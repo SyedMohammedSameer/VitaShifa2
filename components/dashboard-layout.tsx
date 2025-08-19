@@ -53,6 +53,7 @@ export function DashboardLayout() {
   const [isDarkMode, setIsDarkMode] = useState(false);
   const [selectedLanguage, setSelectedLanguage] = useState(i18n.language);
   const [recentConsultations, setRecentConsultations] = useState<any[]>([]);
+  const [selectedConversation, setSelectedConversation] = useState<any | null>(null);
   const router = useRouter();
 
   useEffect(() => {
@@ -85,6 +86,20 @@ export function DashboardLayout() {
       document.documentElement.dir = 'ltr';
     }
   };
+  
+  const handleRecentConversationClick = (chat: any) => {
+    setSelectedConversation(chat);
+    setActiveTab("consultation");
+    setSidebarOpen(false); // Close sidebar on mobile after selection
+  };
+
+  const handleNavigationClick = (tabId: string) => {
+    if (tabId === 'consultation') {
+      setSelectedConversation(null); // Start a new chat when clicking the main nav
+    }
+    setActiveTab(tabId);
+    setSidebarOpen(false);
+  };
 
   const navigationItems = [
     { id: "consultation", label: t("medicalConsultation"), icon: MessageSquare },
@@ -112,7 +127,7 @@ export function DashboardLayout() {
   const renderContent = () => {
     switch (activeTab) {
       case "consultation":
-        return <MedicalConsultation />
+        return <MedicalConsultation conversation={selectedConversation} />
       case "diagnosis":
         return <AIDiagnosis />
       case "wellness":
@@ -124,7 +139,7 @@ export function DashboardLayout() {
       case "settings":
         return <SettingsComponent />
       default:
-        return <MedicalConsultation />
+        return <MedicalConsultation conversation={selectedConversation} />
     }
   };
 
@@ -234,10 +249,7 @@ export function DashboardLayout() {
                           ? "bg-gradient-to-r from-primary to-accent text-primary-foreground shadow-lg pulse-glow"
                           : "hover:bg-accent/20 hover:text-accent-foreground",
                       )}
-                      onClick={() => {
-                        setActiveTab(item.id)
-                        setSidebarOpen(false)
-                      }}
+                      onClick={() => handleNavigationClick(item.id)}
                     >
                       <Icon className="h-5 w-5 relative z-10" />
                       <span className="relative z-10">{item.label}</span>
@@ -253,11 +265,12 @@ export function DashboardLayout() {
                   {recentConsultations.map((chat: any, index) => (
                     <Card
                       key={index}
+                      onClick={() => handleRecentConversationClick(chat)}
                       className="glass-card p-3 cursor-pointer hover:bg-accent/20 transition-all duration-200 hover:scale-105"
                     >
                       <p className="text-sm text-foreground truncate">{chat.title || "Consultation"}</p>
                       <p className="text-xs text-muted-foreground mt-1">
-                        {new Date(chat.timestamp?.toDate()).toLocaleDateString()}
+                        {new Date(chat.timestamp?._seconds * 1000).toLocaleDateString()}
                       </p>
                     </Card>
                   ))}

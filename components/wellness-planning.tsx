@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useRef } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -26,6 +26,9 @@ import {
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useToast } from "@/hooks/use-toast"
+import jsPDF from "jspdf";
+import html2canvas from "html2canvas";
+
 
 interface WellnessData {
   personalInfo: {
@@ -68,38 +71,26 @@ export function WellnessPlanning() {
   const [currentStep, setCurrentStep] = useState(1)
   const { user } = useAuth();
   const { toast } = useToast();
+  const planRef = useRef<HTMLDivElement>(null);
+
   const handleDownloadPlan = () => {
-    let report = "Your Personalized VitaShifa Wellness Plan\n\n";
-    report += "========================================\n\n";
-    
-    report += "== Personal Information ==\n";
-    report += `Age: ${formData.personalInfo.age}\n`;
-    report += `Gender: ${formData.personalInfo.gender}\n`;
-    report += `Height: ${formData.personalInfo.height} cm\n`;
-    report += `Weight: ${formData.personalInfo.weight} kg\n\n`;
-
-    report += "== Health Goals ==\n";
-    formData.healthGoals.forEach(goal => report += `- ${goal}\n`);
-    report += "\n";
-
-    report += "== Recommendations ==\n";
-    report += "- Cardio Exercise: 30 minutes, 3-4 times per week.\n";
-    report += "- Nutrition Focus: Balanced diet with portion control.\n";
-    report += "- Sleep Optimization: Aim for 7-8 hours of quality sleep nightly.\n";
-    report += "- Hydration: Drink 8-10 glasses of water daily.\n\n";
-
-    report += "========================================\n";
-    report += "Disclaimer: This is an AI-generated plan. Please consult a healthcare professional before making any changes to your health regimen.\n";
-
-    const blob = new Blob([report], { type: 'text/plain;charset=utf-8' });
-    const url = URL.createObjectURL(blob);
-    const link = document.createElement('a');
-    link.href = url;
-    link.download = 'VitaShifa-Wellness-Plan.txt';
-    document.body.appendChild(link);
-    link.click();
-    document.body.removeChild(link);
-    URL.revokeObjectURL(url);
+    const input = planRef.current;
+    if (input) {
+      html2canvas(input, { scale: 2 }).then((canvas) => {
+        const imgData = canvas.toDataURL("image/png");
+        const pdf = new jsPDF("p", "mm", "a4");
+        const pdfWidth = pdf.internal.pageSize.getWidth();
+        const pdfHeight = pdf.internal.pageSize.getHeight();
+        const canvasWidth = canvas.width;
+        const canvasHeight = canvas.height;
+        const ratio = canvasWidth / canvasHeight;
+        const width = pdfWidth;
+        const height = width / ratio;
+        
+        pdf.addImage(imgData, "PNG", 0, 0, width, height > pdfHeight ? pdfWidth * (canvasHeight / canvasWidth) : height);
+        pdf.save("VitaShifa-Wellness-Plan.pdf");
+      });
+    }
   };
   const [formData, setFormData] = useState<WellnessData>({
     personalInfo: {
@@ -551,88 +542,90 @@ export function WellnessPlanning() {
       case 6:
         return (
           <div className="space-y-6">
-            <div className="text-center space-y-4">
-              <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 mx-auto">
-                <CheckCircle className="h-8 w-8 text-primary" />
+            <div ref={planRef} className="p-4 bg-background">
+              <div className="text-center space-y-4 mb-6">
+                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 mx-auto">
+                  <CheckCircle className="h-8 w-8 text-primary" />
+                </div>
+                <h3 className="text-2xl font-semibold text-foreground">Your Personalized Wellness Plan</h3>
+                <p className="text-muted-foreground">
+                  Based on your responses, we've created a customized wellness plan just for you.
+                </p>
               </div>
-              <h3 className="text-2xl font-semibold text-foreground">Your Personalized Wellness Plan</h3>
-              <p className="text-muted-foreground">
-                Based on your responses, we've created a customized wellness plan just for you.
-              </p>
+
+              <div className="grid gap-4">
+                <Card className="bg-primary/5 border-primary/20">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-primary">
+                      <Target className="h-5 w-5" />
+                      Your Goals
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent>
+                    <div className="flex flex-wrap gap-2">
+                      {formData.healthGoals.map((goal) => (
+                        <Badge key={goal} variant="secondary">
+                          {goal}
+                        </Badge>
+                      ))}
+                    </div>
+                  </CardContent>
+                </Card>
+
+                <Card className="bg-secondary/5 border-secondary/20">
+                  <CardHeader>
+                    <CardTitle className="flex items-center gap-2 text-secondary">
+                      <Activity className="h-5 w-5" />
+                      Recommended Activities
+                    </CardTitle>
+                  </CardHeader>
+                  <CardContent className="space-y-3">
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary/10">
+                        <Heart className="h-4 w-4 text-secondary" />
+                      </div>
+                      <div>
+                        <p className="font-medium">Cardio Exercise</p>
+                        <p className="text-sm text-muted-foreground">30 minutes, 3-4 times per week</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary/10">
+                        <Apple className="h-4 w-4 text-secondary" />
+                      </div>
+                      <div>
+                        <p className="font-medium">Nutrition Focus</p>
+                        <p className="text-sm text-muted-foreground">Balanced diet with portion control</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary/10">
+                        <Moon className="h-4 w-4 text-secondary" />
+                      </div>
+                      <div>
+                        <p className="font-medium">Sleep Optimization</p>
+                        <p className="text-sm text-muted-foreground">7-8 hours of quality sleep nightly</p>
+                      </div>
+                    </div>
+                    <div className="flex items-center gap-3">
+                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary/10">
+                        <Droplets className="h-4 w-4 text-secondary" />
+                      </div>
+                      <div>
+                        <p className="font-medium">Hydration</p>
+                        <p className="text-sm text-muted-foreground">8-10 glasses of water daily</p>
+                      </div>
+                    </div>
+                  </CardContent>
+                </Card>
+              </div>
             </div>
-
-            <div className="grid gap-4">
-              <Card className="bg-primary/5 border-primary/20">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-primary">
-                    <Target className="h-5 w-5" />
-                    Your Goals
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="flex flex-wrap gap-2">
-                    {formData.healthGoals.map((goal) => (
-                      <Badge key={goal} variant="secondary">
-                        {goal}
-                      </Badge>
-                    ))}
-                  </div>
-                </CardContent>
-              </Card>
-
-              <Card className="bg-secondary/5 border-secondary/20">
-                <CardHeader>
-                  <CardTitle className="flex items-center gap-2 text-secondary">
-                    <Activity className="h-5 w-5" />
-                    Recommended Activities
-                  </CardTitle>
-                </CardHeader>
-                <CardContent className="space-y-3">
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary/10">
-                      <Heart className="h-4 w-4 text-secondary" />
-                    </div>
-                    <div>
-                      <p className="font-medium">Cardio Exercise</p>
-                      <p className="text-sm text-muted-foreground">30 minutes, 3-4 times per week</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary/10">
-                      <Apple className="h-4 w-4 text-secondary" />
-                    </div>
-                    <div>
-                      <p className="font-medium">Nutrition Focus</p>
-                      <p className="text-sm text-muted-foreground">Balanced diet with portion control</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary/10">
-                      <Moon className="h-4 w-4 text-secondary" />
-                    </div>
-                    <div>
-                      <p className="font-medium">Sleep Optimization</p>
-                      <p className="text-sm text-muted-foreground">7-8 hours of quality sleep nightly</p>
-                    </div>
-                  </div>
-                  <div className="flex items-center gap-3">
-                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary/10">
-                      <Droplets className="h-4 w-4 text-secondary" />
-                    </div>
-                    <div>
-                      <p className="font-medium">Hydration</p>
-                      <p className="text-sm text-muted-foreground">8-10 glasses of water daily</p>
-                    </div>
-                  </div>
-                </CardContent>
-              </Card>
-
-              <div className="flex gap-4">
-                <Button className="flex-1">Download Plan</Button>
-                <Button variant="outline" className="flex-1 bg-transparent">
-                  Schedule Check-in
-                </Button>
-              </div>
+            
+            <div className="flex gap-4 mt-6">
+              <Button className="flex-1" onClick={handleDownloadPlan}>Download Plan as PDF</Button>
+              <Button variant="outline" className="flex-1 bg-transparent">
+                Schedule Check-in
+              </Button>
             </div>
           </div>
         )
@@ -705,16 +698,18 @@ export function WellnessPlanning() {
           {renderStepContent()}
 
           {/* Navigation */}
-          <div className="flex justify-between pt-6">
-            <Button variant="outline" onClick={prevStep} disabled={currentStep === 1}>
-              <ChevronLeft className="h-4 w-4 mr-2" />
-              Previous
-            </Button>
-            <Button onClick={nextStep} disabled={currentStep === steps.length}>
-              {currentStep === steps.length -1 ? "Generate Plan" : "Next"}
-              {currentStep < steps.length -1 && <ChevronRight className="h-4 w-4 ml-2" />}
-            </Button>
-          </div>
+          {currentStep < 6 && (
+            <div className="flex justify-between pt-6">
+              <Button variant="outline" onClick={prevStep} disabled={currentStep === 1}>
+                <ChevronLeft className="h-4 w-4 mr-2" />
+                Previous
+              </Button>
+              <Button onClick={nextStep} disabled={currentStep === steps.length}>
+                {currentStep === steps.length -1 ? "Generate Plan" : "Next"}
+                {currentStep < steps.length -1 && <ChevronRight className="h-4 w-4 ml-2" />}
+              </Button>
+            </div>
+          )}
         </CardContent>
       </Card>
     </div>

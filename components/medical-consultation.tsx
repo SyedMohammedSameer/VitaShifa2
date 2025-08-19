@@ -1,8 +1,7 @@
 "use client"
 
 import type React from "react"
-
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -10,6 +9,7 @@ import { ScrollArea } from "@/components/ui/scroll-area"
 import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Send, Bot, User, Mic, Paperclip } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useAuth } from "@/context/AuthContext"
 
 interface Message {
   id: string
@@ -18,21 +18,44 @@ interface Message {
   timestamp: Date
 }
 
-export function MedicalConsultation() {
-  const [messages, setMessages] = useState<Message[]>([
-    {
-      id: "1",
-      content:
-        "Hello! I'm your AI health companion. I'm here to help with your medical questions and provide guidance. Please note that I'm not a replacement for professional medical care. How can I assist you today?",
-      sender: "ai",
-      timestamp: new Date(),
-    },
-  ])
-  const [inputValue, setInputValue] = useState("")
-  const [isTyping, setIsTyping] = useState(false)
+interface MedicalConsultationProps {
+  conversation: any | null;
+}
+
+export function MedicalConsultation({ conversation: initialConversation }: MedicalConsultationProps) {
+  const { user } = useAuth();
+  const [messages, setMessages] = useState<Message[]>([]);
+  const [inputValue, setInputValue] = useState("");
+  const [isTyping, setIsTyping] = useState(false);
+  const [currentConversationId, setCurrentConversationId] = useState<string | null>(null);
+
+  useEffect(() => {
+    if (initialConversation && initialConversation.messages) {
+      const loadedMessages = initialConversation.messages.map((msg: any, index: number) => ({
+        id: `${initialConversation.id}-${index}`,
+        content: msg.content,
+        sender: msg.sender,
+        timestamp: new Date(initialConversation.timestamp?._seconds * 1000),
+      }));
+      setMessages(loadedMessages);
+      setCurrentConversationId(initialConversation.id);
+    } else {
+      // New chat
+      setMessages([
+        {
+          id: "1",
+          content:
+            "Hello! I'm your AI health companion. I'm here to help with your medical questions and provide guidance. Please note that I'm not a replacement for professional medical care. How can I assist you today?",
+          sender: "ai",
+          timestamp: new Date(),
+        },
+      ]);
+      setCurrentConversationId(null);
+    }
+  }, [initialConversation]);
 
   const handleSendMessage = async () => {
-    if (!inputValue.trim()) return
+    if (!inputValue.trim() || !user) return
 
     const userMessage: Message = {
       id: Date.now().toString(),
@@ -41,17 +64,24 @@ export function MedicalConsultation() {
       timestamp: new Date(),
     }
 
-    setMessages((prev) => [...prev, userMessage])
-    setInputValue("")
-    setIsTyping(true)
+    // Optimistically add user message to UI
+    setMessages((prev) => [...prev, userMessage]);
+    const currentInput = inputValue;
+    setInputValue("");
+    setIsTyping(true);
 
     try {
+      const idToken = await user.getIdToken();
       const response = await fetch('/api/medical-consultation', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`,
         },
-        body: JSON.stringify({ message: inputValue }),
+        body: JSON.stringify({ 
+          message: currentInput, 
+          conversationId: currentConversationId 
+        }),
       });
 
       if (!response.ok) {
@@ -66,6 +96,12 @@ export function MedicalConsultation() {
         timestamp: new Date(),
       };
       setMessages((prev) => [...prev, aiMessage]);
+
+      // If it was a new conversation, set the new ID for continuation
+      if (!currentConversationId && data.conversationId) {
+        setCurrentConversationId(data.conversationId);
+      }
+
     } catch (error) {
       console.error(error);
       const errorMessage: Message = {

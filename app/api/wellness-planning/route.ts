@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import admin from "@/lib/firebaseAdmin";
-import { collection, addDoc, serverTimestamp } from "firebase/firestore";
 
 export async function POST(req: NextRequest) {
   const idToken = req.headers.get('Authorization')?.split('Bearer ')[1];
@@ -12,12 +11,13 @@ export async function POST(req: NextRequest) {
   try {
     const decodedToken = await admin.auth().verifyIdToken(idToken);
     const userId = decodedToken.uid;
+    const db = admin.firestore();
 
     const plan = await req.json();
-    const docRef = await addDoc(collection(admin.firestore(), "wellnessPlans"), {
+    const docRef = await db.collection("wellnessPlans").add({
       ...plan,
       userId: userId, // Associate plan with user
-      createdAt: serverTimestamp(),
+      createdAt: admin.firestore.FieldValue.serverTimestamp(),
     });
 
     return NextResponse.json({ id: docRef.id });

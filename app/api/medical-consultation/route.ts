@@ -1,13 +1,22 @@
 import { GoogleGenerativeAI } from "@google/generative-ai";
 import { NextRequest, NextResponse } from "next/server";
+import admin from "@/lib/firebaseAdmin";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
 
 export async function POST(req: NextRequest) {
   try {
-    const { message } = await req.json();
+    const { message, conversationId } = await req.json();
+    const idToken = req.headers.get('Authorization')?.split('Bearer ')[1];
 
-    const model = genAI.getGenerativeModel({ model: "gemini-2.0-flash-001" });
+    if (!idToken) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    const userId = decodedToken.uid;
+
+    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
     const chat = model.startChat({
       history: [
@@ -29,7 +38,41 @@ export async function POST(req: NextRequest) {
     const response = await result.response;
     const text = response.text();
 
-    return NextResponse.json({ reply: text });
+    const db = admin.firestore();
+    let newConversationId = conversationId;
+
+    if (conversationId) {
+      // Update existing conversation
+      const consultationRef = db.collection("consultations").doc(conversationId);
+      // Ensure the user owns this conversation before updating
+      const docSnap = await consultationRef.get();
+      if (docSnap.exists() && docSnap.data()?.userId === userId) {
+        await consultationRef.update({
+          timestamp: admin.firestore.FieldValue.serverTimestamp(), // Update timestamp to keep it recent
+          messages: admin.firestore.FieldValue.arrayUnion(
+            { sender: "user", content: message },
+            { sender: "ai", content: text }
+          ),
+        });
+      } else {
+        return NextResponse.json({ error: "Permission denied or conversation not found" }, { status: 404 });
+      }
+    } else {
+      // Create new conversation
+      const consultationRef = db.collection("consultations").doc();
+      await consultationRef.set({
+        userId,
+        title: message.substring(0, 30),
+        timestamp: admin.firestore.FieldValue.serverTimestamp(),
+        messages: [
+          { sender: "user", content: message },
+          { sender: "ai", content: text },
+        ],
+      });
+      newConversationId = consultationRef.id;
+    }
+
+    return NextResponse.json({ reply: text, conversationId: newConversationId });
   } catch (error) {
     console.error(error);
     return NextResponse.json({ error: "Failed to get a response from the AI." }, { status: 500 });

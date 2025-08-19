@@ -45,18 +45,39 @@ export function MedicalConsultation() {
     setInputValue("")
     setIsTyping(true)
 
-    // Simulate AI response
-    setTimeout(() => {
+    try {
+      const response = await fetch('/api/medical-consultation', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ message: inputValue }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to get response from AI');
+      }
+
+      const data = await response.json();
       const aiMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content:
-          "Thank you for your question. Based on what you've described, I'd recommend consulting with a healthcare professional for a proper evaluation. In the meantime, here are some general suggestions that might help...",
+        content: data.reply,
         sender: "ai",
         timestamp: new Date(),
-      }
-      setMessages((prev) => [...prev, aiMessage])
-      setIsTyping(false)
-    }, 2000)
+      };
+      setMessages((prev) => [...prev, aiMessage]);
+    } catch (error) {
+      console.error(error);
+      const errorMessage: Message = {
+        id: (Date.now() + 1).toString(),
+        content: "Sorry, I'm having trouble connecting. Please try again later.",
+        sender: "ai",
+        timestamp: new Date(),
+      };
+      setMessages((prev) => [...prev, errorMessage]);
+    } finally {
+      setIsTyping(false);
+    }
   }
 
   const handleKeyPress = (e: React.KeyboardEvent) => {

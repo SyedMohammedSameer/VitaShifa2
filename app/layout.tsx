@@ -3,6 +3,8 @@ import type { Metadata } from "next"
 import { Inter } from "next/font/google"
 import { Manrope } from "next/font/google"
 import "./globals.css"
+import { Toaster } from "@/components/ui/toaster"
+import { AuthProvider } from "@/context/AuthContext"
 
 const inter = Inter({
   subsets: ["latin"],
@@ -30,7 +32,12 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" className={`${inter.variable} ${manrope.variable} antialiased`}>
-      <body className="min-h-screen bg-background font-sans antialiased">{children}</body>
+      <body className="min-h-screen bg-background font-sans antialiased">
+        <AuthProvider>
+          {children}
+          <Toaster />
+        </AuthProvider>
+      </body>
     </html>
   )
 }

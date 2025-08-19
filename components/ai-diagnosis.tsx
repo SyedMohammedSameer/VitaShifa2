@@ -68,33 +68,23 @@ export function AIDiagnosis() {
 
       setUploadedImages((prev) => [...prev, newImage])
 
-      // Simulate upload and analysis
-      setTimeout(() => {
+      // Simulate upload and then call analysis
+      setTimeout(async () => {
         setUploadedImages((prev) => prev.map((img) => (img.id === id ? { ...img, status: "analyzing" } : img)))
 
-        // Simulate AI analysis
-        setTimeout(() => {
-          const mockAnalysis: AnalysisResult = {
-            confidence: Math.floor(Math.random() * 30) + 70,
-            findings: [
-              "No obvious abnormalities detected",
-              "Image quality is suitable for analysis",
-              "Recommend professional medical evaluation for confirmation",
-            ],
-            recommendations: [
-              "Consult with a healthcare professional",
-              "Consider follow-up imaging if symptoms persist",
-              "Monitor for any changes in symptoms",
-            ],
-            urgency: "low",
-            disclaimer:
-              "This AI analysis is for informational purposes only and should not replace professional medical diagnosis.",
+        try {
+          const response = await fetch('/api/ai-diagnosis', { method: 'POST' });
+          if (!response.ok) {
+            throw new Error('Analysis failed');
           }
-
+          const analysis: AnalysisResult = await response.json();
           setUploadedImages((prev) =>
-            prev.map((img) => (img.id === id ? { ...img, status: "completed", analysis: mockAnalysis } : img)),
+            prev.map((img) => (img.id === id ? { ...img, status: "completed", analysis } : img)),
           )
-        }, 3000)
+        } catch (error) {
+          console.error(error);
+          setUploadedImages((prev) => prev.map((img) => (img.id === id ? { ...img, status: "error" } : img)))
+        }
       }, 1000)
     })
   }

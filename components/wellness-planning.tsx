@@ -24,6 +24,7 @@ import {
   TrendingUp,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useToast } from "@/hooks/use-toast"
 
 interface WellnessData {
   personalInfo: {
@@ -92,6 +93,8 @@ export function WellnessPlanning() {
     },
   })
 
+  const { toast } = useToast();
+
   const updateFormData = (section: keyof WellnessData, data: any) => {
     setFormData((prev) => ({
       ...prev,
@@ -99,9 +102,29 @@ export function WellnessPlanning() {
     }))
   }
 
-  const nextStep = () => {
+  const nextStep = async () => {
     if (currentStep < steps.length) {
       setCurrentStep(currentStep + 1)
+    }
+    if (currentStep === steps.length - 1) {
+      try {
+        const response = await fetch('/api/wellness-planning', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(formData),
+        });
+
+        if (!response.ok) {
+          throw new Error('Failed to save wellness plan');
+        }
+        toast({ title: "Success", description: "Your wellness plan has been saved." });
+        setCurrentStep(currentStep + 1);
+      } catch (error) {
+        console.error(error);
+        toast({ title: "Error", description: "Could not save your wellness plan.", variant: "destructive" });
+      }
     }
   }
 
@@ -649,8 +672,8 @@ export function WellnessPlanning() {
               Previous
             </Button>
             <Button onClick={nextStep} disabled={currentStep === steps.length}>
-              {currentStep === steps.length ? "Complete" : "Next"}
-              {currentStep < steps.length && <ChevronRight className="h-4 w-4 ml-2" />}
+              {currentStep === steps.length -1 ? "Generate Plan" : "Next"}
+              {currentStep < steps.length -1 && <ChevronRight className="h-4 w-4 ml-2" />}
             </Button>
           </div>
         </CardContent>

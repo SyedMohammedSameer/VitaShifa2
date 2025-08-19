@@ -4,7 +4,7 @@ import { useState } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger } from "@/components/ui/dropdown-menu"
+import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuTrigger, DropdownMenuSeparator } from "@/components/ui/dropdown-menu"
 import {
   MessageSquare,
   Scan,
@@ -19,6 +19,7 @@ import {
   Stethoscope,
   ChevronDown,
   Pill,
+  LogOut,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { MedicalConsultation } from "@/components/medical-consultation"
@@ -27,6 +28,9 @@ import { WellnessPlanning } from "@/components/wellness-planning"
 import { EmergencyCare } from "@/components/emergency-care"
 import { Settings as SettingsComponent } from "@/components/settings"
 import { MedicationReminders } from "@/components/medication-reminders"
+import { auth } from "@/lib/firebase"
+import { signOut } from "firebase/auth"
+import { useRouter } from "next/navigation"
 
 const navigationItems = [
   { id: "consultation", label: "Medical Consultation", icon: MessageSquare },
@@ -49,6 +53,16 @@ export function DashboardLayout() {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const [isDarkMode, setIsDarkMode] = useState(false)
   const [selectedLanguage, setSelectedLanguage] = useState("en")
+  const router = useRouter();
+
+  const handleSignOut = async () => {
+    try {
+      await signOut(auth);
+      router.push('/signin');
+    } catch (error) {
+      console.error("Failed to sign out:", error);
+    }
+  };
 
   const toggleTheme = () => {
     setIsDarkMode(!isDarkMode)
@@ -136,21 +150,27 @@ export function DashboardLayout() {
               </DropdownMenuContent>
             </DropdownMenu>
 
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={() => setActiveTab("settings")}
-              className={cn("hover:bg-accent/20", activeTab === "settings" && "bg-accent/30")}
-            >
-              <Settings className="h-4 w-4" />
-            </Button>
-
-            <Avatar className="h-8 w-8 ring-2 ring-primary/30">
-              <AvatarImage src="/placeholder.svg?height=32&width=32" />
-              <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground">
-                VS
-              </AvatarFallback>
-            </Avatar>
+            <DropdownMenu>
+              <DropdownMenuTrigger asChild>
+                <Avatar className="h-8 w-8 ring-2 ring-primary/30 cursor-pointer">
+                  <AvatarImage src="/placeholder.svg?height=32&width=32" />
+                  <AvatarFallback className="bg-gradient-to-br from-primary to-accent text-primary-foreground">
+                    VS
+                  </AvatarFallback>
+                </Avatar>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="glass-card border-border/50">
+                <DropdownMenuItem onClick={() => setActiveTab("settings")} className="cursor-pointer">
+                  <Settings className="h-4 w-4 mr-2" />
+                  Settings
+                </DropdownMenuItem>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-red-500">
+                  <LogOut className="h-4 w-4 mr-2" />
+                  Sign Out
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </header>

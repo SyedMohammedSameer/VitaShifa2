@@ -1,5 +1,5 @@
 "use client"
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -9,21 +9,9 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import {
-  SettingsIcon,
-  User,
-  Bell,
-  Shield,
-  Globe,
-  Palette,
-  Download,
-  Upload,
-  Trash2,
-  Eye,
-  Moon,
-  Sun,
-  Volume2,
-  Accessibility,
+  SettingsIcon, User, Bell, Shield, Globe, Palette, Download, Upload, Trash2, Eye, Moon, Sun, Volume2, Accessibility,
 } from "lucide-react"
+import { useToast } from "@/hooks/use-toast"
 
 interface UserSettings {
   profile: {
@@ -71,6 +59,7 @@ const languages = [
 ]
 
 export function Settings() {
+  const { toast } = useToast();
   const [settings, setSettings] = useState<UserSettings>({
     profile: {
       name: "John Doe",
@@ -103,31 +92,68 @@ export function Settings() {
     },
   })
 
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        const response = await fetch('/api/settings');
+        if (response.ok) {
+          const data = await response.json();
+          setSettings(data);
+        }
+      } catch (error) {
+        console.error("Failed to fetch settings:", error);
+      }
+    };
+    fetchSettings();
+  }, []);
+
+
+  const saveSettings = async (newSettings: UserSettings) => {
+    try {
+      const response = await fetch('/api/settings', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(newSettings),
+      });
+      if (!response.ok) throw new Error('Failed to save settings');
+      toast({ title: "Success", description: "Settings saved successfully." });
+    } catch (error) {
+      console.error(error);
+      toast({ title: "Error", description: "Could not save settings.", variant: "destructive" });
+    }
+  };
+
   const updateSettings = (section: keyof UserSettings, updates: any) => {
-    setSettings((prev) => ({
-      ...prev,
-      [section]: { ...prev[section], ...updates },
-    }))
+    const newSettings = {
+      ...settings,
+      [section]: { ...settings[section], ...updates },
+    };
+    setSettings(newSettings);
+    saveSettings(newSettings);
   }
 
   const updateNotificationSettings = (updates: Partial<UserSettings["preferences"]["notifications"]>) => {
-    setSettings((prev) => ({
-      ...prev,
+    const newSettings = {
+      ...settings,
       preferences: {
-        ...prev.preferences,
-        notifications: { ...prev.preferences.notifications, ...updates },
+        ...settings.preferences,
+        notifications: { ...settings.preferences.notifications, ...updates },
       },
-    }))
+    };
+    setSettings(newSettings);
+    saveSettings(newSettings);
   }
 
   const updateAccessibilitySettings = (updates: Partial<UserSettings["preferences"]["accessibility"]>) => {
-    setSettings((prev) => ({
-      ...prev,
+    const newSettings = {
+      ...settings,
       preferences: {
-        ...prev.preferences,
-        accessibility: { ...prev.preferences.accessibility, ...updates },
+        ...settings.preferences,
+        accessibility: { ...settings.preferences.accessibility, ...updates },
       },
-    }))
+    };
+    setSettings(newSettings);
+    saveSettings(newSettings);
   }
 
   return (
@@ -223,7 +249,7 @@ export function Settings() {
                 />
               </div>
 
-              <Button>Save Changes</Button>
+              <Button onClick={() => saveSettings(settings)}>Save Changes</Button>
             </CardContent>
           </Card>
         </TabsContent>

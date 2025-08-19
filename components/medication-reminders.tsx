@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -53,64 +53,37 @@ const frequencyOptions = [
 ]
 
 const timeSlots = [
-  "06:00",
-  "07:00",
-  "08:00",
-  "09:00",
-  "10:00",
-  "11:00",
-  "12:00",
-  "13:00",
-  "14:00",
-  "15:00",
-  "16:00",
-  "17:00",
-  "18:00",
-  "19:00",
-  "20:00",
-  "21:00",
-  "22:00",
-  "23:00",
+  "06:00", "07:00", "08:00", "09:00", "10:00", "11:00", "12:00",
+  "13:00", "14:00", "15:00", "16:00", "17:00", "18:00", "19:00",
+  "20:00", "21:00", "22:00", "23:00",
 ]
 
 export function MedicationReminders() {
-  const [reminders, setReminders] = useState<MedicationReminder[]>([
-    {
-      id: "1",
-      name: "Lisinopril",
-      dose: "10mg",
-      frequency: "once-daily",
-      times: ["08:00"],
-      startDate: "2024-01-01",
-      endDate: "2024-12-31",
-      notes: "Take with food",
-      adherence: [true, true, false, true, true, true, true],
-    },
-    {
-      id: "2",
-      name: "Metformin",
-      dose: "500mg",
-      frequency: "twice-daily",
-      times: ["08:00", "20:00"],
-      startDate: "2024-01-01",
-      endDate: "2024-12-31",
-      notes: "Take with meals",
-      adherence: [true, true, true, false, true, true, true],
-    },
-  ])
-
+  const [reminders, setReminders] = useState<MedicationReminder[]>([])
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [newReminder, setNewReminder] = useState({
-    name: "",
-    dose: "",
-    frequency: "",
-    times: [""],
-    startDate: "",
-    endDate: "",
-    notes: "",
+    name: "", dose: "", frequency: "", times: [""],
+    startDate: "", endDate: "", notes: "",
   })
 
-  const addReminder = () => {
+  useEffect(() => {
+    const fetchReminders = async () => {
+      try {
+        const response = await fetch('/api/medication-reminders');
+        if (!response.ok) {
+          throw new Error('Failed to fetch reminders');
+        }
+        const data = await response.json();
+        setReminders(data);
+      } catch (error) {
+        console.error(error);
+        toast({ title: "Error", description: "Could not fetch reminders.", variant: "destructive" });
+      }
+    };
+    fetchReminders();
+  }, []);
+
+  const addReminder = async () => {
     if (!newReminder.name || !newReminder.dose || !newReminder.frequency) {
       toast({
         title: "Error",
@@ -120,36 +93,52 @@ export function MedicationReminders() {
       return
     }
 
-    const reminder: MedicationReminder = {
-      id: Date.now().toString(),
-      ...newReminder,
-      adherence: [false, false, false, false, false, false, false],
+    try {
+      const response = await fetch('/api/medication-reminders', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(newReminder),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to add reminder');
+      }
+
+      const addedReminder = await response.json();
+      setReminders([...reminders, { ...newReminder, id: addedReminder.id, adherence: [] }]);
+      setNewReminder({
+        name: "", dose: "", frequency: "", times: [""],
+        startDate: "", endDate: "", notes: "",
+      })
+      setIsDialogOpen(false)
+
+      toast({
+        title: "Success",
+        description: "Medication reminder added successfully!",
+      })
+    } catch (error) {
+      console.error(error);
+      toast({ title: "Error", description: "Could not add reminder.", variant: "destructive" });
     }
-
-    setReminders([...reminders, reminder])
-    setNewReminder({
-      name: "",
-      dose: "",
-      frequency: "",
-      times: [""],
-      startDate: "",
-      endDate: "",
-      notes: "",
-    })
-    setIsDialogOpen(false)
-
-    toast({
-      title: "Success",
-      description: "Medication reminder added successfully!",
-    })
   }
 
-  const deleteReminder = (id: string) => {
-    setReminders(reminders.filter((r) => r.id !== id))
-    toast({
-      title: "Deleted",
-      description: "Medication reminder removed.",
-    })
+  const deleteReminder = async (id: string) => {
+    try {
+      const response = await fetch(`/api/medication-reminders/${id}`, { method: 'DELETE' });
+      if (!response.ok) {
+        throw new Error('Failed to delete reminder');
+      }
+      setReminders(reminders.filter((r) => r.id !== id))
+      toast({
+        title: "Deleted",
+        description: "Medication reminder removed.",
+      })
+    } catch (error) {
+      console.error(error);
+      toast({ title: "Error", description: "Could not delete reminder.", variant: "destructive" });
+    }
   }
 
   const markAsTaken = (id: string) => {
@@ -175,6 +164,7 @@ export function MedicationReminders() {
   }
 
   const calculateAdherence = (adherence: boolean[]) => {
+    if (!adherence || adherence.length === 0) return 0;
     const taken = adherence.filter(Boolean).length
     return Math.round((taken / adherence.length) * 100)
   }

@@ -1,5 +1,6 @@
 "use client"
 import { useState, useEffect } from "react"
+import { useAuth } from "@/context/AuthContext";
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
@@ -59,6 +60,7 @@ const languages = [
 ]
 
 export function Settings() {
+  const { user } = useAuth();
   const { toast } = useToast();
   const [settings, setSettings] = useState<UserSettings>({
     profile: {
@@ -94,32 +96,43 @@ export function Settings() {
 
   useEffect(() => {
     const fetchSettings = async () => {
-      try {
-        const response = await fetch('/api/settings');
-        if (response.ok) {
-          const data = await response.json();
-          setSettings(data);
+        if (!user) return;
+        try {
+            const idToken = await user.getIdToken();
+            const response = await fetch('/api/settings', {
+                headers: { 'Authorization': `Bearer ${idToken}` }
+            });
+            if (response.ok) {
+                const data = await response.json();
+                if (Object.keys(data).length > 0) { // Check if settings exist
+                    setSettings(data);
+                }
+            }
+        } catch (error) {
+            console.error("Failed to fetch settings:", error);
         }
-      } catch (error) {
-        console.error("Failed to fetch settings:", error);
-      }
     };
     fetchSettings();
-  }, []);
+  }, [user]);
 
 
   const saveSettings = async (newSettings: UserSettings) => {
+    if (!user) return;
     try {
-      const response = await fetch('/api/settings', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(newSettings),
-      });
-      if (!response.ok) throw new Error('Failed to save settings');
-      toast({ title: "Success", description: "Settings saved successfully." });
+        const idToken = await user.getIdToken();
+        const response = await fetch('/api/settings', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'Authorization': `Bearer ${idToken}`
+            },
+            body: JSON.stringify(newSettings),
+        });
+        if (!response.ok) throw new Error('Failed to save settings');
+        toast({ title: "Success", description: "Settings saved successfully." });
     } catch (error) {
-      console.error(error);
-      toast({ title: "Error", description: "Could not save settings.", variant: "destructive" });
+        console.error(error);
+        toast({ title: "Error", description: "Could not save settings.", variant: "destructive" });
     }
   };
 

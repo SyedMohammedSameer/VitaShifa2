@@ -11,6 +11,7 @@ import { Checkbox } from "@/components/ui/checkbox"
 import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
+import { useAuth } from "@/context/AuthContext";
 import {
   Heart,
   ChevronLeft,
@@ -65,6 +66,41 @@ const steps = [
 
 export function WellnessPlanning() {
   const [currentStep, setCurrentStep] = useState(1)
+  const { user } = useAuth();
+  const { toast } = useToast();
+  const handleDownloadPlan = () => {
+    let report = "Your Personalized VitaShifa Wellness Plan\n\n";
+    report += "========================================\n\n";
+    
+    report += "== Personal Information ==\n";
+    report += `Age: ${formData.personalInfo.age}\n`;
+    report += `Gender: ${formData.personalInfo.gender}\n`;
+    report += `Height: ${formData.personalInfo.height} cm\n`;
+    report += `Weight: ${formData.personalInfo.weight} kg\n\n`;
+
+    report += "== Health Goals ==\n";
+    formData.healthGoals.forEach(goal => report += `- ${goal}\n`);
+    report += "\n";
+
+    report += "== Recommendations ==\n";
+    report += "- Cardio Exercise: 30 minutes, 3-4 times per week.\n";
+    report += "- Nutrition Focus: Balanced diet with portion control.\n";
+    report += "- Sleep Optimization: Aim for 7-8 hours of quality sleep nightly.\n";
+    report += "- Hydration: Drink 8-10 glasses of water daily.\n\n";
+
+    report += "========================================\n";
+    report += "Disclaimer: This is an AI-generated plan. Please consult a healthcare professional before making any changes to your health regimen.\n";
+
+    const blob = new Blob([report], { type: 'text/plain;charset=utf-8' });
+    const url = URL.createObjectURL(blob);
+    const link = document.createElement('a');
+    link.href = url;
+    link.download = 'VitaShifa-Wellness-Plan.txt';
+    document.body.appendChild(link);
+    link.click();
+    document.body.removeChild(link);
+    URL.revokeObjectURL(url);
+  };
   const [formData, setFormData] = useState<WellnessData>({
     personalInfo: {
       age: "",
@@ -93,7 +129,6 @@ export function WellnessPlanning() {
     },
   })
 
-  const { toast } = useToast();
 
   const updateFormData = (section: keyof WellnessData, data: any) => {
     setFormData((prev) => ({
@@ -103,30 +138,34 @@ export function WellnessPlanning() {
   }
 
   const nextStep = async () => {
-    if (currentStep < steps.length) {
-      setCurrentStep(currentStep + 1)
-    }
-    if (currentStep === steps.length - 1) {
-      try {
-        const response = await fetch('/api/wellness-planning', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(formData),
-        });
-
-        if (!response.ok) {
-          throw new Error('Failed to save wellness plan');
+    if (currentStep === steps.length - 1) { // On the last step before the plan is shown
+        if (!user) {
+            toast({ title: "Authentication Error", description: "You must be logged in to generate a plan.", variant: "destructive" });
+            return;
         }
-        toast({ title: "Success", description: "Your wellness plan has been saved." });
+        try {
+            const idToken = await user.getIdToken();
+            const response = await fetch('/api/wellness-planning', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                    'Authorization': `Bearer ${idToken}`,
+                },
+                body: JSON.stringify(formData),
+            });
+
+            if (!response.ok) throw new Error('Failed to save wellness plan');
+            
+            toast({ title: "Success", description: "Your wellness plan has been generated and saved." });
+            setCurrentStep(currentStep + 1); // Move to the final plan view
+        } catch (error) {
+            console.error(error);
+            toast({ title: "Error", description: "Could not save your wellness plan.", variant: "destructive" });
+        }
+    } else if (currentStep < steps.length) {
         setCurrentStep(currentStep + 1);
-      } catch (error) {
-        console.error(error);
-        toast({ title: "Error", description: "Could not save your wellness plan.", variant: "destructive" });
-      }
     }
-  }
+  };
 
   const prevStep = () => {
     if (currentStep > 1) {

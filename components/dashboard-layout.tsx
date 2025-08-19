@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Button } from "@/components/ui/button"
 import { Card } from "@/components/ui/card"
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
@@ -31,29 +31,68 @@ import { MedicationReminders } from "@/components/medication-reminders"
 import { auth } from "@/lib/firebase"
 import { signOut } from "firebase/auth"
 import { useRouter } from "next/navigation"
-
-const navigationItems = [
-  { id: "consultation", label: "Medical Consultation", icon: MessageSquare },
-  { id: "diagnosis", label: "AI Diagnosis", icon: Scan },
-  { id: "wellness", label: "Wellness Planning", icon: Heart },
-  { id: "medication", label: "Medication Reminders", icon: Pill },
-  { id: "emergency", label: "Emergency Care", icon: AlertTriangle },
-]
+import { useTranslation } from "react-i18next"
+import i18n from "@/lib/i18n"
+import { useAuth } from "@/context/AuthContext"
 
 const languages = [
   { code: "en", name: "English", flag: "🇺🇸" },
+  { code: "ar", name: "العربية", flag: "🇸🇦" },
   { code: "es", name: "Español", flag: "🇪🇸" },
   { code: "fr", name: "Français", flag: "🇫🇷" },
-  { code: "de", name: "Deutsch", flag: "🇩🇪" },
-  { code: "zh", name: "中文", flag: "🇨🇳" },
-]
+  { code: "ja", name: "日本語", flag: "🇯🇵" },
+  { code: "id", name: "Bahasa Indonesia", flag: "🇮🇩" },
+  { code: "hi", name: "हिन्दी", flag: "🇮🇳" },
+];
 
 export function DashboardLayout() {
-  const [activeTab, setActiveTab] = useState("consultation")
-  const [sidebarOpen, setSidebarOpen] = useState(false)
-  const [isDarkMode, setIsDarkMode] = useState(false)
-  const [selectedLanguage, setSelectedLanguage] = useState("en")
+  const { t } = useTranslation();
+  const { user } = useAuth();
+  const [activeTab, setActiveTab] = useState("consultation");
+  const [sidebarOpen, setSidebarOpen] = useState(false);
+  const [isDarkMode, setIsDarkMode] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState(i18n.language);
+  const [recentConsultations, setRecentConsultations] = useState<any[]>([]);
   const router = useRouter();
+
+  useEffect(() => {
+    const fetchRecentConsultations = async () => {
+      if (!user) return;
+      try {
+        const idToken = await user.getIdToken();
+        const response = await fetch('/api/recent-consultations', {
+          headers: { 'Authorization': `Bearer ${idToken}` }
+        });
+        if (response.ok) {
+          const data = await response.json();
+          setRecentConsultations(data);
+        } else {
+           console.error("Failed to fetch recent consultations:", response.statusText);
+        }
+      } catch (error) {
+        console.error("Failed to fetch recent consultations:", error);
+      }
+    };
+    fetchRecentConsultations();
+  }, [user, activeTab]);
+
+  const handleLanguageChange = (langCode: string) => {
+    i18n.changeLanguage(langCode);
+    setSelectedLanguage(langCode);
+    if (langCode === 'ar') {
+      document.documentElement.dir = 'rtl';
+    } else {
+      document.documentElement.dir = 'ltr';
+    }
+  };
+
+  const navigationItems = [
+    { id: "consultation", label: t("medicalConsultation"), icon: MessageSquare },
+    { id: "diagnosis", label: t("aiDiagnosis"), icon: Scan },
+    { id: "wellness", label: t("wellnessPlanning"), icon: Heart },
+    { id: "medication", label: t("medicationReminders"), icon: Pill },
+    { id: "emergency", label: t("emergencyCare"), icon: AlertTriangle },
+  ];
 
   const handleSignOut = async () => {
     try {
@@ -65,12 +104,9 @@ export function DashboardLayout() {
   };
 
   const toggleTheme = () => {
-    setIsDarkMode(!isDarkMode)
-    if (!isDarkMode) {
-      document.documentElement.classList.add("dark")
-    } else {
-      document.documentElement.classList.remove("dark")
-    }
+    setIsDarkMode(!isDarkMode);
+    const newTheme = !isDarkMode ? 'dark' : 'light';
+    document.documentElement.classList.toggle("dark", !isDarkMode);
   }
 
   const renderContent = () => {
@@ -90,9 +126,9 @@ export function DashboardLayout() {
       default:
         return <MedicalConsultation />
     }
-  }
+  };
 
-  const currentLanguage = languages.find((lang) => lang.code === selectedLanguage)
+  const currentLanguage = languages.find((lang) => lang.code === selectedLanguage);
 
   return (
     <div className="min-h-screen relative overflow-hidden">
@@ -137,7 +173,7 @@ export function DashboardLayout() {
                 {languages.map((language) => (
                   <DropdownMenuItem
                     key={language.code}
-                    onClick={() => setSelectedLanguage(language.code)}
+                    onClick={() => handleLanguageChange(language.code)}
                     className={cn(
                       "flex items-center gap-2 hover:bg-accent/20",
                       selectedLanguage === language.code && "bg-accent/30",
@@ -162,12 +198,12 @@ export function DashboardLayout() {
               <DropdownMenuContent align="end" className="glass-card border-border/50">
                 <DropdownMenuItem onClick={() => setActiveTab("settings")} className="cursor-pointer">
                   <Settings className="h-4 w-4 mr-2" />
-                  Settings
+                  {t('settings')}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-red-500">
                   <LogOut className="h-4 w-4 mr-2" />
-                  Sign Out
+                  {t('signOut')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -212,15 +248,17 @@ export function DashboardLayout() {
 
               {/* Chat History Section */}
               <div className="mt-8">
-                <h3 className="mb-3 text-sm font-medium text-muted-foreground">Recent Consultations</h3>
+                <h3 className="mb-3 text-sm font-medium text-muted-foreground">{t('recentConsultations')}</h3>
                 <div className="space-y-2">
-                  {["Chest pain consultation", "Wellness check-up", "Medication review"].map((chat, index) => (
+                  {recentConsultations.map((chat: any, index) => (
                     <Card
                       key={index}
                       className="glass-card p-3 cursor-pointer hover:bg-accent/20 transition-all duration-200 hover:scale-105"
                     >
-                      <p className="text-sm text-foreground truncate">{chat}</p>
-                      <p className="text-xs text-muted-foreground mt-1">2 hours ago</p>
+                      <p className="text-sm text-foreground truncate">{chat.title || "Consultation"}</p>
+                      <p className="text-xs text-muted-foreground mt-1">
+                        {new Date(chat.timestamp?.toDate()).toLocaleDateString()}
+                      </p>
                     </Card>
                   ))}
                 </div>

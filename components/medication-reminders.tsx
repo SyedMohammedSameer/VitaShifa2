@@ -9,28 +9,11 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Badge } from "@/components/ui/badge"
 import { Separator } from "@/components/ui/separator"
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-  DialogTrigger,
-} from "@/components/ui/dialog"
+import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from "@/components/ui/dialog"
 import { toast } from "@/hooks/use-toast"
-import {
-  Plus,
-  Pill,
-  Clock,
-  Calendar,
-  Check,
-  X,
-  AlarmClockIcon as Snooze,
-  Trash2,
-  TrendingUp,
-  AlertCircle,
-} from "lucide-react"
+import { Plus, Pill, Clock, Calendar, Check, X, AlarmClockIcon as Snooze, Trash2, TrendingUp, AlertCircle } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useAuth } from "@/context/AuthContext"
 
 interface MedicationReminder {
   id: string
@@ -59,6 +42,7 @@ const timeSlots = [
 ]
 
 export function MedicationReminders() {
+  const { user } = useAuth(); // Get the authenticated user
   const [reminders, setReminders] = useState<MedicationReminder[]>([])
   const [isDialogOpen, setIsDialogOpen] = useState(false)
   const [newReminder, setNewReminder] = useState({
@@ -68,8 +52,12 @@ export function MedicationReminders() {
 
   useEffect(() => {
     const fetchReminders = async () => {
+      if (!user) return; // Don't fetch if no user is logged in
       try {
-        const response = await fetch('/api/medication-reminders');
+        const idToken = await user.getIdToken();
+        const response = await fetch('/api/medication-reminders', {
+          headers: { 'Authorization': `Bearer ${idToken}` }
+        });
         if (!response.ok) {
           throw new Error('Failed to fetch reminders');
         }
@@ -81,65 +69,54 @@ export function MedicationReminders() {
       }
     };
     fetchReminders();
-  }, []);
+  }, [user]); // Re-run the effect when the user object changes
 
   const addReminder = async () => {
-    if (!newReminder.name || !newReminder.dose || !newReminder.frequency) {
-      toast({
-        title: "Error",
-        description: "Please fill in all required fields.",
-        variant: "destructive",
-      })
-      return
+    if (!user || !newReminder.name || !newReminder.dose || !newReminder.frequency) {
+      toast({ title: "Error", description: "Please fill in all required fields.", variant: "destructive" });
+      return;
     }
 
     try {
+      const idToken = await user.getIdToken();
       const response = await fetch('/api/medication-reminders', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
+          'Authorization': `Bearer ${idToken}`,
         },
         body: JSON.stringify(newReminder),
       });
 
-      if (!response.ok) {
-        throw new Error('Failed to add reminder');
-      }
+      if (!response.ok) throw new Error('Failed to add reminder');
 
       const addedReminder = await response.json();
       setReminders([...reminders, { ...newReminder, id: addedReminder.id, adherence: [] }]);
-      setNewReminder({
-        name: "", dose: "", frequency: "", times: [""],
-        startDate: "", endDate: "", notes: "",
-      })
-      setIsDialogOpen(false)
-
-      toast({
-        title: "Success",
-        description: "Medication reminder added successfully!",
-      })
+      setNewReminder({ name: "", dose: "", frequency: "", times: [""], startDate: "", endDate: "", notes: "" });
+      setIsDialogOpen(false);
+      toast({ title: "Success", description: "Medication reminder added successfully!" });
     } catch (error) {
       console.error(error);
       toast({ title: "Error", description: "Could not add reminder.", variant: "destructive" });
     }
-  }
+  };
 
   const deleteReminder = async (id: string) => {
+    if (!user) return;
     try {
-      const response = await fetch(`/api/medication-reminders/${id}`, { method: 'DELETE' });
-      if (!response.ok) {
-        throw new Error('Failed to delete reminder');
-      }
-      setReminders(reminders.filter((r) => r.id !== id))
-      toast({
-        title: "Deleted",
-        description: "Medication reminder removed.",
-      })
+      const idToken = await user.getIdToken();
+      const response = await fetch(`/api/medication-reminders/${id}`, {
+        method: 'DELETE',
+        headers: { 'Authorization': `Bearer ${idToken}` },
+      });
+      if (!response.ok) throw new Error('Failed to delete reminder');
+      setReminders(reminders.filter((r) => r.id !== id));
+      toast({ title: "Deleted", description: "Medication reminder removed." });
     } catch (error) {
       console.error(error);
       toast({ title: "Error", description: "Could not delete reminder.", variant: "destructive" });
     }
-  }
+  };
 
   const markAsTaken = (id: string) => {
     toast({

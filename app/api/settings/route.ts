@@ -1,29 +1,50 @@
-import { db } from "@/lib/firebase";
-import { doc, getDoc, setDoc } from "firebase/firestore";
 import { NextRequest, NextResponse } from "next/server";
+import admin from "@/lib/firebaseAdmin";
+import { doc, getDoc, setDoc } from "firebase/firestore";
 
 export async function GET(req: NextRequest) {
-    // Assuming you have a way to get the current user's ID
-    const userId = "test-user"; // Replace with actual user ID from auth
-    const docRef = doc(db, "settings", userId);
+  const idToken = req.headers.get('Authorization')?.split('Bearer ')[1];
+
+  if (!idToken) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
+  try {
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    const userId = decodedToken.uid;
+
+    const docRef = doc(admin.firestore(), "settings", userId);
     const docSnap = await getDoc(docRef);
 
     if (docSnap.exists()) {
-        return NextResponse.json(docSnap.data());
+      return NextResponse.json(docSnap.data());
     } else {
-        return NextResponse.json({ error: "No settings found for this user." }, { status: 404 });
+      // Return default settings if none exist
+      return NextResponse.json({});
     }
+  } catch (error) {
+    console.error("Error fetching settings:", error);
+    return NextResponse.json({ error: "Failed to fetch settings." }, { status: 500 });
+  }
 }
 
-
 export async function POST(req: NextRequest) {
+  const idToken = req.headers.get('Authorization')?.split('Bearer ')[1];
+
+  if (!idToken) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+  }
+
   try {
-    const userId = "test-user"; // Replace with actual user ID
+    const decodedToken = await admin.auth().verifyIdToken(idToken);
+    const userId = decodedToken.uid;
+
     const settings = await req.json();
-    await setDoc(doc(db, "settings", userId), settings, { merge: true });
+    await setDoc(doc(admin.firestore(), "settings", userId), settings, { merge: true });
+
     return NextResponse.json({ message: "Settings updated successfully." });
   } catch (error) {
-    console.error(error);
+    console.error("Error updating settings:", error);
     return NextResponse.json({ error: "Failed to update settings." }, { status: 500 });
   }
 }

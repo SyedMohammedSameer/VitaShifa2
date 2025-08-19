@@ -1,15 +1,13 @@
 import admin from 'firebase-admin';
 
-// Check if the app is already initialized to prevent errors
 if (!admin.apps.length) {
   try {
+    const serviceAccount = JSON.parse(
+      Buffer.from(process.env.FIREBASE_SERVICE_ACCOUNT_BASE64 as string, 'base64').toString('utf-8')
+    );
+
     admin.initializeApp({
-      credential: admin.credential.cert({
-        projectId: process.env.NEXT_PUBLIC_FIREBASE_PROJECT_ID,
-        clientEmail: process.env.FIREBASE_CLIENT_EMAIL,
-        // Replace escaped newlines with actual newlines
-        privateKey: process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, '\n'),
-      }),
+      credential: admin.credential.cert(serviceAccount),
     });
   } catch (error) {
     console.error('Firebase admin initialization error', error);

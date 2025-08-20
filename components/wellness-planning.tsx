@@ -74,21 +74,84 @@ export function WellnessPlanning() {
   const planRef = useRef<HTMLDivElement>(null);
 
   const handleDownloadPlan = () => {
-    const input = planRef.current;
-    if (input) {
-      html2canvas(input, { scale: 2 }).then((canvas) => {
-        const imgData = canvas.toDataURL("image/png");
-        const pdf = new jsPDF("p", "mm", "a4");
-        const pdfWidth = pdf.internal.pageSize.getWidth();
-        const pdfHeight = pdf.internal.pageSize.getHeight();
-        const canvasWidth = canvas.width;
-        const canvasHeight = canvas.height;
-        const ratio = canvasWidth / canvasHeight;
-        const width = pdfWidth;
-        const height = width / ratio;
-        
-        pdf.addImage(imgData, "PNG", 0, 0, width, height > pdfHeight ? pdfWidth * (canvasHeight / canvasWidth) : height);
-        pdf.save("VitaShifa-Wellness-Plan.pdf");
+    // Create a new window with just the wellness plan content
+    const printWindow = window.open('', '_blank');
+    const planContent = planRef.current;
+    
+    if (printWindow && planContent) {
+      printWindow.document.write(`
+        <!DOCTYPE html>
+        <html>
+          <head>
+            <title>VitaShifa Wellness Plan</title>
+            <style>
+              @media print {
+                body { margin: 0; padding: 20px; }
+                .no-print { display: none; }
+              }
+              body { font-family: system-ui, -apple-system, sans-serif; }
+              .space-y-4 > * + * { margin-top: 1rem; }
+              .space-y-6 > * + * { margin-top: 1.5rem; }
+              .text-center { text-align: center; }
+              .text-2xl { font-size: 1.5rem; line-height: 2rem; }
+              .text-lg { font-size: 1.125rem; line-height: 1.75rem; }
+              .font-semibold { font-weight: 600; }
+              .font-medium { font-weight: 500; }
+              .text-foreground { color: #0f172a; }
+              .text-primary { color: #3b82f6; }
+              .text-secondary { color: #94a3b8; }
+              .text-muted-foreground { color: #64748b; }
+              .bg-primary\\/5 { background-color: rgba(59, 130, 246, 0.05); }
+              .bg-secondary\\/5 { background-color: rgba(148, 163, 184, 0.05); }
+              .bg-secondary\\/10 { background-color: rgba(148, 163, 184, 0.1); }
+              .border { border: 1px solid #e2e8f0; }
+              .border-primary\\/20 { border-color: rgba(59, 130, 246, 0.2); }
+              .border-secondary\\/20 { border-color: rgba(148, 163, 184, 0.2); }
+              .rounded-lg { border-radius: 0.5rem; }
+              .rounded-full { border-radius: 9999px; }
+              .p-4 { padding: 1rem; }
+              .p-6 { padding: 1.5rem; }
+              .mb-2 { margin-bottom: 0.5rem; }
+              .mb-6 { margin-bottom: 1.5rem; }
+              .mt-6 { margin-top: 1.5rem; }
+              .flex { display: flex; }
+              .items-center { align-items: center; }
+              .justify-center { justify-content: center; }
+              .gap-2 { gap: 0.5rem; }
+              .gap-3 { gap: 0.75rem; }
+              .h-8 { height: 2rem; }
+              .w-8 { width: 2rem; }
+              .h-16 { height: 4rem; }
+              .w-16 { width: 4rem; }
+              .h-5 { height: 1.25rem; }
+              .w-5 { width: 1.25rem; }
+              .h-4 { height: 1rem; }
+              .w-4 { width: 1rem; }
+              .mx-auto { margin-left: auto; margin-right: auto; }
+              .grid { display: grid; }
+              .gap-4 { gap: 1rem; }
+              .text-sm { font-size: 0.875rem; }
+              .flex-wrap { flex-wrap: wrap; }
+              .badge { display: inline-flex; align-items: center; border-radius: 0.375rem; padding: 0.25rem 0.75rem; font-size: 0.75rem; font-weight: 500; background-color: #f1f5f9; color: #475569; }
+            </style>
+          </head>
+          <body>
+            ${planContent.innerHTML}
+          </body>
+        </html>
+      `);
+      
+      printWindow.document.close();
+      
+      // Wait for content to load, then print
+      setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+      }, 500);
+      
+      toast({ 
+        title: "Print Dialog Opened", 
+        description: "Choose 'Save as PDF' in the print dialog to download your wellness plan." 
       });
     }
   };

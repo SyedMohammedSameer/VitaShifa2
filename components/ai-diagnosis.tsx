@@ -1,7 +1,6 @@
 "use client"
 
 import type React from "react"
-
 import { useState, useCallback } from "react"
 import { Button } from "@/components/ui/button"
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card"
@@ -26,6 +25,15 @@ interface AnalysisResult {
   disclaimer: string
 }
 
+const fileToBase64 = (file: File): Promise<string> => {
+  return new Promise((resolve, reject) => {
+    const reader = new FileReader();
+    reader.readAsDataURL(file);
+    reader.onload = () => resolve(reader.result as string);
+    reader.onerror = (error) => reject(error);
+  });
+};
+
 export function AIDiagnosis() {
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([])
   const [isDragOver, setIsDragOver] = useState(false)
@@ -43,9 +51,7 @@ export function AIDiagnosis() {
   const handleDrop = useCallback((e: React.DragEvent) => {
     e.preventDefault()
     setIsDragOver(false)
-
     const files = Array.from(e.dataTransfer.files).filter((file) => file.type.startsWith("image/"))
-
     handleFiles(files)
   }, [])
 
@@ -55,7 +61,7 @@ export function AIDiagnosis() {
   }
 
   const handleFiles = (files: File[]) => {
-    files.forEach((file) => {
+    files.forEach(async (file) => {
       const id = Date.now().toString() + Math.random().toString(36).substr(2, 9)
       const preview = URL.createObjectURL(file)
 
@@ -63,29 +69,38 @@ export function AIDiagnosis() {
         id,
         file,
         preview,
-        status: "uploading",
+        status: "uploading", // We'll keep this state for user feedback
       }
 
-      setUploadedImages((prev) => [...prev, newImage])
+      setUploadedImages((prev) => [...prev, newImage]);
+      
+      // We can change the status to "analyzing" right away
+      setUploadedImages((prev) => prev.map((img) => (img.id === id ? { ...img, status: "analyzing" } : img)));
 
-      // Simulate upload and then call analysis
-      setTimeout(async () => {
-        setUploadedImages((prev) => prev.map((img) => (img.id === id ? { ...img, status: "analyzing" } : img)))
+      try {
+        // 1. Convert the file to a Base64 string
+        const base64Image = await fileToBase64(file);
 
-        try {
-          const response = await fetch('/api/ai-diagnosis', { method: 'POST' });
-          if (!response.ok) {
+        // 2. Call your backend API with the Base64 string
+        const response = await fetch('/api/ai-diagnosis', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: JSON.stringify({ image: base64Image }), // Send the base64 string
+        });
+
+        if (!response.ok) {
             throw new Error('Analysis failed');
-          }
-          const analysis: AnalysisResult = await response.json();
-          setUploadedImages((prev) =>
+        }
+        const analysis: AnalysisResult = await response.json();
+
+        // 3. Update state with the analysis result
+        setUploadedImages((prev) =>
             prev.map((img) => (img.id === id ? { ...img, status: "completed", analysis } : img)),
-          )
-        } catch (error) {
+        )
+      } catch (error) {
           console.error(error);
           setUploadedImages((prev) => prev.map((img) => (img.id === id ? { ...img, status: "error" } : img)))
-        }
-      }, 1000)
+      }
     })
   }
 

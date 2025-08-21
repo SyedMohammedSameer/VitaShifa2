@@ -20,14 +20,16 @@ import {
   Activity,
   Apple,
   Moon,
-  Droplets,
   CheckCircle,
   TrendingUp,
+  Loader2,
+  Calendar,
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useToast } from "@/hooks/use-toast"
-import jsPDF from "jspdf";
-import html2canvas from "html2canvas";
+// We are NOT using html2canvas or jspdf here anymore
+// import jsPDF from "jspdf";
+// import html2canvas from "html2canvas";
 
 
 interface WellnessData {
@@ -58,6 +60,25 @@ interface WellnessData {
   }
 }
 
+interface Recommendation {
+  tip: string;
+  explanation: string;
+}
+
+interface DailySchedule {
+  day: string;
+  fitness: string;
+  nutrition: string;
+  mindfulness: string;
+}
+
+interface AIPlan {
+  nutritionPlan: { title: string; summary: string; recommendations: Recommendation[] };
+  fitnessPlan: { title: string; summary: string; recommendations: Recommendation[] };
+  mindfulnessPlan: { title: string; summary: string; recommendations: Recommendation[] };
+  weeklySchedule: { title: string; summary: string; schedule: DailySchedule[] };
+}
+
 const steps = [
   { id: 1, title: "Personal Information", icon: Target },
   { id: 2, title: "Health Goals", icon: Heart },
@@ -72,67 +93,86 @@ export function WellnessPlanning() {
   const { user } = useAuth();
   const { toast } = useToast();
   const planRef = useRef<HTMLDivElement>(null);
+  const [generatedPlan, setGeneratedPlan] = useState<AIPlan | null>(null);
+  const [isGenerating, setIsGenerating] = useState(false);
 
   const handleDownloadPlan = () => {
-    // Create a new window with just the wellness plan content
-    const printWindow = window.open('', '_blank');
     const planContent = planRef.current;
-    
-    if (printWindow && planContent) {
+    if (!planContent) {
+      toast({ title: "Error", description: "Could not find plan content.", variant: "destructive" });
+      return;
+    }
+
+    const printWindow = window.open('', '_blank');
+    if (printWindow) {
       printWindow.document.write(`
         <!DOCTYPE html>
         <html>
           <head>
             <title>VitaShifa Wellness Plan</title>
             <style>
+              /* Basic setup for printing */
               @media print {
-                body { margin: 0; padding: 20px; }
-                .no-print { display: none; }
+                body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
               }
-              body { font-family: system-ui, -apple-system, sans-serif; }
-              .space-y-4 > * + * { margin-top: 1rem; }
-              .space-y-6 > * + * { margin-top: 1.5rem; }
+              body { 
+                margin: 2rem; 
+                font-family: "Inter", sans-serif;
+                background: linear-gradient(135deg, oklch(0.98 0.005 180) 0%, oklch(0.95 0.01 200) 100%);
+                color: oklch(0.15 0.02 200);
+              }
+
+              /* Core component styles adapted from your globals.css and components */
+              .card {
+                background-color: oklch(0.99 0.002 180 / 0.8);
+                border: 1px solid oklch(0.85 0.01 180 / 0.4);
+                border-radius: 0.75rem;
+                padding: 1.5rem;
+                margin-bottom: 1.5rem;
+                box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+                page-break-inside: avoid;
+              }
+              .card-header { padding: 0 0 1rem 0; }
+              .card-title { font-size: 1.125rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
+              .card-content { font-size: 0.875rem; }
+              .badge {
+                display: inline-flex;
+                align-items: center;
+                border-radius: 0.375rem;
+                padding: 0.25rem 0.75rem;
+                font-size: 0.75rem;
+                font-weight: 500;
+                background-color: oklch(0.55 0.12 180 / 0.2);
+                color: oklch(0.15 0.02 200);
+                border: 1px solid oklch(0.55 0.12 180 / 0.5);
+              }
+
+              /* Plan-specific layout */
               .text-center { text-align: center; }
-              .text-2xl { font-size: 1.5rem; line-height: 2rem; }
-              .text-lg { font-size: 1.125rem; line-height: 1.75rem; }
-              .font-semibold { font-weight: 600; }
-              .font-medium { font-weight: 500; }
-              .text-foreground { color: #0f172a; }
-              .text-primary { color: #3b82f6; }
-              .text-secondary { color: #94a3b8; }
-              .text-muted-foreground { color: #64748b; }
-              .bg-primary\\/5 { background-color: rgba(59, 130, 246, 0.05); }
-              .bg-secondary\\/5 { background-color: rgba(148, 163, 184, 0.05); }
-              .bg-secondary\\/10 { background-color: rgba(148, 163, 184, 0.1); }
-              .border { border: 1px solid #e2e8f0; }
-              .border-primary\\/20 { border-color: rgba(59, 130, 246, 0.2); }
-              .border-secondary\\/20 { border-color: rgba(148, 163, 184, 0.2); }
-              .rounded-lg { border-radius: 0.5rem; }
-              .rounded-full { border-radius: 9999px; }
-              .p-4 { padding: 1rem; }
-              .p-6 { padding: 1.5rem; }
-              .mb-2 { margin-bottom: 0.5rem; }
+              .space-y-2 > * + * { margin-top: 0.5rem; }
+              .mb-4 { margin-bottom: 1rem; }
               .mb-6 { margin-bottom: 1.5rem; }
-              .mt-6 { margin-top: 1.5rem; }
-              .flex { display: flex; }
-              .items-center { align-items: center; }
-              .justify-center { justify-content: center; }
-              .gap-2 { gap: 0.5rem; }
-              .gap-3 { gap: 0.75rem; }
-              .h-8 { height: 2rem; }
-              .w-8 { width: 2rem; }
-              .h-16 { height: 4rem; }
-              .w-16 { width: 4rem; }
-              .h-5 { height: 1.25rem; }
-              .w-5 { width: 1.25rem; }
-              .h-4 { height: 1rem; }
-              .w-4 { width: 1rem; }
-              .mx-auto { margin-left: auto; margin-right: auto; }
-              .grid { display: grid; }
-              .gap-4 { gap: 1rem; }
-              .text-sm { font-size: 0.875rem; }
-              .flex-wrap { flex-wrap: wrap; }
-              .badge { display: inline-flex; align-items: center; border-radius: 0.375rem; padding: 0.25rem 0.75rem; font-size: 0.75rem; font-weight: 500; background-color: #f1f5f9; color: #475569; }
+              h3 { font-size: 1.5rem; line-height: 2rem; font-weight: 600; }
+              p { color: oklch(0.45 0.02 200); }
+              ul { list-style-position: inside; padding-left: 0;}
+              li { margin-top: 0.5rem; }
+              table { width: 100%; border-collapse: collapse; }
+              th, td { text-align: left; padding: 0.75rem; border-bottom: 1px solid oklch(0.85 0.01 180 / 0.4); }
+              th { font-weight: 600; }
+              thead { display: table-header-group; }
+              tr { page-break-inside: avoid; }
+
+
+              /* Icon and color theming */
+              .text-primary { color: oklch(0.45 0.15 180); }
+              .text-secondary { color: oklch(0.55 0.12 180); }
+              svg {
+                display: inline-block;
+                width: 1.25rem;
+                height: 1.25rem;
+                margin-right: 0.5rem;
+                vertical-align: middle;
+              }
             </style>
           </head>
           <body>
@@ -143,18 +183,18 @@ export function WellnessPlanning() {
       
       printWindow.document.close();
       
-      // Wait for content to load, then print
       setTimeout(() => {
         printWindow.print();
         printWindow.close();
       }, 500);
-      
+
       toast({ 
         title: "Print Dialog Opened", 
-        description: "Choose 'Save as PDF' in the print dialog to download your wellness plan." 
+        description: "Your PDF is ready. Please use the 'Save as PDF' option in your browser's print menu." 
       });
     }
   };
+
   const [formData, setFormData] = useState<WellnessData>({
     personalInfo: {
       age: "",
@@ -193,28 +233,27 @@ export function WellnessPlanning() {
 
   const nextStep = async () => {
     if (currentStep === steps.length - 1) { // On the last step before the plan is shown
-        if (!user) {
-            toast({ title: "Authentication Error", description: "You must be logged in to generate a plan.", variant: "destructive" });
-            return;
-        }
+        setIsGenerating(true);
+        setGeneratedPlan(null);
         try {
-            const idToken = await user.getIdToken();
-            const response = await fetch('/api/wellness-planning', {
+            const response = await fetch('/api/wellness-planning/generate', {
                 method: 'POST',
                 headers: {
                     'Content-Type': 'application/json',
-                    'Authorization': `Bearer ${idToken}`,
                 },
                 body: JSON.stringify(formData),
             });
 
-            if (!response.ok) throw new Error('Failed to save wellness plan');
+            if (!response.ok) throw new Error('Failed to generate plan');
             
-            toast({ title: "Success", description: "Your wellness plan has been generated and saved." });
+            const plan: AIPlan = await response.json();
+            setGeneratedPlan(plan);
             setCurrentStep(currentStep + 1); // Move to the final plan view
         } catch (error) {
             console.error(error);
-            toast({ title: "Error", description: "Could not save your wellness plan.", variant: "destructive" });
+            toast({ title: "Error", description: "Could not generate your wellness plan.", variant: "destructive" });
+        } finally {
+            setIsGenerating(false);
         }
     } else if (currentStep < steps.length) {
         setCurrentStep(currentStep + 1);
@@ -231,6 +270,7 @@ export function WellnessPlanning() {
 
   const renderStepContent = () => {
     switch (currentStep) {
+      // Cases 1-5 remain unchanged...
       case 1:
         return (
           <div className="space-y-6">
@@ -603,94 +643,98 @@ export function WellnessPlanning() {
         )
 
       case 6:
-        return (
-          <div className="space-y-6">
-            <div ref={planRef} className="p-4 bg-background">
-              <div className="text-center space-y-4 mb-6">
-                <div className="flex h-16 w-16 items-center justify-center rounded-full bg-primary/10 mx-auto">
-                  <CheckCircle className="h-8 w-8 text-primary" />
+        if (isGenerating) {
+            return (
+                <div className="flex flex-col items-center justify-center text-center space-y-4 h-64">
+                    <Loader2 className="h-12 w-12 animate-spin text-primary" />
+                    <h3 className="text-xl font-semibold">Generating Your Plan...</h3>
+                    <p className="text-muted-foreground">Our AI is crafting a personalized wellness journey just for you.</p>
                 </div>
-                <h3 className="text-2xl font-semibold text-foreground">Your Personalized Wellness Plan</h3>
-                <p className="text-muted-foreground">
-                  Based on your responses, we've created a customized wellness plan just for you.
-                </p>
-              </div>
+            )
+        }
 
-              <div className="grid gap-4">
-                <Card className="bg-primary/5 border-primary/20">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-primary">
-                      <Target className="h-5 w-5" />
-                      Your Goals
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex flex-wrap gap-2">
-                      {formData.healthGoals.map((goal) => (
-                        <Badge key={goal} variant="secondary">
-                          {goal}
-                        </Badge>
-                      ))}
-                    </div>
-                  </CardContent>
-                </Card>
+        if (!generatedPlan) {
+            return <div className="text-center h-64">Could not generate a plan. Please go back and try again.</div>
+        }
 
-                <Card className="bg-secondary/5 border-secondary/20">
-                  <CardHeader>
-                    <CardTitle className="flex items-center gap-2 text-secondary">
-                      <Activity className="h-5 w-5" />
-                      Recommended Activities
-                    </CardTitle>
-                  </CardHeader>
-                  <CardContent className="space-y-3">
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary/10">
-                        <Heart className="h-4 w-4 text-secondary" />
-                      </div>
-                      <div>
-                        <p className="font-medium">Cardio Exercise</p>
-                        <p className="text-sm text-muted-foreground">30 minutes, 3-4 times per week</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary/10">
-                        <Apple className="h-4 w-4 text-secondary" />
-                      </div>
-                      <div>
-                        <p className="font-medium">Nutrition Focus</p>
-                        <p className="text-sm text-muted-foreground">Balanced diet with portion control</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary/10">
-                        <Moon className="h-4 w-4 text-secondary" />
-                      </div>
-                      <div>
-                        <p className="font-medium">Sleep Optimization</p>
-                        <p className="text-sm text-muted-foreground">7-8 hours of quality sleep nightly</p>
-                      </div>
-                    </div>
-                    <div className="flex items-center gap-3">
-                      <div className="flex h-8 w-8 items-center justify-center rounded-full bg-secondary/10">
-                        <Droplets className="h-4 w-4 text-secondary" />
-                      </div>
-                      <div>
-                        <p className="font-medium">Hydration</p>
-                        <p className="text-sm text-muted-foreground">8-10 glasses of water daily</p>
-                      </div>
-                    </div>
-                  </CardContent>
-                </Card>
-              </div>
+        return (
+            <div className="space-y-6">
+                 <div ref={planRef} className="p-6 bg-background space-y-6">
+                     <div className="text-center space-y-2 mb-6">
+                        <h3 className="text-2xl font-semibold text-foreground">Your Personalized Wellness Plan</h3>
+                        <p className="text-muted-foreground">Here is a starting point for your wellness journey, created just for you.</p>
+                     </div>
+                     
+                     <Card className="bg-primary/5 border-primary/20">
+                         <CardHeader>
+                             <CardTitle className="flex items-center gap-2 text-primary"><Target className="h-5 w-5" /> Your Goals</CardTitle>
+                         </CardHeader>
+                         <CardContent>
+                             <div className="flex flex-wrap gap-2">
+                             {formData.healthGoals.map((goal) => (<Badge key={goal} variant="secondary">{goal}</Badge>))}
+                             </div>
+                         </CardContent>
+                     </Card>
+
+                     {[generatedPlan.nutritionPlan, generatedPlan.fitnessPlan, generatedPlan.mindfulnessPlan].map((plan, index) => {
+                        const icons = [<Apple key="n" className="h-5 w-5" />, <Activity key="f" className="h-5 w-5" />, <Moon key="m" className="h-5 w-5" />];
+                        return (
+                            <Card key={plan.title} className="bg-secondary/5 border-secondary/20">
+                                <CardHeader>
+                                    <CardTitle className="flex items-center gap-2 text-secondary">{icons[index]} {plan.title}</CardTitle>
+                                </CardHeader>
+                                <CardContent className="space-y-4">
+                                    <p className="text-sm text-muted-foreground italic">{plan.summary}</p>
+                                    <div className="space-y-3">
+                                        {plan.recommendations.map((rec) => (
+                                            <div key={rec.tip}>
+                                                <p className="font-medium text-foreground">{rec.tip}</p>
+                                                <p className="text-sm text-muted-foreground pl-4">{rec.explanation}</p>
+                                            </div>
+                                        ))}
+                                    </div>
+                                </CardContent>
+                            </Card>
+                        )
+                     })}
+
+                     <Card className="bg-secondary/5 border-secondary/20">
+                         <CardHeader>
+                             <CardTitle className="flex items-center gap-2 text-secondary"><Calendar className="h-5 w-5" /> {generatedPlan.weeklySchedule.title}</CardTitle>
+                         </CardHeader>
+                         <CardContent>
+                             <p className="text-sm text-muted-foreground italic mb-4">{generatedPlan.weeklySchedule.summary}</p>
+                             <div className="overflow-x-auto">
+                                <table className="w-full text-left">
+                                    <thead>
+                                        <tr className="border-b">
+                                            <th className="p-2 font-medium">Day</th>
+                                            <th className="p-2 font-medium">Fitness</th>
+                                            <th className="p-2 font-medium">Nutrition Focus</th>
+                                            <th className="p-2 font-medium">Mindfulness</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {generatedPlan.weeklySchedule.schedule.map((day) => (
+                                            <tr key={day.day} className="border-b text-sm">
+                                                <td className="p-2 font-medium">{day.day}</td>
+                                                <td className="p-2">{day.fitness}</td>
+                                                <td className="p-2">{day.nutrition}</td>
+                                                <td className="p-2">{day.mindfulness}</td>
+                                            </tr>
+                                        ))}
+                                    </tbody>
+                                </table>
+                             </div>
+                         </CardContent>
+                     </Card>
+                 </div>
+                 
+                 <div className="flex gap-4 mt-6">
+                     <Button className="flex-1" onClick={handleDownloadPlan}>Download Plan as PDF</Button>
+                     <Button variant="outline" className="flex-1 bg-transparent">Schedule Check-in</Button>
+                 </div>
             </div>
-            
-            <div className="flex gap-4 mt-6">
-              <Button className="flex-1" onClick={handleDownloadPlan}>Download Plan as PDF</Button>
-              <Button variant="outline" className="flex-1 bg-transparent">
-                Schedule Check-in
-              </Button>
-            </div>
-          </div>
         )
 
       default:
@@ -700,7 +744,6 @@ export function WellnessPlanning() {
 
   return (
     <div className="space-y-6">
-      {/* Header */}
       <div className="flex items-center gap-3">
         <div className="flex h-10 w-10 items-center justify-center rounded-full bg-accent/10">
           <Heart className="h-5 w-5 text-accent" />
@@ -711,7 +754,6 @@ export function WellnessPlanning() {
         </div>
       </div>
 
-      {/* Progress */}
       <Card className="bg-card/50 backdrop-blur-sm border-border/50">
         <CardContent className="p-6">
           <div className="space-y-4">
@@ -752,7 +794,6 @@ export function WellnessPlanning() {
         </CardContent>
       </Card>
 
-      {/* Form Content */}
       <Card className="bg-card/50 backdrop-blur-sm border-border/50">
         <CardHeader>
           <CardTitle>{steps[currentStep - 1]?.title}</CardTitle>
@@ -760,16 +801,15 @@ export function WellnessPlanning() {
         <CardContent className="space-y-6">
           {renderStepContent()}
 
-          {/* Navigation */}
           {currentStep < 6 && (
             <div className="flex justify-between pt-6">
               <Button variant="outline" onClick={prevStep} disabled={currentStep === 1}>
                 <ChevronLeft className="h-4 w-4 mr-2" />
                 Previous
               </Button>
-              <Button onClick={nextStep} disabled={currentStep === steps.length}>
-                {currentStep === steps.length -1 ? "Generate Plan" : "Next"}
-                {currentStep < steps.length -1 && <ChevronRight className="h-4 w-4 ml-2" />}
+              <Button onClick={nextStep} disabled={isGenerating}>
+                {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : (currentStep === steps.length -1 ? "Generate Plan" : "Next")}
+                {!isGenerating && currentStep < steps.length -1 && <ChevronRight className="h-4 w-4 ml-2" />}
               </Button>
             </div>
           )}

@@ -229,7 +229,7 @@ export function MedicationReminders() {
         reminder.times.map((time) => {
             const reminderDateTime = parse(`${todayStr}T${time}:00`, "yyyy-MM-dd'T'HH:mm:ss", new Date());
             // Check if this dose has already been taken or skipped today
-            const isHandled = reminder.adherence.some(log => log.date.startsWith(`${todayStr}T${time}`));
+            const isHandled = reminder.adherence && reminder.adherence.some(log => log.date.startsWith(`${todayStr}T${time}`));
 
             if (isBefore(reminderDateTime, now) && !isHandled) {
                 return { reminder, time, isOverdue: true };

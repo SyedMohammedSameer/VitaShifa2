@@ -10,7 +10,7 @@ async function verifyOwnership(userId: string, reminderId: string) {
   }
 }
 
-export async function PUT(req: NextRequest, { params }: { params: { id: string } }) {
+export async function PUT(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const idToken = req.headers.get('Authorization')?.split('Bearer ')[1];
   if (!idToken) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -19,7 +19,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   try {
     const decodedToken = await admin.auth().verifyIdToken(idToken);
     const userId = decodedToken.uid;
-    const { id } = params;
+    const { id } = await params;
     const db = admin.firestore();
 
     await verifyOwnership(userId, id);
@@ -33,7 +33,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
   }
 }
 
-export async function DELETE(req: NextRequest, { params }: { params: { id: string } }) {
+export async function DELETE(req: NextRequest, { params }: { params: Promise<{ id: string }> }) {
   const idToken = req.headers.get('Authorization')?.split('Bearer ')[1];
   if (!idToken) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
@@ -42,7 +42,7 @@ export async function DELETE(req: NextRequest, { params }: { params: { id: strin
   try {
     const decodedToken = await admin.auth().verifyIdToken(idToken);
     const userId = decodedToken.uid;
-    const { id } = params;
+    const { id } = await params;
     const db = admin.firestore();
 
     await verifyOwnership(userId, id);

@@ -155,8 +155,7 @@ export function MedicationReminders() {
 
       const newLog: AdherenceLog = { date: `${todayStr}T${time}:00`, status };
       
-      // Filter out any previous logs for the same time slot today
-      const updatedAdherence = reminder.adherence.filter(log => !log.date.startsWith(`${todayStr}T${time}`));
+      const updatedAdherence = (reminder.adherence || []).filter(log => !log.date.startsWith(`${todayStr}T${time}`));
       updatedAdherence.push(newLog);
 
       try {
@@ -206,7 +205,7 @@ export function MedicationReminders() {
         const dateStr = format(date, 'yyyy-MM-dd');
         totalDoses += reminder.times.length;
 
-        const dosesTakenOnDate = reminder.adherence.filter(log => log.date.startsWith(dateStr) && log.status === 'taken').length;
+        const dosesTakenOnDate = (reminder.adherence || []).filter(log => log.date.startsWith(dateStr) && log.status === 'taken').length;
         takenDoses += dosesTakenOnDate;
     }
     
@@ -228,7 +227,6 @@ export function MedicationReminders() {
       .flatMap((reminder) =>
         reminder.times.map((time) => {
             const reminderDateTime = parse(`${todayStr}T${time}:00`, "yyyy-MM-dd'T'HH:mm:ss", new Date());
-            // Check if this dose has already been taken or skipped today
             const isHandled = reminder.adherence && reminder.adherence.some(log => log.date.startsWith(`${todayStr}T${time}`));
 
             if (isBefore(reminderDateTime, now) && !isHandled) {
@@ -253,7 +251,7 @@ export function MedicationReminders() {
         <div className="flex gap-1">
           {days.map((day, index) => {
             const dateStr = format(day, 'yyyy-MM-dd');
-            const logsForDay = reminder.adherence.filter(log => log.date.startsWith(dateStr));
+            const logsForDay = (reminder.adherence || []).filter(log => log.date.startsWith(dateStr));
             const allTaken = logsForDay.length > 0 && logsForDay.length === reminder.times.length && logsForDay.every(l => l.status === 'taken');
             
             let color = "bg-muted";

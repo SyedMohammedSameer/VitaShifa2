@@ -25,7 +25,7 @@ export async function PUT(req: NextRequest, { params }: { params: { id: string }
     await verifyOwnership(userId, id);
     const updatedData = await req.json();
     await db.collection("reminders").doc(id).update(updatedData);
-    
+
     return NextResponse.json({ message: "Reminder updated successfully." });
   } catch (error) {
     console.error("Error updating reminder:", error);

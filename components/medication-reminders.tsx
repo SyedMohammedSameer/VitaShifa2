@@ -387,8 +387,8 @@ export function MedicationReminders() {
                       </Badge>
                     </div>
                     <div className="flex gap-1">
-                      {reminder.adherence.map((taken, index) => (
-                        <div key={index} className={cn("h-8 flex-1 rounded", taken ? "bg-green-500" : "bg-muted")} />
+                      {Array.from({ length: 7 }).map((_, index) => (
+                        <div key={index} className={cn("h-8 flex-1 rounded", reminder.adherence && reminder.adherence[index] ? "bg-green-500" : "bg-muted")} />
                       ))}
                     </div>
                   </div>

@@ -1,6 +1,5 @@
 import { NextRequest, NextResponse } from "next/server";
 import admin from "@/lib/firebaseAdmin";
-import { doc, getDoc, setDoc } from "firebase/firestore";
 
 export async function GET(req: NextRequest) {
   const idToken = req.headers.get('Authorization')?.split('Bearer ')[1];
@@ -12,14 +11,15 @@ export async function GET(req: NextRequest) {
   try {
     const decodedToken = await admin.auth().verifyIdToken(idToken);
     const userId = decodedToken.uid;
+    const db = admin.firestore();
 
-    const docRef = doc(admin.firestore(), "settings", userId);
-    const docSnap = await getDoc(docRef);
+    const docRef = db.collection("settings").doc(userId);
+    const docSnap = await docRef.get();
 
-    if (docSnap.exists()) {
+    if (docSnap.exists) {
       return NextResponse.json(docSnap.data());
     } else {
-      // Return default settings if none exist
+      // Return empty object if no settings exist, front-end will use defaults
       return NextResponse.json({});
     }
   } catch (error) {
@@ -38,9 +38,10 @@ export async function POST(req: NextRequest) {
   try {
     const decodedToken = await admin.auth().verifyIdToken(idToken);
     const userId = decodedToken.uid;
+    const db = admin.firestore();
 
     const settings = await req.json();
-    await setDoc(doc(admin.firestore(), "settings", userId), settings, { merge: true });
+    await db.collection("settings").doc(userId).set(settings, { merge: true });
 
     return NextResponse.json({ message: "Settings updated successfully." });
   } catch (error) {

@@ -3,7 +3,7 @@
     "loading": "Loading...",
     "save": "Save",
     "cancel": "Cancel",
-    "delete": "Delete", 
+    "delete": "Delete",
     "edit": "Edit",
     "add": "Add",
     "next": "Next",
@@ -22,7 +22,7 @@
   },
   "navigation": {
     "medicalConsultation": "Medical Consultation",
-    "aiDiagnosis": "AI Diagnosis", 
+    "aiDiagnosis": "AI Diagnosis",
     "wellnessPlanning": "Wellness Planning",
     "medicationReminders": "Medication Reminders",
     "emergencyCare": "Emergency Care",
@@ -62,21 +62,21 @@
     },
     "priority": {
       "high": "HIGH PRIORITY",
-      "medium": "MEDIUM PRIORITY", 
+      "medium": "MEDIUM PRIORITY",
       "low": "LOW PRIORITY"
     },
     "disclaimer": "This AI analysis is for informational purposes only and should not replace professional medical diagnosis.",
     "supportedTypes": {
       "title": "Supported Image Types",
       "xrays": "X-rays and radiographs",
-      "mri": "MRI and CT scans", 
+      "mri": "MRI and CT scans",
       "dermatology": "Dermatological images",
       "pathology": "Pathology slides"
     },
     "privacy": {
       "title": "Privacy & Security",
       "encrypted": "Images are encrypted during upload",
-      "secure": "Analysis is performed securely", 
+      "secure": "Analysis is performed securely",
       "notStored": "Data is not stored permanently",
       "hipaa": "HIPAA compliant processing"
     }
@@ -87,7 +87,7 @@
     "steps": {
       "personalInfo": "Personal Information",
       "healthGoals": "Health Goals",
-      "lifestyle": "Lifestyle Assessment", 
+      "lifestyle": "Lifestyle Assessment",
       "medicalHistory": "Medical History",
       "preferences": "Preferences",
       "plan": "Your Wellness Plan"
@@ -98,7 +98,7 @@
       "gender": "Gender",
       "genderOptions": {
         "male": "Male",
-        "female": "Female", 
+        "female": "Female",
         "other": "Other",
         "preferNotToSay": "Prefer not to say"
       },
@@ -117,7 +117,7 @@
     "healthGoals": {
       "title": "What are your primary health goals?",
       "weightLoss": "Weight loss",
-      "weightGain": "Weight gain", 
+      "weightGain": "Weight gain",
       "muscleBuilding": "Muscle building",
       "cardiovascularHealth": "Cardiovascular health",
       "stressManagement": "Stress management",
@@ -132,7 +132,7 @@
       "sleepOptions": {
         "lessThan5": "Less than 5 hours",
         "5to6": "5-6 hours",
-        "7to8": "7-8 hours", 
+        "7to8": "7-8 hours",
         "moreThan8": "More than 8 hours"
       },
       "stressLevel": "Current stress level",
@@ -152,7 +152,7 @@
       "alcoholOptions": {
         "never": "Never",
         "rarely": "Rarely",
-        "occasionally": "Occasionally", 
+        "occasionally": "Occasionally",
         "regularly": "Regularly"
       }
     },
@@ -162,7 +162,7 @@
         "diabetes": "Diabetes",
         "hypertension": "Hypertension",
         "heartDisease": "Heart disease",
-        "asthma": "Asthma", 
+        "asthma": "Asthma",
         "arthritis": "Arthritis",
         "depressionAnxiety": "Depression/Anxiety",
         "thyroidDisorders": "Thyroid disorders",
@@ -211,13 +211,35 @@
       "downloadPdf": "Download Plan as PDF",
       "scheduleCheckin": "Schedule Check-in",
       "generating": "Generating Your Plan...",
-      "generatingSubtitle": "Our AI is crafting a personalized wellness journey just for you."
+      "generatingSubtitle": "Our AI is crafting a personalized wellness journey just for you.",
+      "weeklyScheduleTitle": "Your Sample Week at a Glance"
     }
   },
   "medication": {
-    "title": "Medication Reminders", 
+    "title": "Medication Reminders",
     "description": "Stay on track with your medication schedule",
     "addReminder": "Add Reminder",
+    "addNew": "Add New Medication",
+    "createReminder": "Create a reminder for your medication schedule",
+    "nameLabel": "Medication Name *",
+    "namePlaceholder": "e.g., Lisinopril",
+    "doseLabel": "Dose *",
+    "dosePlaceholder": "e.g., 10mg",
+    "frequencyLabel": "Frequency *",
+    "selectFrequency": "Select frequency",
+    "onceDaily": "Once daily",
+    "twiceDaily": "Twice daily",
+    "threeTimesDaily": "Three times daily",
+    "fourTimesDaily": "Four times daily",
+    "asNeeded": "As needed",
+    "timesLabel": "Time(s) *",
+    "selectTime": "Select time",
+    "addTime": "Add Time",
+    "startDateLabel": "Start Date",
+    "endDateLabel": "End Date (optional)",
+    "notesLabel": "Notes",
+    "notesPlaceholder": "Special instructions...",
+    "addMedication": "Add Medication",
     "upcomingReminders": "Upcoming Reminders",
     "adherence": "7-Day Adherence",
     "allMedications": "All Medications",
@@ -233,33 +255,16 @@
     "snoozeMessage": "We'll remind you again in 15 minutes.",
     "jobStaying": "Great job staying on track!",
     "reminderNoted": "Reminder noted.",
-    "form": {
-      "title": "Add New Medication",
-      "description": "Create a reminder for your medication schedule",
-      "name": "Medication Name",
-      "namePrompt": "e.g., Lisinopril",
-      "dose": "Dose", 
-      "dosePrompt": "e.g., 10mg",
-      "frequency": "Frequency",
-      "frequencyOptions": {
-        "onceDaily": "Once daily",
-        "twiceDaily": "Twice daily",
-        "threeTimes": "Three times daily",
-        "fourTimes": "Four times daily",
-        "asNeeded": "As needed"
-      },
-      "times": "Time(s)",
-      "addTime": "Add Time",
-      "startDate": "Start Date",
-      "endDate": "End Date (optional)",
-      "notes": "Notes",
-      "notesPrompt": "Special instructions...",
-      "add": "Add Medication"
-    }
+    "adherenceChartTitle": "7-Day Adherence",
+    "adherenceChartDescription": "Your medication compliance this week",
+    "noMedicationsToTrack": "No medications to track.",
+    "allMedicationsTitle": "All Medications",
+    "manageReminders": "Manage your medication reminders",
+    "scheduleToday": "Your medication schedule for today"
   },
   "emergency": {
     "title": "Emergency Care",
-    "description": "Quick access to emergency guidance and first aid instructions", 
+    "description": "Quick access to emergency guidance and first aid instructions",
     "lifeThreatening": "Life-Threatening Emergency?",
     "lifeThreateningDesc": "If someone is unconscious, not breathing, or severely injured, call emergency services immediately.",
     "callEmergency": "Call Emergency Services",
@@ -269,7 +274,7 @@
     "geolocationNotSupported": "Geolocation is not supported by this browser.",
     "tabs": {
       "contacts": "Emergency Contacts",
-      "guides": "First Aid Guides", 
+      "guides": "First Aid Guides",
       "symptoms": "Symptom Checker"
     },
     "findHospital": "Find Nearest Hospital",
@@ -289,7 +294,7 @@
     },
     "firstAidGuides": {
       "cpr": "CPR (Cardiopulmonary Resuscitation)",
-      "choking": "Choking (Heimlich Maneuver)", 
+      "choking": "Choking (Heimlich Maneuver)",
       "bleeding": "Severe Bleeding Control",
       "burns": "Burn Treatment"
     },
@@ -308,7 +313,7 @@
       "charredSkin": "Charred skin",
       "emergencyList": {
         "unconscious": "Unconscious or unresponsive",
-        "breathing": "Difficulty breathing or no breathing", 
+        "breathing": "Difficulty breathing or no breathing",
         "chestPain": "Chest pain or pressure",
         "severeBleeding": "Severe bleeding",
         "stroke": "Signs of stroke (FAST test)",
@@ -319,7 +324,7 @@
         "highFever": "High fever (over 103°F)",
         "abdominalPain": "Severe abdominal pain",
         "deepCuts": "Deep cuts requiring stitches",
-        "brokenBones": "Suspected broken bones", 
+        "brokenBones": "Suspected broken bones",
         "headache": "Severe headache with vision changes",
         "vomiting": "Persistent vomiting",
         "dehydration": "Signs of dehydration"
@@ -330,6 +335,22 @@
       "description": "Select symptoms to get immediate guidance on whether emergency care is needed.",
       "callEmergencyIf": "Call Emergency Services If:",
       "seekUrgentCareFor": "Seek Urgent Care For:"
+    },
+    "contacts": {
+        "police": "Police",
+        "fire": "Fire",
+        "ambulance": "Ambulance",
+        "emergencyServices": "Emergency Services",
+        "poisonControl": "Poison Control",
+        "crisisHotline": "Crisis Hotline",
+        "generalEmergency": "General Emergency",
+        "medicalEmergency": "Medical Emergency",
+        "civilDefense": "Civil Defense",
+        "policeFireAmbulance": "Police, Fire, Ambulance",
+        "nonUrgentMedical": "Non-urgent medical advice",
+        "policeDepartment": "Police Department",
+        "fireDepartment": "Fire Department",
+        "medicalFireEmergency": "Medical & Fire Emergency"
     }
   },
   "settings": {
@@ -350,7 +371,7 @@
       "removePhoto": "Remove Photo",
       "fullName": "Full Name",
       "email": "Email Address",
-      "phone": "Phone Number", 
+      "phone": "Phone Number",
       "dateOfBirth": "Date of Birth",
       "emergencyContact": "Emergency Contact",
       "saveChanges": "Save Changes"
@@ -368,7 +389,7 @@
       "accessibility": "Accessibility",
       "highContrast": "High Contrast Mode",
       "highContrastDesc": "Increase contrast for better visibility",
-      "largeText": "Large Text", 
+      "largeText": "Large Text",
       "largeTextDesc": "Increase text size throughout the app",
       "screenReader": "Screen Reader Support",
       "screenReaderDesc": "Optimize for screen reading software",
@@ -380,7 +401,7 @@
       "email": "Email Notifications",
       "emailDesc": "Receive updates and reminders via email",
       "push": "Push Notifications",
-      "pushDesc": "Get instant notifications on your device", 
+      "pushDesc": "Get instant notifications on your device",
       "sms": "SMS Notifications",
       "smsDesc": "Receive important alerts via text message",
       "reminders": "Health Reminders",
@@ -390,7 +411,7 @@
       "title": "Privacy & Data Control",
       "dataSharing": "Data Sharing with Healthcare Providers",
       "dataSharingDesc": "Allow sharing anonymized data for research",
-      "analytics": "Analytics & Performance", 
+      "analytics": "Analytics & Performance",
       "analyticsDesc": "Help improve the app with usage analytics",
       "marketing": "Marketing Communications",
       "marketingDesc": "Receive promotional content and health tips",
@@ -406,7 +427,7 @@
       "export": "Export Your Data",
       "exportDesc": "Download a copy of your health data, consultations, and wellness plans.",
       "exportData": "Export Data",
-      "import": "Import Health Data", 
+      "import": "Import Health Data",
       "importDesc": "Import health records from other platforms or devices.",
       "importData": "Import Data",
       "dangerZone": "Danger Zone",
@@ -416,7 +437,7 @@
   },
   "auth": {
     "signIn": "Sign In",
-    "signUp": "Sign Up", 
+    "signUp": "Sign Up",
     "email": "Email",
     "password": "Password",
     "confirmPassword": "Confirm Password",

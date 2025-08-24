@@ -1,3 +1,4 @@
+// components/medication-reminders.tsx
 "use client"
 
 import { useState, useEffect } from "react"
@@ -15,6 +16,7 @@ import { Plus, Pill, Clock, Calendar, Check, X, AlarmClockIcon as Snooze, Trash2
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/context/AuthContext"
 import { addDays, format, startOfDay, isBefore, parse } from "date-fns"
+import { useTranslation } from "react-i18next"
 
 // A more robust data structure for reminders
 interface AdherenceLog {
@@ -40,15 +42,6 @@ interface UpcomingReminder {
   isOverdue: boolean;
 }
 
-
-const frequencyOptions = [
-  { value: "once-daily", label: "Once daily" },
-  { value: "twice-daily", label: "Twice daily" },
-  { value: "three-times", label: "Three times daily" },
-  { value: "four-times", label: "Four times daily" },
-  { value: "as-needed", label: "As needed" },
-]
-
 const timeSlots = Array.from({ length: 24 }, (_, i) => {
     const hour = i.toString().padStart(2, '0');
     return [`${hour}:00`, `${hour}:30`];
@@ -56,6 +49,7 @@ const timeSlots = Array.from({ length: 24 }, (_, i) => {
 
 
 export function MedicationReminders() {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [reminders, setReminders] = useState<MedicationReminder[]>([])
   const [isDialogOpen, setIsDialogOpen] = useState(false)
@@ -63,6 +57,14 @@ export function MedicationReminders() {
     name: "", dose: "", frequency: "", times: [""],
     startDate: format(new Date(), 'yyyy-MM-dd'), endDate: "", notes: "",
   })
+
+  const frequencyOptions = [
+    { value: "once-daily", label: t("medication.onceDaily") },
+    { value: "twice-daily", label: t("medication.twiceDaily") },
+    { value: "three-times", label: t("medication.threeTimesDaily") },
+    { value: "four-times", label: t("medication.fourTimesDaily") },
+    { value: "as-needed", label: t("medication.asNeeded") },
+  ]
 
   const fetchReminders = async () => {
       if (!user) return;
@@ -173,8 +175,8 @@ export function MedicationReminders() {
 
           await fetchReminders(); // Refresh data from server
           toast({
-              title: status === 'taken' ? "Marked as Taken" : "Dose Skipped",
-              description: status === 'taken' ? "Great job staying on track!" : "Reminder noted.",
+              title: status === 'taken' ? t("medication.taken") : t("medication.skipped"),
+              description: status === 'taken' ? t("medication.jobStaying") : t("medication.reminderNoted"),
               variant: status === 'skipped' ? 'destructive' : 'default',
           });
       } catch (error) {
@@ -185,8 +187,8 @@ export function MedicationReminders() {
 
   const snoozeDose = (id: string) => {
     toast({
-      title: "Reminder Snoozed",
-      description: "We'll remind you again in 15 minutes.",
+      title: t("medication.snoozed"),
+      description: t("medication.snoozeMessage"),
     })
   }
 
@@ -276,53 +278,53 @@ export function MedicationReminders() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-foreground bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-            Medication Reminders
+            {t("medication.title")}
           </h1>
-          <p className="text-muted-foreground mt-1">Stay on track with your medication schedule</p>
+          <p className="text-muted-foreground mt-1">{t("medication.description")}</p>
         </div>
 
         <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
           <DialogTrigger asChild>
             <Button className="bg-gradient-to-r from-primary to-accent hover:from-primary/90 hover:to-accent/90 pulse-glow">
               <Plus className="h-4 w-4 mr-2" />
-              Add Reminder
+              {t("medication.addReminder")}
             </Button>
           </DialogTrigger>
           <DialogContent className="glass-card border-border/50 max-w-md">
             <DialogHeader>
-              <DialogTitle>Add New Medication</DialogTitle>
-              <DialogDescription>Create a reminder for your medication schedule</DialogDescription>
+              <DialogTitle>{t("medication.addNew")}</DialogTitle>
+              <DialogDescription>{t("medication.createReminder")}</DialogDescription>
             </DialogHeader>
 
             <div className="space-y-4">
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="name">Medication Name *</Label>
+                  <Label htmlFor="name">{t("medication.nameLabel")}</Label>
                   <Input
                     id="name"
                     value={newReminder.name}
                     onChange={(e) => setNewReminder({ ...newReminder, name: e.target.value })}
-                    placeholder="e.g., Lisinopril"
+                    placeholder={t("medication.namePlaceholder")}
                   />
                 </div>
                 <div>
-                  <Label htmlFor="dose">Dose *</Label>
+                  <Label htmlFor="dose">{t("medication.doseLabel")}</Label>
                   <Input
                     id="dose"
                     value={newReminder.dose}
                     onChange={(e) => setNewReminder({ ...newReminder, dose: e.target.value })}
-                    placeholder="e.g., 10mg"
+                    placeholder={t("medication.dosePlaceholder")}
                   />
                 </div>
               </div>
 
               <div>
-                <Label htmlFor="frequency">Frequency *</Label>
+                <Label htmlFor="frequency">{t("medication.frequencyLabel")}</Label>
                 <Select
                   value={newReminder.frequency}
                   onValueChange={(value) => setNewReminder({ ...newReminder, frequency: value })}
                 >
-                  <SelectTrigger><SelectValue placeholder="Select frequency" /></SelectTrigger>
+                  <SelectTrigger><SelectValue placeholder={t("medication.selectFrequency")} /></SelectTrigger>
                   <SelectContent>
                     {frequencyOptions.map((option) => (
                       <SelectItem key={option.value} value={option.value}>
@@ -334,11 +336,11 @@ export function MedicationReminders() {
               </div>
 
               <div>
-                <Label>Time(s) *</Label>
+                <Label>{t("medication.timesLabel")}</Label>
                 {newReminder.times.map((time, index) => (
                     <div key={index} className="flex items-center gap-2 mt-2">
                         <Select value={time} onValueChange={(value) => handleTimeChange(index, value)}>
-                            <SelectTrigger><SelectValue placeholder="Select time" /></SelectTrigger>
+                            <SelectTrigger><SelectValue placeholder={t("medication.selectTime")} /></SelectTrigger>
                             <SelectContent>
                                 {timeSlots.map((slot) => (<SelectItem key={slot} value={slot}>{slot}</SelectItem>))}
                             </SelectContent>
@@ -351,27 +353,27 @@ export function MedicationReminders() {
                     </div>
                 ))}
                  <Button variant="outline" size="sm" onClick={addTimeSlot} className="mt-2">
-                    <Plus className="h-4 w-4 mr-2"/> Add Time
+                    <Plus className="h-4 w-4 mr-2"/> {t("medication.addTime")}
                 </Button>
               </div>
 
               <div className="grid grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="startDate">Start Date</Label>
+                  <Label htmlFor="startDate">{t("medication.startDateLabel")}</Label>
                   <Input id="startDate" type="date" value={newReminder.startDate} onChange={(e) => setNewReminder({ ...newReminder, startDate: e.target.value })}/>
                 </div>
                 <div>
-                  <Label htmlFor="endDate">End Date (optional)</Label>
+                  <Label htmlFor="endDate">{t("medication.endDateLabel")}</Label>
                   <Input id="endDate" type="date" value={newReminder.endDate} onChange={(e) => setNewReminder({ ...newReminder, endDate: e.target.value })}/>
                 </div>
               </div>
 
               <div>
-                <Label htmlFor="notes">Notes</Label>
-                <Textarea id="notes" value={newReminder.notes} onChange={(e) => setNewReminder({ ...newReminder, notes: e.target.value })} placeholder="Special instructions..."/>
+                <Label htmlFor="notes">{t("medication.notesLabel")}</Label>
+                <Textarea id="notes" value={newReminder.notes} onChange={(e) => setNewReminder({ ...newReminder, notes: e.target.value })} placeholder={t("medication.notesPlaceholder")}/>
               </div>
 
-              <Button onClick={addReminder} className="w-full bg-gradient-to-r from-primary to-accent"> Add Medication </Button>
+              <Button onClick={addReminder} className="w-full bg-gradient-to-r from-primary to-accent"> {t("medication.addMedication")} </Button>
             </div>
           </DialogContent>
         </Dialog>
@@ -382,15 +384,15 @@ export function MedicationReminders() {
         <div className="lg:col-span-2">
           <Card className="glass-card border-border/50">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2"> <Clock className="h-5 w-5 text-primary" /> Upcoming Reminders </CardTitle>
-              <CardDescription>Your medication schedule for today</CardDescription>
+              <CardTitle className="flex items-center gap-2"> <Clock className="h-5 w-5 text-primary" /> {t("medication.upcomingReminders")} </CardTitle>
+              <CardDescription>{t("medication.scheduleToday")}</CardDescription>
             </CardHeader>
             <CardContent>
               {getUpcomingReminders().length === 0 ? (
                 <div className="text-center py-8">
                   <Pill className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-                  <p className="text-muted-foreground">No upcoming reminders for today!</p>
-                  <p className="text-sm text-muted-foreground">You're all caught up.</p>
+                  <p className="text-muted-foreground">{t("medication.noReminders")}</p>
+                  <p className="text-sm text-muted-foreground">{t("medication.allCaughtUp")}</p>
                 </div>
               ) : (
                 <div className="space-y-3">
@@ -404,7 +406,7 @@ export function MedicationReminders() {
                           <p className="font-medium">{reminder.name}</p>
                           <p className="text-sm text-muted-foreground">
                             {reminder.dose} at {time}
-                            {isOverdue && <Badge variant="destructive" className="ml-2">Overdue</Badge>}
+                            {isOverdue && <Badge variant="destructive" className="ml-2">{t("medication.overdue")}</Badge>}
                           </p>
                         </div>
                       </div>
@@ -426,12 +428,12 @@ export function MedicationReminders() {
         <div>
           <Card className="glass-card border-border/50">
             <CardHeader>
-              <CardTitle className="flex items-center gap-2"> <TrendingUp className="h-5 w-5 text-primary" /> 7-Day Adherence </CardTitle>
-              <CardDescription>Your medication compliance this week</CardDescription>
+              <CardTitle className="flex items-center gap-2"> <TrendingUp className="h-5 w-5 text-primary" /> {t("medication.adherenceChartTitle")} </CardTitle>
+              <CardDescription>{t("medication.adherenceChartDescription")}</CardDescription>
             </CardHeader>
             <CardContent>
               <div className="space-y-4">
-                {reminders.length === 0 ? (<p className="text-sm text-muted-foreground text-center py-4">No medications to track.</p>) : reminders.map((reminder) => (
+                {reminders.length === 0 ? (<p className="text-sm text-muted-foreground text-center py-4">{t("medication.noMedicationsToTrack")}</p>) : reminders.map((reminder) => (
                   <div key={reminder.id}>
                     <div className="flex items-center justify-between mb-2">
                       <p className="font-medium text-sm">{reminder.name}</p>
@@ -451,16 +453,16 @@ export function MedicationReminders() {
       {/* All Medications */}
       <Card className="glass-card border-border/50">
         <CardHeader>
-          <CardTitle className="flex items-center gap-2"> <Pill className="h-5 w-5 text-primary" /> All Medications </CardTitle>
-          <CardDescription>Manage your medication reminders</CardDescription>
+          <CardTitle className="flex items-center gap-2"> <Pill className="h-5 w-5 text-primary" /> {t("medication.allMedicationsTitle")} </CardTitle>
+          <CardDescription>{t("medication.manageReminders")}</CardDescription>
         </CardHeader>
         <CardContent>
           {reminders.length === 0 ? (
             <div className="text-center py-8">
               <AlertCircle className="h-12 w-12 text-muted-foreground mx-auto mb-4" />
-              <p className="text-muted-foreground">No medications added yet</p>
-              <p className="text-sm text-muted-foreground mb-4">Start by adding your first medication reminder</p>
-              <Button onClick={() => setIsDialogOpen(true)} className="bg-gradient-to-r from-primary to-accent"> <Plus className="h-4 w-4 mr-2" /> Add First Medication </Button>
+              <p className="text-muted-foreground">{t("medication.noMedications")}</p>
+              <p className="text-sm text-muted-foreground mb-4">{t("medication.addFirst")}</p>
+              <Button onClick={() => setIsDialogOpen(true)} className="bg-gradient-to-r from-primary to-accent"> <Plus className="h-4 w-4 mr-2" /> {t("medication.addFirstMedication")} </Button>
             </div>
           ) : (
             <div className="grid gap-4 md:grid-cols-2">
@@ -481,7 +483,7 @@ export function MedicationReminders() {
                     </div>
                     <Separator className="my-3" />
                     <div className="flex items-center justify-between">
-                      <span className="text-sm text-muted-foreground">Adherence</span>
+                      <span className="text-sm text-muted-foreground">{t("medication.adherence")}</span>
                       <Badge variant="outline" className={cn(calculateAdherence(reminder) >= 80 ? "text-green-600 border-green-600" : "text-orange-600 border-orange-600")}>
                         {calculateAdherence(reminder)}%
                       </Badge>

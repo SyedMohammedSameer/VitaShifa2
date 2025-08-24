@@ -14,7 +14,11 @@
     "required": "必須",
     "optional": "任意",
     "yes": "はい",
-    "no": "いいえ"
+    "no": "いいえ",
+    "step": "ステップ",
+    "of": "/",
+    "complete": "完了",
+    "and": "と"
   },
   "navigation": {
     "medicalConsultation": "医療相談",
@@ -36,6 +40,47 @@
     "disclaimer": "このAIアシスタントは一般的な健康情報を提供するものであり、専門的な医学的アドバイスの代替ではありません。",
     "aiGreeting": "こんにちは！私はあなたのAI健康パートナーです。医学的な質問やガイダンスの提供をお手伝いします。私は専門的な医療の代替ではないことをご理解ください。今日はどのようにお手伝いできますか？"
   },
+  "diagnosis": {
+    "title": "AI医療画像分析",
+    "description": "AIによる分析と洞察のために医療画像をアップロード",
+    "uploadTitle": "医療画像をアップロード",
+    "uploadDescription": "ここに画像をドラッグアンドドロップするか、クリックして参照",
+    "chooseImages": "画像を選択",
+    "supportedFormats": "サポート形式：JPG、PNG、DICOM • 最大サイズ：画像あたり10MB",
+    "analysisResults": "分析結果",
+    "keyFindings": "主な所見",
+    "recommendations": "推奨事項",
+    "confidence": "信頼度",
+    "imagePreviewAlt": "医療画像のプレビュー",
+    "disclaimerTitle": "医療免責事項",
+    "errorAnalyzing": "画像の分析中にエラーが発生しました。もう一度お試しください。",
+    "status": {
+      "uploading": "画像をアップロードしています...",
+      "analyzing": "AIが画像を分析しています...",
+      "completed": "分析が完了しました",
+      "error": "分析に失敗しました"
+    },
+    "priority": {
+      "high": "高優先度",
+      "medium": "中優先度",
+      "low": "低優先度"
+    },
+    "disclaimer": "このAI分析は情報提供のみを目的としており、専門的な医学的診断に代わるものではありません。",
+    "supportedTypes": {
+      "title": "サポートされている画像の種類",
+      "xrays": "X線およびレントゲン写真",
+      "mri": "MRIおよびCTスキャン",
+      "dermatology": "皮膚科の画像",
+      "pathology": "病理スライド"
+    },
+    "privacy": {
+      "title": "プライバシーとセキュリティ",
+      "encrypted": "画像はアップロード中に暗号化されます",
+      "secure": "分析は安全に実行されます",
+      "notStored": "データは永続的に保存されません",
+      "hipaa": "HIPAA準拠の処理"
+    }
+  },
   "wellness": {
     "title": "ウェルネス計画",
     "description": "個人向けの健康・ウェルネス計画を作成",
@@ -47,6 +92,118 @@
       "preferences": "好み",
       "plan": "あなたのウェルネス計画"
     },
+    "personalInfo": {
+      "age": "年齢",
+      "agePrompt": "年齢を入力してください",
+      "gender": "性別",
+      "genderOptions": {
+        "male": "男性",
+        "female": "女性",
+        "other": "その他",
+        "preferNotToSay": "答えたくない"
+      },
+      "height": "身長（cm）",
+      "heightPrompt": "身長を入力してください",
+      "weight": "体重（kg）",
+      "weightPrompt": "体重を入力してください",
+      "activityLevel": "現在の活動レベル",
+      "activityLevels": {
+        "sedentary": "座りがち（運動はほとんどしない）",
+        "light": "軽い活動（週に1〜3日の軽い運動）",
+        "moderate": "中程度の活動（週に3〜5日の中程度の運動）",
+        "very": "非常に活発（週に6〜7日の激しい運動）"
+      }
+    },
+    "healthGoals": {
+      "title": "あなたの主な健康目標は何ですか？",
+      "weightLoss": "減量",
+      "weightGain": "増量",
+      "muscleBuilding": "筋肉増強",
+      "cardiovascularHealth": "心血管の健康",
+      "stressManagement": "ストレス管理",
+      "betterSleep": "より良い睡眠",
+      "increasedEnergy": "エネルギーの増加",
+      "diseasePrevention": "病気の予防",
+      "mentalWellness": "精神的な健康",
+      "flexibilityImprovement": "柔軟性の向上"
+    },
+    "lifestyle": {
+      "sleepHours": "1晩の平均睡眠時間",
+      "sleepOptions": {
+        "lessThan5": "5時間未満",
+        "5to6": "5〜6時間",
+        "7to8": "7〜8時間",
+        "moreThan8": "8時間以上"
+      },
+      "stressLevel": "現在のストレスレベル",
+      "stressLevels": {
+        "low": "低い",
+        "moderate": "中程度",
+        "high": "高い",
+        "veryHigh": "非常に高い"
+      },
+      "smokingStatus": "喫煙状況",
+      "smokingOptions": {
+        "never": "喫煙しない",
+        "former": "元喫煙者",
+        "current": "現在の喫煙者"
+      },
+      "alcoholConsumption": "アルコール摂取量",
+      "alcoholOptions": {
+        "never": "飲まない",
+        "rarely": "めったに飲まない",
+        "occasionally": "時々飲む",
+        "regularly": "定期的に飲む"
+      }
+    },
+    "medicalHistory": {
+      "conditionsTitle": "これらの状態のいずれかがありますか？",
+      "conditions": {
+        "diabetes": "糖尿病",
+        "hypertension": "高血圧",
+        "heartDisease": "心臓病",
+        "asthma": "喘息",
+        "arthritis": "関節炎",
+        "depressionAnxiety": "うつ病/不安",
+        "thyroidDisorders": "甲状腺疾患",
+        "none": "上記に該当なし"
+      },
+      "medications": "現在の薬（任意）",
+      "medicationsPrompt": "現在服用している薬をリストしてください...",
+      "allergies": "既知のアレルギー（任意）",
+      "allergiesPrompt": "既知のアレルギーをリストしてください..."
+    },
+    "preferences": {
+      "dietType": "好みの食事タイプ",
+      "dietTypes": {
+        "balanced": "バランスの取れた食事",
+        "vegetarian": "ベジタリアン",
+        "vegan": "ビーガン",
+        "keto": "ケトジェニック",
+        "mediterranean": "地中海式",
+        "lowCarb": "低炭水化物",
+        "other": "その他"
+      },
+      "exerciseTypes": "好みの運動の種類",
+      "exercises": {
+        "walking": "ウォーキング/ジョギング",
+        "weightTraining": "ウェイトトレーニング",
+        "yoga": "ヨガ/ピラティス",
+        "swimming": "水泳",
+        "cycling": "サイクリング",
+        "dancing": "ダンス",
+        "teamSports": "チームスポーツ",
+        "homeWorkouts": "自宅でのトレーニング"
+      },
+      "timeAvailability": "ウェルネス活動に利用できる時間",
+      "timeOptions": {
+        "15to30": "毎日15〜30分",
+        "30to60": "毎日30〜60分",
+        "1to2hours": "毎日1〜2時間",
+        "weekendsOnly": "週末のみ",
+        "flexible": "柔軟なスケジュール"
+      }
+    },
     "plan": {
       "title": "あなた専用のウェルネス計画",
       "subtitle": "あなただけのために作成された、ウェルネスの旅の出発点です。",
@@ -54,30 +211,259 @@
       "downloadPdf": "計画をPDFでダウンロード",
       "scheduleCheckin": "チェックインを予定",
       "generating": "計画を生成中...",
-      "generatingSubtitle": "AIがあなた専用のウェルネスジャーニーを作成しています。"
+      "generatingSubtitle": "AIがあなた専用のウェルネスジャーニーを作成しています。",
+      "weeklyScheduleTitle": "あなたのサンプル週間が一目でわかる"
     }
   },
   "medication": {
     "title": "服薬リマインダー",
     "description": "服薬スケジュールを管理",
-    "addReminder": "リマインダーを追加"
+    "addReminder": "リマインダーを追加",
+    "addNew": "新しい薬を追加",
+    "createReminder": "服薬スケジュールのリマインダーを作成",
+    "nameLabel": "薬の名前 *",
+    "namePlaceholder": "例：リシノプリル",
+    "doseLabel": "用量 *",
+    "dosePlaceholder": "例：10mg",
+    "frequencyLabel": "頻度 *",
+    "selectFrequency": "頻度を選択",
+    "onceDaily": "1日1回",
+    "twiceDaily": "1日2回",
+    "threeTimesDaily": "1日3回",
+    "fourTimesDaily": "1日4回",
+    "asNeeded": "必要に応じて",
+    "timesLabel": "時間 *",
+    "selectTime": "時間を選択",
+    "addTime": "時間を追加",
+    "startDateLabel": "開始日",
+    "endDateLabel": "終了日（任意）",
+    "notesLabel": "メモ",
+    "notesPlaceholder": "特別な指示...",
+    "addMedication": "薬を追加",
+    "upcomingReminders": "今後のリマインダー",
+    "adherence": "7日間の遵守",
+    "allMedications": "すべての薬",
+    "noReminders": "今日の今後のリマインダーはありません！",
+    "allCaughtUp": "すべて最新の状態です。",
+    "noMedications": "まだ薬が追加されていません",
+    "addFirst": "最初の薬のリマインダーを追加することから始めましょう",
+    "addFirstMedication": "最初の薬を追加",
+    "overdue": "期限切れ",
+    "taken": "服用済みとしてマーク",
+    "skipped": "服用をスキップしました",
+    "snoozed": "リマインダーをスヌーズしました",
+    "snoozeMessage": "15分後にもう一度お知らせします。",
+    "jobStaying": "順調に進んでいて素晴らしいです！",
+    "reminderNoted": "リマインダーを記録しました。",
+    "adherenceChartTitle": "7日間の遵守",
+    "adherenceChartDescription": "今週のあなたの服薬遵守状況",
+    "noMedicationsToTrack": "追跡する薬はありません。",
+    "allMedicationsTitle": "すべての薬",
+    "manageReminders": "あなたの薬のリマインダーを管理する",
+    "scheduleToday": "今日のあなたの薬のスケジュール"
   },
   "emergency": {
     "title": "緊急医療",
     "description": "緊急時のガイダンスと応急処置の指示に素早くアクセス",
-    "callEmergency": "緊急サービスに電話"
+    "lifeThreatening": "生命を脅かす緊急事態ですか？",
+    "lifeThreateningDesc": "誰かが意識不明、呼吸していない、または重傷を負っている場合は、直ちに救急サービスに電話してください。",
+    "callEmergency": "緊急サービスに電話",
+    "emergencyCallButton": "緊急：緊急サービスに電話",
+    "findUrgentCare": "緊急治療を探す",
+    "locationError": "あなたの場所を取得できません。ブラウザの設定で位置情報サービスを有効にしてください。",
+    "geolocationNotSupported": "このブラウザはジオロケーションをサポートしていません。",
+    "tabs": {
+      "contacts": "緊急連絡先",
+      "guides": "応急処置ガイド",
+      "symptoms": "症状チェッカー"
+    },
+    "findHospital": "最寄りの病院を探す",
+    "findHospitalDesc": "現在の場所に基づいて最寄りの救急治療室または緊急治療施設を見つけます。",
+    "findHospitals": "病院を探す",
+    "urgentCare": "緊急治療",
+    "firstAidSearch": "応急処置ガイドまたは症状を検索...",
+    "watchVideo": "ビデオを見る",
+    "emergencyContacts": "緊急連絡先",
+    "selectCountry": "国を選択",
+    "default": "デフォルト",
+    "call": "電話",
+    "severity": {
+      "critical": "致命的",
+      "urgent": "緊急",
+      "moderate": "中程度"
+    },
+    "firstAidGuides": {
+      "cpr": "CPR（心肺蘇生法）",
+      "choking": "窒息（ハイムリック法）",
+      "bleeding": "重度の出血の制御",
+      "burns": "火傷の治療"
+    },
+    "symptoms": {
+      "unconscious": "意識不明",
+      "notBreathing": "呼吸していない",
+      "noPulse": "脈拍なし",
+      "cannotSpeak": "話せない",
+      "clutchingThroat": "喉を押さえている",
+      "blueLips": "青い唇",
+      "heavyBleeding": "大量の出血",
+      "bloodSoaking": "包帯に血が染み込んでいる",
+      "spurtingBlood": "血が噴き出している",
+      "redSkin": "赤く痛みを伴う皮膚",
+      "blisters": "水ぶくれ",
+      "charredSkin": "黒焦げの皮膚",
+      "emergencyList": {
+        "unconscious": "意識不明または無反応",
+        "breathing": "呼吸困難または呼吸なし",
+        "chestPain": "胸の痛みや圧迫感",
+        "severeBleeding": "重度の出血",
+        "stroke": "脳卒中の兆候（FASTテスト）",
+        "allergic": "重度のアレルギー反応",
+        "poisoning": "中毒または過剰摂取"
+      },
+      "urgentList": {
+        "highFever": "高熱（39.4°C以上）",
+        "abdominalPain": "激しい腹痛",
+        "deepCuts": "縫合が必要な深い切り傷",
+        "brokenBones": "骨折の疑い",
+        "headache": "視力の変化を伴う激しい頭痛",
+        "vomiting": "持続的な嘔吐",
+        "dehydration": "脱水症状の兆候"
+      }
+    },
+    "symptomChecker": {
+      "title": "緊急症状チェッカー",
+      "description": "緊急治療が必要かどうかについてすぐにガイダンスを得るために症状を選択してください。",
+      "callEmergencyIf": "次の場合に救急サービスに電話してください：",
+      "seekUrgentCareFor": "次の場合は緊急治療を受けてください："
+    },
+    "contacts": {
+        "police": "警察",
+        "fire": "消防",
+        "ambulance": "救急車",
+        "emergencyServices": "緊急サービス",
+        "poisonControl": "中毒管理",
+        "crisisHotline": "危機ホットライン",
+        "generalEmergency": "一般緊急事態",
+        "medicalEmergency": "医療緊急事態",
+        "civilDefense": "民間防衛",
+        "policeFireAmbulance": "警察、消防、救急車",
+        "nonUrgentMedical": "緊急でない医療相談",
+        "policeDepartment": "警察署",
+        "fireDepartment": "消防署",
+        "medicalFireEmergency": "医療・消防緊急事態"
+    }
   },
   "settings": {
     "title": "設定",
-    "description": "アカウントの設定とプライバシー設定を管理"
+    "description": "アカウントの設定とプライバシー設定を管理",
+    "saveSuccess": "設定が正常に保存されました。",
+    "saveError": "設定の保存に失敗しました。もう一度お試しください。",
+    "tabs": {
+      "profile": "プロフィール",
+      "preferences": "好み",
+      "notifications": "通知",
+      "privacy": "プライバシー",
+      "data": "データ"
+    },
+    "profile": {
+      "title": "プロフィール情報",
+      "changePhoto": "写真を変更",
+      "removePhoto": "写真を削除",
+      "fullName": "フルネーム",
+      "email": "メールアドレス",
+      "phone": "電話番号",
+      "dateOfBirth": "生年月日",
+      "emergencyContact": "緊急連絡先",
+      "saveChanges": "変更を保存"
+    },
+    "preferences": {
+      "language": "言語と地域",
+      "languageLabel": "言語",
+      "appearance": "外観",
+      "theme": "テーマ",
+      "themeOptions": {
+        "light": "ライト",
+        "dark": "ダーク",
+        "system": "システム"
+      },
+      "accessibility": "アクセシビリティ",
+      "highContrast": "ハイコントラストモード",
+      "highContrastDesc": "視認性を高めるためにコントラストを上げる",
+      "largeText": "大きな文字",
+      "largeTextDesc": "アプリ全体の文字サイズを大きくする",
+      "screenReader": "スクリーンリーダーのサポート",
+      "screenReaderDesc": "スクリーンリーダーソフトウェア用に最適化",
+      "reducedMotion": "動きを減らす",
+      "reducedMotionDesc": "アニメーションとトランジションを最小限に抑える"
+    },
+    "notifications": {
+      "title": "通知設定",
+      "email": "メール通知",
+      "emailDesc": "メールで更新情報やリマインダーを受け取る",
+      "push": "プッシュ通知",
+      "pushDesc": "デバイスで即時通知を受け取る",
+      "sms": "SMS通知",
+      "smsDesc": "テキストメッセージで重要なアラートを受け取る",
+      "reminders": "健康リマインダー",
+      "remindersDesc": "薬や予約のリマインダーを受け取る"
+    },
+    "privacy": {
+      "title": "プライバシーとデータ管理",
+      "dataSharing": "医療提供者とのデータ共有",
+      "dataSharingDesc": "研究のために匿名化されたデータの共有を許可する",
+      "analytics": "分析とパフォーマンス",
+      "analyticsDesc": "使用状況の分析でアプリの改善に協力する",
+      "marketing": "マーケティングコミュニケーション",
+      "marketingDesc": "プロモーションコンテンツや健康に関するヒントを受け取る",
+      "thirdParty": "サードパーティの統合",
+      "thirdPartyDesc": "フィットネストラッカーやアプリとの接続を許可する",
+      "accountSecurity": "アカウントのセキュリティ",
+      "viewPrivacy": "プライバシーポリシーを表示",
+      "changePassword": "パスワードを変更",
+      "twoFactor": "二要素認証"
+    },
+    "data": {
+      "title": "データ管理",
+      "export": "あなたのデータをエクスポート",
+      "exportDesc": "あなたの健康データ、相談、ウェルネス計画のコピーをダウンロードします。",
+      "exportData": "データをエクスポート",
+      "import": "健康データをインポート",
+      "importDesc": "他のプラットフォームやデバイスから健康記録をインポートします。",
+      "importData": "データをインポート",
+      "dangerZone": "危険地帯",
+      "deleteAccount": "アカウントを削除",
+      "deleteAccountDesc": "あなたのアカウントと関連するすべてのデータを永久に削除します。この操作は元に戻せません。"
+    }
   },
   "auth": {
     "signIn": "ログイン",
     "signUp": "新規登録",
     "email": "メール",
     "password": "パスワード",
+    "confirmPassword": "パスワードを確認",
     "dontHaveAccount": "アカウントをお持ちではありませんか？",
-    "alreadyHaveAccount": "すでにアカウントをお持ちですか？"
+    "alreadyHaveAccount": "すでにアカウントをお持ちですか？",
+    "signInSubtitle": "あなたの健康パートナーへようこそ",
+    "signUpSubtitle": "あなたのウェルネスの旅を始めるためにご参加ください",
+    "emailPlaceholder": "メールアドレスを入力してください",
+    "passwordPlaceholder": "パスワードを入力してください",
+    "confirmPasswordPlaceholder": "パスワードを確認してください",
+    "passwordRequirement": "パスワードは6文字以上である必要があります",
+    "termsNotice": "サインアップすることにより、あなたは私たちの",
+    "termsOfService": "利用規約",
+    "privacyPolicy": "プライバシーポリシー",
+    "errors": {
+      "signInFailed": "サインインに失敗しました。認証情報を確認して、もう一度お試しください。",
+      "signUpFailed": "サインアップに失敗しました。もう一度お試しください。",
+      "userNotFound": "このメールアドレスのアカウントは見つかりませんでした。",
+      "wrongPassword": "パスワードが正しくありません。もう一度お試しください。",
+      "emailInUse": "このメールアドレスのアカウントは既に存在します。",
+      "invalidEmail": "有効なメールアドレスを入力してください。",
+      "weakPassword": "パスワードが弱すぎます。もっと強力なパスワードを選択してください。",
+      "passwordMismatch": "パスワードが一致しません。もう一度お試しください。",
+      "passwordTooShort": "パスワードは6文字以上である必要があります。",
+      "tooManyRequests": "試行回数が多すぎます。後でもう一度お試しください。"
+    }
   },
   "errors": {
     "generic": "エラーが発生しました。もう一度お試しください。",
@@ -86,5 +472,11 @@
     "notFound": "リソースが見つかりません。",
     "validationError": "入力内容を確認してください。",
     "serverError": "サーバーエラーです。後でもう一度お試しください。"
+  },
+  "success": {
+    "saved": "設定が正常に保存されました！",
+    "deleted": "アイテムが正常に削除されました！",
+    "updated": "正常に更新されました！",
+    "sent": "正常に送信されました！"
   }
 }

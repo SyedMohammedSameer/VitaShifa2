@@ -14,7 +14,11 @@
     "required": "مطلوب",
     "optional": "اختياري",
     "yes": "نعم",
-    "no": "لا"
+    "no": "لا",
+    "step": "خطوة",
+    "of": "من",
+    "complete": "مكتمل",
+    "and": "و"
   },
   "navigation": {
     "medicalConsultation": "الاستشارة الطبية",
@@ -47,6 +51,15 @@
     "keyFindings": "النتائج الرئيسية",
     "recommendations": "التوصيات",
     "confidence": "الثقة",
+    "imagePreviewAlt": "معاينة الصورة الطبية",
+    "disclaimerTitle": "إخلاء المسؤولية الطبية",
+    "errorAnalyzing": "خطأ في تحليل الصورة. يرجى المحاولة مرة أخرى.",
+    "status": {
+      "uploading": "جاري رفع الصورة...",
+      "analyzing": "يقوم الذكاء الاصطناعي بتحليل صورتك...",
+      "completed": "اكتمل التحليل",
+      "error": "فشل التحليل"
+    },
     "priority": {
       "high": "أولوية عالية",
       "medium": "أولوية متوسطة",
@@ -198,13 +211,35 @@
       "downloadPdf": "تحميل الخطة كـ PDF",
       "scheduleCheckin": "جدولة المتابعة",
       "generating": "جاري إنشاء خطتك...",
-      "generatingSubtitle": "الذكاء الاصطناعي يصنع رحلة صحية شخصية لك."
+      "generatingSubtitle": "الذكاء الاصطناعي يصنع رحلة صحية شخصية لك.",
+      "weeklyScheduleTitle": "لمحة عن أسبوعك النموذجي"
     }
   },
   "medication": {
     "title": "تذكيرات الأدوية",
     "description": "ابق على المسار الصحيح مع جدول أدويتك",
     "addReminder": "إضافة تذكير",
+    "addNew": "إضافة دواء جديد",
+    "createReminder": "أنشئ تذكيراً لجدول دوائك",
+    "nameLabel": "اسم الدواء *",
+    "namePlaceholder": "مثال: ليزينوبريل",
+    "doseLabel": "الجرعة *",
+    "dosePlaceholder": "مثال: 10 ملغ",
+    "frequencyLabel": "التكرار *",
+    "selectFrequency": "اختر التكرار",
+    "onceDaily": "مرة واحدة يومياً",
+    "twiceDaily": "مرتين يومياً",
+    "threeTimesDaily": "ثلاث مرات يومياً",
+    "fourTimesDaily": "أربع مرات يومياً",
+    "asNeeded": "عند الحاجة",
+    "timesLabel": "الأوقات *",
+    "selectTime": "اختر الوقت",
+    "addTime": "إضافة وقت",
+    "startDateLabel": "تاريخ البدء",
+    "endDateLabel": "تاريخ الانتهاء (اختياري)",
+    "notesLabel": "ملاحظات",
+    "notesPlaceholder": "تعليمات خاصة...",
+    "addMedication": "إضافة دواء",
     "upcomingReminders": "التذكيرات القادمة",
     "adherence": "الالتزام لمدة 7 أيام",
     "allMedications": "جميع الأدوية",
@@ -219,36 +254,24 @@
     "snoozed": "تم تأجيل التذكير",
     "snoozeMessage": "سنذكرك مرة أخرى خلال 15 دقيقة.",
     "jobStaying": "عمل رائع في البقاء على المسار!",
-    "form": {
-      "title": "إضافة دواء جديد",
-      "description": "أنشئ تذكيراً لجدول دوائك",
-      "name": "اسم الدواء",
-      "namePrompt": "مثال: ليزينوبريل",
-      "dose": "الجرعة",
-      "dosePrompt": "مثال: 10 ملغ",
-      "frequency": "التكرار",
-      "frequencyOptions": {
-        "onceDaily": "مرة واحدة يومياً",
-        "twiceDaily": "مرتين يومياً",
-        "threeTimes": "ثلاث مرات يومياً",
-        "fourTimes": "أربع مرات يومياً",
-        "asNeeded": "عند الحاجة"
-      },
-      "times": "الأوقات",
-      "addTime": "إضافة وقت",
-      "startDate": "تاريخ البداية",
-      "endDate": "تاريخ النهاية (اختياري)",
-      "notes": "ملاحظات",
-      "notesPrompt": "تعليمات خاصة...",
-      "add": "إضافة دواء"
-    }
+    "reminderNoted": "تم تدوين الملاحظة.",
+    "adherenceChartTitle": "الالتزام لمدة 7 أيام",
+    "adherenceChartDescription": "امتثالك للدواء هذا الأسبوع",
+    "noMedicationsToTrack": "لا توجد أدوية لتتبعها.",
+    "allMedicationsTitle": "جميع الأدوية",
+    "manageReminders": "إدارة تذكيرات الأدوية الخاصة بك",
+    "scheduleToday": "جدول أدويتك لهذا اليوم"
   },
-  "emergency": {
+    "emergency": {
     "title": "الرعاية الطارئة",
     "description": "وصول سريع لإرشادات الطوارئ وتعليمات الإسعاف الأولي",
     "lifeThreatening": "حالة طوارئ تهدد الحياة؟",
     "lifeThreateningDesc": "إذا كان شخص فاقد الوعي، لا يتنفس، أو مصاب بجروح خطيرة، اتصل بخدمات الطوارئ فوراً.",
     "callEmergency": "اتصل بخدمات الطوارئ",
+    "emergencyCallButton": "طوارئ: اتصل بخدمات الطوارئ",
+    "findUrgentCare": "البحث عن رعاية عاجلة",
+    "locationError": "تعذر استرداد موقعك. يرجى تمكين خدمات الموقع في إعدادات متصفحك.",
+    "geolocationNotSupported": "الموقع الجغرافي غير مدعوم من قبل هذا المتصفح.",
     "tabs": {
       "contacts": "جهات اتصال الطوارئ",
       "guides": "أدلة الإسعاف الأولي",
@@ -260,6 +283,53 @@
     "urgentCare": "الرعاية العاجلة",
     "firstAidSearch": "ابحث في أدلة الإسعاف الأولي أو الأعراض...",
     "watchVideo": "شاهد الفيديو",
+    "emergencyContacts": "جهات اتصال الطوارئ",
+    "selectCountry": "اختر دولة",
+    "default": "افتراضي",
+    "call": "اتصل",
+    "severity": {
+      "critical": "حرجة",
+      "urgent": "عاجلة",
+      "moderate": "متوسطة"
+    },
+    "firstAidGuides": {
+      "cpr": "الإنعاش القلبي الرئوي",
+      "choking": "الاختناق (مناورة هيمليك)",
+      "bleeding": "السيطرة على النزيف الحاد",
+      "burns": "علاج الحروق"
+    },
+    "symptoms": {
+      "unconscious": "فاقد الوعي",
+      "notBreathing": "لا يتنفس",
+      "noPulse": "لا يوجد نبض",
+      "cannotSpeak": "لا يستطيع التحدث",
+      "clutchingThroat": "يمسك حلقه",
+      "blueLips": "شفاه زرقاء",
+      "heavyBleeding": "نزيف حاد",
+      "bloodSoaking": "الدم ينقع الضمادات",
+      "spurtingBlood": "دم يتدفق",
+      "redSkin": "جلد أحمر مؤلم",
+      "blisters": "بثور",
+      "charredSkin": "جلد متفحم",
+      "emergencyList": {
+        "unconscious": "فاقد الوعي أو غير مستجيب",
+        "breathing": "صعوبة في التنفس أو عدم التنفس",
+        "chestPain": "ألم في الصدر أو ضغط",
+        "severeBleeding": "نزيف حاد",
+        "stroke": "علامات السكتة الدماغية (اختبار FAST)",
+        "allergic": "رد فعل تحسسي حاد",
+        "poisoning": "تسمم أو جرعة زائدة"
+      },
+      "urgentList": {
+        "highFever": "حمى عالية (أكثر من 39.4 درجة مئوية)",
+        "abdominalPain": "ألم شديد في البطن",
+        "deepCuts": "جروح عميقة تحتاج خياطة",
+        "brokenBones": "كسور مشتبه بها",
+        "headache": "صداع شديد مع تغيرات في الرؤية",
+        "vomiting": "قيء مستمر",
+        "dehydration": "علامات الجفاف"
+      }
+    },
     "symptomChecker": {
       "title": "فاحص أعراض الطوارئ",
       "description": "اختر الأعراض للحصول على إرشادات فورية حول ما إذا كانت الرعاية الطارئة مطلوبة.",
@@ -284,16 +354,28 @@
         "علامات الجفاف"
       ]
     },
-    "firstAidGuides": {
-      "cpr": "الإنعاش القلبي الرئوي",
-      "choking": "الاختناق (مناورة هيمليك)",
-      "bleeding": "السيطرة على النزيف الحاد",
-      "burns": "علاج الحروق"
+    "contacts": {
+        "police": "الشرطة",
+        "fire": "الإطفاء",
+        "ambulance": "الإسعاف",
+        "emergencyServices": "خدمات الطوارئ",
+        "poisonControl": "مكافحة السموم",
+        "crisisHotline": "الخط الساخن للأزمات",
+        "generalEmergency": "الطوارئ العامة",
+        "medicalEmergency": "الطوارئ الطبية",
+        "civilDefense": "الدفاع المدني",
+        "policeFireAmbulance": "الشرطة، الإطفاء، الإسعاف",
+        "nonUrgentMedical": "نصائح طبية غير عاجلة",
+        "policeDepartment": "قسم الشرطة",
+        "fireDepartment": "قسم الإطفاء",
+        "medicalFireEmergency": "الطوارئ الطبية والإطفاء"
     }
   },
   "settings": {
     "title": "الإعدادات",
     "description": "إدارة تفضيلات حسابك وإعدادات الخصوصية",
+    "saveSuccess": "تم حفظ الإعدادات بنجاح.",
+    "saveError": "فشل حفظ الإعدادات. يرجى المحاولة مرة أخرى.",
     "tabs": {
       "profile": "الملف الشخصي",
       "preferences": "التفضيلات",
@@ -376,8 +458,30 @@
     "signUp": "إنشاء حساب",
     "email": "البريد الإلكتروني",
     "password": "كلمة المرور",
+    "confirmPassword": "تأكيد كلمة المرور",
     "dontHaveAccount": "ليس لديك حساب؟",
-    "alreadyHaveAccount": "لديك حساب بالفعل؟"
+    "alreadyHaveAccount": "لديك حساب بالفعل؟",
+    "signInSubtitle": "مرحبا بعودتك إلى رفيقك الصحي",
+    "signUpSubtitle": "انضم إلينا لبدء رحلتك الصحية",
+    "emailPlaceholder": "أدخل عنوان بريدك الإلكتروني",
+    "passwordPlaceholder": "ادخل كلمة المرور",
+    "confirmPasswordPlaceholder": "تأكيد كلمة المرور",
+    "passwordRequirement": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل",
+    "termsNotice": "بالتسجيل، فإنك توافق على",
+    "termsOfService": "شروط الخدمة",
+    "privacyPolicy": "سياسة الخصوصية",
+    "errors": {
+      "signInFailed": "فشل تسجيل الدخول. يرجى التحقق من بيانات الاعتماد الخاصة بك والمحاولة مرة أخرى.",
+      "signUpFailed": "فشل التسجيل. حاول مرة أخرى.",
+      "userNotFound": "لم يتم العثور على حساب بهذا البريد الإلكتروني.",
+      "wrongPassword": "كلمة سر خاطئة. حاول مرة أخرى.",
+      "emailInUse": "يوجد حساب بهذا البريد الإلكتروني بالفعل.",
+      "invalidEmail": "الرجاء إدخال بريد إلكتروني صحيح.",
+      "weakPassword": "كلمة المرور ضعيفة جدا. الرجاء اختيار كلمة مرور أقوى.",
+      "passwordMismatch": "كلمتا المرور غير متطابقتين. حاول مرة أخرى.",
+      "passwordTooShort": "يجب أن تتكون كلمة المرور من 6 أحرف على الأقل.",
+      "tooManyRequests": "محاولات كثيرة جدا. يرجى المحاولة مرة أخرى في وقت لاحق."
+    }
   },
   "errors": {
     "generic": "حدث خطأ. يرجى المحاولة مرة أخرى.",

@@ -14,7 +14,11 @@
     "required": "Wajib",
     "optional": "Opsional",
     "yes": "Ya",
-    "no": "Tidak"
+    "no": "Tidak",
+    "step": "Langkah",
+    "of": "dari",
+    "complete": "Selesai",
+    "and": "dan"
   },
   "navigation": {
     "medicalConsultation": "Konsultasi Medis",
@@ -36,13 +40,430 @@
     "disclaimer": "Asisten AI ini memberikan informasi kesehatan umum dan bukan pengganti nasihat medis profesional.",
     "aiGreeting": "Halo! Saya pendamping kesehatan AI Anda. Saya di sini untuk membantu pertanyaan medis dan memberikan bimbingan. Harap dicatat bahwa saya bukan pengganti perawatan medis profesional. Bagaimana saya bisa membantu Anda hari ini?"
   },
+  "diagnosis": {
+    "title": "Analisis Gambar Medis AI",
+    "description": "Unggah gambar medis untuk analisis dan wawasan bertenaga AI",
+    "uploadTitle": "Unggah Gambar Medis",
+    "uploadDescription": "Seret dan lepas gambar Anda di sini, atau klik untuk menelusuri",
+    "chooseImages": "Pilih Gambar",
+    "supportedFormats": "Mendukung: JPG, PNG, DICOM • Ukuran maks: 10MB per gambar",
+    "analysisResults": "Hasil Analisis",
+    "keyFindings": "Temuan Kunci",
+    "recommendations": "Rekomendasi",
+    "confidence": "Keyakinan",
+    "imagePreviewAlt": "Pratinjau gambar medis",
+    "disclaimerTitle": "Penafian Medis",
+    "errorAnalyzing": "Terjadi kesalahan saat menganalisis gambar. Silakan coba lagi.",
+    "status": {
+      "uploading": "Mengunggah gambar...",
+      "analyzing": "AI sedang menganalisis gambar Anda...",
+      "completed": "Analisis selesai",
+      "error": "Analisis gagal"
+    },
+    "priority": {
+      "high": "PRIORITAS TINGGI",
+      "medium": "PRIORITAS SEDANG",
+      "low": "PRIORITAS RENDAH"
+    },
+    "disclaimer": "Analisis AI ini hanya untuk tujuan informasi dan tidak boleh menggantikan diagnosis medis profesional.",
+    "supportedTypes": {
+      "title": "Jenis Gambar yang Didukung",
+      "xrays": "Sinar-X dan radiograf",
+      "mri": "Pemindaian MRI dan CT",
+      "dermatology": "Gambar dermatologis",
+      "pathology": "Slide patologi"
+    },
+    "privacy": {
+      "title": "Privasi & Keamanan",
+      "encrypted": "Gambar dienkripsi saat diunggah",
+      "secure": "Analisis dilakukan dengan aman",
+      "notStored": "Data tidak disimpan secara permanen",
+      "hipaa": "Pemrosesan yang sesuai dengan HIPAA"
+    }
+  },
+  "wellness": {
+    "title": "Perencanaan Kesehatan",
+    "description": "Buat rencana kesehatan dan kebugaran pribadi Anda",
+    "steps": {
+      "personalInfo": "Informasi Pribadi",
+      "healthGoals": "Tujuan Kesehatan",
+      "lifestyle": "Penilaian Gaya Hidup",
+      "medicalHistory": "Riwayat Medis",
+      "preferences": "Preferensi",
+      "plan": "Rencana Kesehatan Anda"
+    },
+    "personalInfo": {
+      "age": "Usia",
+      "agePrompt": "Masukkan usia Anda",
+      "gender": "Jenis Kelamin",
+      "genderOptions": {
+        "male": "Pria",
+        "female": "Wanita",
+        "other": "Lainnya",
+        "preferNotToSay": "Lebih baik tidak mengatakan"
+      },
+      "height": "Tinggi (cm)",
+      "heightPrompt": "Masukkan tinggi badan Anda",
+      "weight": "Berat (kg)",
+      "weightPrompt": "Masukkan berat badan Anda",
+      "activityLevel": "Tingkat Aktivitas Saat Ini",
+      "activityLevels": {
+        "sedentary": "Kurang aktif (sedikit atau tanpa olahraga)",
+        "light": "Sedikit aktif (olahraga ringan 1-3 hari/minggu)",
+        "moderate": "Cukup aktif (olahraga sedang 3-5 hari/minggu)",
+        "very": "Sangat aktif (olahraga berat 6-7 hari/minggu)"
+      }
+    },
+    "healthGoals": {
+      "title": "Apa tujuan kesehatan utama Anda?",
+      "weightLoss": "Penurunan berat badan",
+      "weightGain": "Penambahan berat badan",
+      "muscleBuilding": "Pembangunan otot",
+      "cardiovascularHealth": "Kesehatan jantung",
+      "stressManagement": "Manajemen stres",
+      "betterSleep": "Tidur lebih baik",
+      "increasedEnergy": "Peningkatan energi",
+      "diseasePrevention": "Pencegahan penyakit",
+      "mentalWellness": "Kesehatan mental",
+      "flexibilityImprovement": "Peningkatan fleksibilitas"
+    },
+    "lifestyle": {
+      "sleepHours": "Rata-rata jam tidur per malam",
+      "sleepOptions": {
+        "lessThan5": "Kurang dari 5 jam",
+        "5to6": "5-6 jam",
+        "7to8": "7-8 jam",
+        "moreThan8": "Lebih dari 8 jam"
+      },
+      "stressLevel": "Tingkat stres saat ini",
+      "stressLevels": {
+        "low": "Rendah",
+        "moderate": "Sedang",
+        "high": "Tinggi",
+        "veryHigh": "Sangat Tinggi"
+      },
+      "smokingStatus": "Status merokok",
+      "smokingOptions": {
+        "never": "Tidak pernah merokok",
+        "former": "Mantan perokok",
+        "current": "Perokok saat ini"
+      },
+      "alcoholConsumption": "Konsumsi alkohol",
+      "alcoholOptions": {
+        "never": "Tidak pernah",
+        "rarely": "Jarang",
+        "occasionally": "Kadang-kadang",
+        "regularly": "Secara teratur"
+      }
+    },
+    "medicalHistory": {
+      "conditionsTitle": "Apakah Anda memiliki salah satu dari kondisi ini?",
+      "conditions": {
+        "diabetes": "Diabetes",
+        "hypertension": "Hipertensi",
+        "heartDisease": "Penyakit jantung",
+        "asthma": "Asma",
+        "arthritis": "Radang sendi",
+        "depressionAnxiety": "Depresi/Kecemasan",
+        "thyroidDisorders": "Gangguan tiroid",
+        "none": "Tidak ada di atas"
+      },
+      "medications": "Obat-obatan saat ini (opsional)",
+      "medicationsPrompt": "Sebutkan obat apa pun yang sedang Anda minum...",
+      "allergies": "Alergi yang diketahui (opsional)",
+      "allergiesPrompt": "Sebutkan alergi yang diketahui..."
+    },
+    "preferences": {
+      "dietType": "Jenis diet yang disukai",
+      "dietTypes": {
+        "balanced": "Diet seimbang",
+        "vegetarian": "Vegetarian",
+        "vegan": "Vegan",
+        "keto": "Ketogenik",
+        "mediterranean": "Mediterania",
+        "lowCarb": "Rendah karbohidrat",
+        "other": "Lainnya"
+      },
+      "exerciseTypes": "Jenis olahraga yang disukai",
+      "exercises": {
+        "walking": "Jalan/Joging",
+        "weightTraining": "Latihan beban",
+        "yoga": "Yoga/Pilates",
+        "swimming": "Berenang",
+        "cycling": "Bersepeda",
+        "dancing": "Menari",
+        "teamSports": "Olahraga tim",
+        "homeWorkouts": "Latihan di rumah"
+      },
+      "timeAvailability": "Ketersediaan waktu untuk kegiatan kesehatan",
+      "timeOptions": {
+        "15to30": "15-30 menit setiap hari",
+        "30to60": "30-60 menit setiap hari",
+        "1to2hours": "1-2 jam setiap hari",
+        "weekendsOnly": "Hanya akhir pekan",
+        "flexible": "Jadwal fleksibel"
+      }
+    },
+    "plan": {
+      "title": "Rencana Kesehatan Pribadi Anda",
+      "subtitle": "Berikut adalah titik awal untuk perjalanan kesehatan Anda, yang dibuat khusus untuk Anda.",
+      "goals": "Tujuan Anda",
+      "downloadPdf": "Unduh Rencana sebagai PDF",
+      "scheduleCheckin": "Jadwalkan Check-in",
+      "generating": "Menghasilkan Rencana Anda...",
+      "generatingSubtitle": "AI kami sedang menyusun perjalanan kesehatan yang dipersonalisasi hanya untuk Anda.",
+      "weeklyScheduleTitle": "Sekilas Contoh Minggu Anda"
+    }
+  },
+  "medication": {
+    "title": "Pengingat Obat",
+    "description": "Tetap di jalur dengan jadwal pengobatan Anda",
+    "addReminder": "Tambah Pengingat",
+    "addNew": "Tambah Obat Baru",
+    "createReminder": "Buat pengingat untuk jadwal pengobatan Anda",
+    "nameLabel": "Nama Obat *",
+    "namePlaceholder": "misalnya, Lisinopril",
+    "doseLabel": "Dosis *",
+    "dosePlaceholder": "misalnya, 10mg",
+    "frequencyLabel": "Frekuensi *",
+    "selectFrequency": "Pilih frekuensi",
+    "onceDaily": "Sekali sehari",
+    "twiceDaily": "Dua kali sehari",
+    "threeTimesDaily": "Tiga kali sehari",
+    "fourTimesDaily": "Empat kali sehari",
+    "asNeeded": "Sesuai kebutuhan",
+    "timesLabel": "Waktu *",
+    "selectTime": "Pilih waktu",
+    "addTime": "Tambah Waktu",
+    "startDateLabel": "Tanggal Mulai",
+    "endDateLabel": "Tanggal Berakhir (opsional)",
+    "notesLabel": "Catatan",
+    "notesPlaceholder": "Instruksi khusus...",
+    "addMedication": "Tambah Obat",
+    "upcomingReminders": "Pengingat Mendatang",
+    "adherence": "Kepatuhan 7 Hari",
+    "allMedications": "Semua Obat",
+    "noReminders": "Tidak ada pengingat yang akan datang untuk hari ini!",
+    "allCaughtUp": "Anda sudah terupdate.",
+    "noMedications": "Belum ada obat yang ditambahkan",
+    "addFirst": "Mulai dengan menambahkan pengingat obat pertama Anda",
+    "addFirstMedication": "Tambah Obat Pertama",
+    "overdue": "Terlambat",
+    "taken": "Ditandai sebagai Diambil",
+    "skipped": "Dosis Dilewati",
+    "snoozed": "Pengingat Ditunda",
+    "snoozeMessage": "Kami akan mengingatkan Anda lagi dalam 15 menit.",
+    "jobStaying": "Kerja bagus tetap di jalur!",
+    "reminderNoted": "Pengingat dicatat.",
+    "adherenceChartTitle": "Kepatuhan 7 Hari",
+    "adherenceChartDescription": "Kepatuhan pengobatan Anda minggu ini",
+    "noMedicationsToTrack": "Tidak ada obat untuk dilacak.",
+    "allMedicationsTitle": "Semua Obat",
+    "manageReminders": "Kelola pengingat obat Anda",
+    "scheduleToday": "Jadwal pengobatan Anda untuk hari ini"
+  },
+  "emergency": {
+    "title": "Perawatan Darurat",
+    "description": "Akses cepat ke panduan darurat dan instruksi pertolongan pertama",
+    "lifeThreatening": "Keadaan Darurat yang Mengancam Jiwa?",
+    "lifeThreateningDesc": "Jika seseorang tidak sadar, tidak bernapas, atau terluka parah, segera hubungi layanan darurat.",
+    "callEmergency": "Hubungi Layanan Darurat",
+    "emergencyCallButton": "Darurat: Hubungi Layanan Darurat",
+    "findUrgentCare": "Cari Perawatan Mendesak",
+    "locationError": "Tidak dapat mengambil lokasi Anda. Harap aktifkan layanan lokasi di pengaturan browser Anda.",
+    "geolocationNotSupported": "Geolokasi tidak didukung oleh browser ini.",
+    "tabs": {
+      "contacts": "Kontak Darurat",
+      "guides": "Panduan Pertolongan Pertama",
+      "symptoms": "Pemeriksa Gejala"
+    },
+    "findHospital": "Cari Rumah Sakit Terdekat",
+    "findHospitalDesc": "Temukan ruang gawat darurat atau fasilitas perawatan mendesak terdekat berdasarkan lokasi Anda saat ini.",
+    "findHospitals": "Cari Rumah Sakit",
+    "urgentCare": "Perawatan Mendesak",
+    "firstAidSearch": "Cari panduan pertolongan pertama atau gejala...",
+    "watchVideo": "Tonton Video",
+    "emergencyContacts": "Kontak Darurat",
+    "selectCountry": "Pilih negara",
+    "default": "Default",
+    "call": "Panggil",
+    "severity": {
+      "critical": "KRITIS",
+      "urgent": "MENDESAK",
+      "moderate": "SEDANG"
+    },
+    "firstAidGuides": {
+      "cpr": "RJP (Resusitasi Jantung Paru)",
+      "choking": "Tersedak (Manuver Heimlich)",
+      "bleeding": "Kontrol Perdarahan Hebat",
+      "burns": "Perawatan Luka Bakar"
+    },
+    "symptoms": {
+      "unconscious": "Tidak sadar",
+      "notBreathing": "Tidak bernapas",
+      "noPulse": "Tidak ada denyut nadi",
+      "cannotSpeak": "Tidak bisa berbicara",
+      "clutchingThroat": "Mencekik leher",
+      "blueLips": "Bibir biru",
+      "heavyBleeding": "Perdarahan hebat",
+      "bloodSoaking": "Darah membasahi perban",
+      "spurtingBlood": "Darah menyembur",
+      "redSkin": "Kulit merah dan nyeri",
+      "blisters": "Lepuh",
+      "charredSkin": "Kulit hangus",
+      "emergencyList": {
+        "unconscious": "Tidak sadar atau tidak responsif",
+        "breathing": "Kesulitan bernapas atau tidak bernapas",
+        "chestPain": "Nyeri atau tekanan dada",
+        "severeBleeding": "Perdarahan hebat",
+        "stroke": "Tanda-tanda stroke (tes FAST)",
+        "allergic": "Reaksi alergi parah",
+        "poisoning": "Keracunan atau overdosis"
+      },
+      "urgentList": {
+        "highFever": "Demam tinggi (di atas 39,4°C)",
+        "abdominalPain": "Nyeri perut hebat",
+        "deepCuts": "Luka dalam yang membutuhkan jahitan",
+        "brokenBones": "Dugaan patah tulang",
+        "headache": "Sakit kepala parah dengan perubahan penglihatan",
+        "vomiting": "Muntah terus-menerus",
+        "dehydration": "Tanda-tanda dehidrasi"
+      }
+    },
+    "symptomChecker": {
+      "title": "Pemeriksa Gejala Darurat",
+      "description": "Pilih gejala untuk mendapatkan panduan segera tentang apakah perawatan darurat diperlukan.",
+      "callEmergencyIf": "Hubungi Layanan Darurat Jika:",
+      "seekUrgentCareFor": "Cari Perawatan Mendesak Untuk:"
+    },
+    "contacts": {
+        "police": "Polisi",
+        "fire": "Pemadam Kebakaran",
+        "ambulance": "Ambulans",
+        "emergencyServices": "Layanan Darurat",
+        "poisonControl": "Kontrol Racun",
+        "crisisHotline": "Hotline Krisis",
+        "generalEmergency": "Darurat Umum",
+        "medicalEmergency": "Darurat Medis",
+        "civilDefense": "Pertahanan Sipil",
+        "policeFireAmbulance": "Polisi, Pemadam Kebakaran, Ambulans",
+        "nonUrgentMedical": "Saran medis yang tidak mendesak",
+        "policeDepartment": "Departemen Kepolisian",
+        "fireDepartment": "Dinas Pemadam Kebakaran",
+        "medicalFireEmergency": "Darurat Medis & Kebakaran"
+    }
+  },
+  "settings": {
+    "title": "Pengaturan",
+    "description": "Kelola preferensi akun dan pengaturan privasi Anda",
+    "saveSuccess": "Pengaturan telah berhasil disimpan.",
+    "saveError": "Gagal menyimpan pengaturan. Silakan coba lagi.",
+    "tabs": {
+      "profile": "Profil",
+      "preferences": "Preferensi",
+      "notifications": "Notifikasi",
+      "privacy": "Privasi",
+      "data": "Data"
+    },
+    "profile": {
+      "title": "Informasi Profil",
+      "changePhoto": "Ubah Foto",
+      "removePhoto": "Hapus Foto",
+      "fullName": "Nama Lengkap",
+      "email": "Alamat Email",
+      "phone": "Nomor Telepon",
+      "dateOfBirth": "Tanggal Lahir",
+      "emergencyContact": "Kontak Darurat",
+      "saveChanges": "Simpan Perubahan"
+    },
+    "preferences": {
+      "language": "Bahasa & Wilayah",
+      "languageLabel": "Bahasa",
+      "appearance": "Tampilan",
+      "theme": "Tema",
+      "themeOptions": {
+        "light": "Terang",
+        "dark": "Gelap",
+        "system": "Sistem"
+      },
+      "accessibility": "Aksesibilitas",
+      "highContrast": "Mode Kontras Tinggi",
+      "highContrastDesc": "Tingkatkan kontras untuk visibilitas yang lebih baik",
+      "largeText": "Teks Besar",
+      "largeTextDesc": "Tingkatkan ukuran teks di seluruh aplikasi",
+      "screenReader": "Dukungan Pembaca Layar",
+      "screenReaderDesc": "Optimalkan untuk perangkat lunak pembaca layar",
+      "reducedMotion": "Gerakan yang Dikurangi",
+      "reducedMotionDesc": "Minimalkan animasi dan transisi"
+    },
+    "notifications": {
+      "title": "Preferensi Notifikasi",
+      "email": "Notifikasi Email",
+      "emailDesc": "Terima pembaruan dan pengingat melalui email",
+      "push": "Notifikasi Push",
+      "pushDesc": "Dapatkan notifikasi instan di perangkat Anda",
+      "sms": "Notifikasi SMS",
+      "smsDesc": "Terima peringatan penting melalui pesan teks",
+      "reminders": "Pengingat Kesehatan",
+      "remindersDesc": "Dapatkan pengingat untuk obat-obatan dan janji temu"
+    },
+    "privacy": {
+      "title": "Privasi & Kontrol Data",
+      "dataSharing": "Berbagi Data dengan Penyedia Layanan Kesehatan",
+      "dataSharingDesc": "Izinkan berbagi data anonim untuk penelitian",
+      "analytics": "Analitik & Kinerja",
+      "analyticsDesc": "Bantu tingkatkan aplikasi dengan analitik penggunaan",
+      "marketing": "Komunikasi Pemasaran",
+      "marketingDesc": "Terima konten promosi dan tips kesehatan",
+      "thirdParty": "Integrasi Pihak Ketiga",
+      "thirdPartyDesc": "Izinkan koneksi dengan pelacak kebugaran dan aplikasi",
+      "accountSecurity": "Keamanan Akun",
+      "viewPrivacy": "Lihat Kebijakan Privasi",
+      "changePassword": "Ubah Kata Sandi",
+      "twoFactor": "Otentikasi Dua Faktor"
+    },
+    "data": {
+      "title": "Manajemen Data",
+      "export": "Ekspor Data Anda",
+      "exportDesc": "Unduh salinan data kesehatan, konsultasi, dan rencana kesehatan Anda.",
+      "exportData": "Ekspor Data",
+      "import": "Impor Data Kesehatan",
+      "importDesc": "Impor catatan kesehatan dari platform atau perangkat lain.",
+      "importData": "Impor Data",
+      "dangerZone": "Zona Bahaya",
+      "deleteAccount": "Hapus Akun",
+      "deleteAccountDesc": "Hapus akun Anda secara permanen dan semua data terkait. Tindakan ini tidak dapat dibatalkan."
+    }
+  },
   "auth": {
     "signIn": "Masuk",
     "signUp": "Daftar",
     "email": "Email",
     "password": "Kata Sandi",
+    "confirmPassword": "Konfirmasi Kata Sandi",
     "dontHaveAccount": "Belum punya akun?",
-    "alreadyHaveAccount": "Sudah punya akun?"
+    "alreadyHaveAccount": "Sudah punya akun?",
+    "signInSubtitle": "Selamat datang kembali di pendamping kesehatan Anda",
+    "signUpSubtitle": "Bergabunglah dengan kami untuk memulai perjalanan kesehatan Anda",
+    "emailPlaceholder": "Masukkan alamat email Anda",
+    "passwordPlaceholder": "Masukkan kata sandi Anda",
+    "confirmPasswordPlaceholder": "Konfirmasi kata sandi Anda",
+    "passwordRequirement": "Kata sandi harus terdiri dari minimal 6 karakter",
+    "termsNotice": "Dengan mendaftar, Anda menyetujui",
+    "termsOfService": "Ketentuan Layanan",
+    "privacyPolicy": "Kebijakan Privasi",
+    "errors": {
+      "signInFailed": "Gagal masuk. Silakan periksa kredensial Anda dan coba lagi.",
+      "signUpFailed": "Gagal mendaftar. Silakan coba lagi.",
+      "userNotFound": "Tidak ada akun yang ditemukan dengan alamat email ini.",
+      "wrongPassword": "Kata sandi salah. Silakan coba lagi.",
+      "emailInUse": "Akun dengan email ini sudah ada.",
+      "invalidEmail": "Silakan masukkan alamat email yang valid.",
+      "weakPassword": "Kata sandi terlalu lemah. Silakan pilih kata sandi yang lebih kuat.",
+      "passwordMismatch": "Kata sandi tidak cocok. Silakan coba lagi.",
+      "passwordTooShort": "Kata sandi harus terdiri dari minimal 6 karakter.",
+      "tooManyRequests": "Terlalu banyak percobaan. Silakan coba lagi nanti."
+    }
   },
   "errors": {
     "generic": "Terjadi kesalahan. Silakan coba lagi.",
@@ -51,5 +472,11 @@
     "notFound": "Sumber daya tidak ditemukan.",
     "validationError": "Periksa input Anda.",
     "serverError": "Kesalahan server. Coba lagi nanti."
+  },
+  "success": {
+    "saved": "Pengaturan berhasil disimpan!",
+    "deleted": "Item berhasil dihapus!",
+    "updated": "Berhasil diperbarui!",
+    "sent": "Berhasil dikirim!"
   }
 }

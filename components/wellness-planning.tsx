@@ -1,3 +1,4 @@
+// components/wellness-planning.tsx
 "use client"
 
 import { useState, useRef } from "react"
@@ -673,7 +674,7 @@ export function WellnessPlanning() {
                                 <table className="w-full text-left">
                                     <thead>
                                         <tr className="border-b">
-                                            <th className="p-2 font-medium">{t("common.search")}</th>
+                                            <th className="p-2 font-medium">{t("wellness.plan.weeklyScheduleTitle")}</th>
                                             <th className="p-2 font-medium">Fitness</th>
                                             <th className="p-2 font-medium">Nutrition Focus</th>
                                             <th className="p-2 font-medium">Mindfulness</th>
@@ -724,9 +725,9 @@ export function WellnessPlanning() {
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <span className="text-sm font-medium text-foreground">
-                {t("common.search")} {currentStep} {t("common.search")} {steps.length}
+                {t("common.step")} {currentStep} {t("common.of")} {steps.length}
               </span>
-              <span className="text-sm text-muted-foreground">{Math.round(progress)}% {t("common.search")}</span>
+              <span className="text-sm text-muted-foreground">{Math.round(progress)}% {t("common.complete")}</span>
             </div>
             <Progress value={progress} className="h-2" />
             <div className="flex justify-between">

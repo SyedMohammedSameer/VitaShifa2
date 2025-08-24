@@ -1,101 +1,102 @@
+// lib/emergency-contacts.ts
 import { Phone, Shield, Heart } from "lucide-react";
 
 export interface EmergencyContact {
-  name: string;
+  nameKey: string;
   number: string;
-  description: string;
+  descriptionKey: string;
   icon: React.ComponentType<{ className?: string }>;
 }
 
 export const emergencyContactsByCountry: Record<string, EmergencyContact[]> = {
   US: [
-    { name: "Emergency Services", number: "911", description: "Police, Fire, Ambulance", icon: Phone },
-    { name: "Poison Control", number: "1-800-222-1222", description: "24/7 Poison Emergency", icon: Shield },
-    { name: "Crisis Hotline", number: "988", description: "Mental Health Crisis", icon: Heart },
+    { nameKey: "emergency.contacts.emergencyServices", number: "911", descriptionKey: "emergency.contacts.policeFireAmbulance", icon: Phone },
+    { nameKey: "emergency.contacts.poisonControl", number: "1-800-222-1222", descriptionKey: "emergency.contacts.poisonControl", icon: Shield },
+    { nameKey: "emergency.contacts.crisisHotline", number: "988", descriptionKey: "emergency.contacts.crisisHotline", icon: Heart },
   ],
   GB: [
-    { name: "Emergency Services", number: "999", description: "Police, Fire, Ambulance", icon: Phone },
-    { name: "NHS Non-Emergency", number: "111", description: "Non-urgent medical advice", icon: Heart },
+    { nameKey: "emergency.contacts.emergencyServices", number: "999", descriptionKey: "emergency.contacts.policeFireAmbulance", icon: Phone },
+    { nameKey: "emergency.contacts.nonUrgentMedical", number: "111", descriptionKey: "emergency.contacts.nonUrgentMedical", icon: Heart },
   ],
   IN: [
-    { name: "General Emergency", number: "112", description: "Police, Fire, Ambulance", icon: Phone },
-    { name: "Police", number: "100", description: "Police Department", icon: Shield },
-    { name: "Ambulance", number: "102", description: "Medical Emergency", icon: Heart },
+    { nameKey: "emergency.contacts.generalEmergency", number: "112", descriptionKey: "emergency.contacts.policeFireAmbulance", icon: Phone },
+    { nameKey: "emergency.contacts.police", number: "100", descriptionKey: "emergency.contacts.policeDepartment", icon: Shield },
+    { nameKey: "emergency.contacts.ambulance", number: "102", descriptionKey: "emergency.contacts.medicalEmergency", icon: Heart },
   ],
   PK: [
-    { name: "Police", number: "15", description: "Police Department", icon: Shield },
-    { name: "Fire", number: "16", description: "Fire Department", icon: Phone },
-    { name: "Ambulance", number: "115", description: "Medical Emergency", icon: Heart },
+    { nameKey: "emergency.contacts.police", number: "15", descriptionKey: "emergency.contacts.policeDepartment", icon: Shield },
+    { nameKey: "emergency.contacts.fire", number: "16", descriptionKey: "emergency.contacts.fireDepartment", icon: Phone },
+    { nameKey: "emergency.contacts.ambulance", number: "115", descriptionKey: "emergency.contacts.medicalEmergency", icon: Heart },
   ],
   EG: [
-    { name: "Police", number: "122", description: "Police Department", icon: Shield },
-    { name: "Ambulance", number: "123", description: "Medical Emergency", icon: Heart },
-    { name: "Fire", number: "180", description: "Fire Department", icon: Phone },
+    { nameKey: "emergency.contacts.police", number: "122", descriptionKey: "emergency.contacts.policeDepartment", icon: Shield },
+    { nameKey: "emergency.contacts.ambulance", number: "123", descriptionKey: "emergency.contacts.medicalEmergency", icon: Heart },
+    { nameKey: "emergency.contacts.fire", number: "180", descriptionKey: "emergency.contacts.fireDepartment", icon: Phone },
   ],
   DZ: [
-    { name: "General Emergency", number: "112", description: "Police, Fire, Ambulance", icon: Phone },
-    { name: "Police", number: "17", description: "Police Department", icon: Shield },
-    { name: "Ambulance / Fire", number: "14", description: "Medical & Fire Emergency", icon: Heart },
+    { nameKey: "emergency.contacts.generalEmergency", number: "112", descriptionKey: "emergency.contacts.policeFireAmbulance", icon: Phone },
+    { nameKey: "emergency.contacts.police", number: "17", descriptionKey: "emergency.contacts.policeDepartment", icon: Shield },
+    { nameKey: "emergency.contacts.ambulance", number: "14", descriptionKey: "emergency.contacts.medicalFireEmergency", icon: Heart },
   ],
   AU: [
-    { name: "Emergency Services", number: "000", description: "Police, Fire, Ambulance", icon: Phone },
+    { nameKey: "emergency.contacts.emergencyServices", number: "000", descriptionKey: "emergency.contacts.policeFireAmbulance", icon: Phone },
   ],
   SG: [
-    { name: "Police", number: "999", description: "Police Department", icon: Shield },
-    { name: "Ambulance / Fire", number: "995", description: "Medical & Fire Emergency", icon: Heart },
+    { nameKey: "emergency.contacts.police", number: "999", descriptionKey: "emergency.contacts.policeDepartment", icon: Shield },
+    { nameKey: "emergency.contacts.ambulance", number: "995", descriptionKey: "emergency.contacts.medicalFireEmergency", icon: Heart },
   ],
   IQ: [
-    { name: "General Emergency", number: "112", description: "Police, Fire, Ambulance", icon: Phone },
+    { nameKey: "emergency.contacts.generalEmergency", number: "112", descriptionKey: "emergency.contacts.policeFireAmbulance", icon: Phone },
   ],
   SA: [
-    { name: "General Emergency", number: "911", description: "Police, Fire, Ambulance", icon: Phone },
+    { nameKey: "emergency.contacts.generalEmergency", number: "911", descriptionKey: "emergency.contacts.policeFireAmbulance", icon: Phone },
   ],
   ID: [
-    { name: "Police", number: "110", description: "Police Department", icon: Shield },
-    { name: "Ambulance", number: "118", description: "Medical Emergency", icon: Heart },
-    { name: "Fire", number: "113", description: "Fire Department", icon: Phone },
+    { nameKey: "emergency.contacts.police", number: "110", descriptionKey: "emergency.contacts.policeDepartment", icon: Shield },
+    { nameKey: "emergency.contacts.ambulance", number: "118", descriptionKey: "emergency.contacts.medicalEmergency", icon: Heart },
+    { nameKey: "emergency.contacts.fire", number: "113", descriptionKey: "emergency.contacts.fireDepartment", icon: Phone },
   ],
   BR: [
-    { name: "Police", number: "190", description: "Military Police", icon: Shield },
-    { name: "Ambulance", number: "192", description: "Medical Emergency", icon: Heart },
-    { name: "Fire", number: "193", description: "Fire Department", icon: Phone },
+    { nameKey: "emergency.contacts.police", number: "190", descriptionKey: "emergency.contacts.policeDepartment", icon: Shield },
+    { nameKey: "emergency.contacts.ambulance", number: "192", descriptionKey: "emergency.contacts.medicalEmergency", icon: Heart },
+    { nameKey: "emergency.contacts.fire", number: "193", descriptionKey: "emergency.contacts.fireDepartment", icon: Phone },
   ],
   JP: [
-    { name: "Police", number: "110", description: "Police Department", icon: Shield },
-    { name: "Ambulance / Fire", number: "119", description: "Medical & Fire Emergency", icon: Heart },
+    { nameKey: "emergency.contacts.police", number: "110", descriptionKey: "emergency.contacts.policeDepartment", icon: Shield },
+    { nameKey: "emergency.contacts.ambulance", number: "119", descriptionKey: "emergency.contacts.medicalFireEmergency", icon: Heart },
   ],
   CN: [
-    { name: "Police", number: "110", description: "Police Department", icon: Shield },
-    { name: "Ambulance", number: "120", description: "Medical Emergency", icon: Heart },
-    { name: "Fire", number: "119", description: "Fire Department", icon: Phone },
+    { nameKey: "emergency.contacts.police", number: "110", descriptionKey: "emergency.contacts.policeDepartment", icon: Shield },
+    { nameKey: "emergency.contacts.ambulance", number: "120", descriptionKey: "emergency.contacts.medicalEmergency", icon: Heart },
+    { nameKey: "emergency.contacts.fire", number: "119", descriptionKey: "emergency.contacts.fireDepartment", icon: Phone },
   ],
   MA: [
-    { name: "Police", number: "19", description: "Police Department", icon: Shield },
-    { name: "Ambulance / Fire", number: "15", description: "Medical & Fire Emergency", icon: Heart },
+    { nameKey: "emergency.contacts.police", number: "19", descriptionKey: "emergency.contacts.policeDepartment", icon: Shield },
+    { nameKey: "emergency.contacts.ambulance", number: "15", descriptionKey: "emergency.contacts.medicalFireEmergency", icon: Heart },
   ],
   SY: [
-    { name: "Police", number: "112", description: "Police Department", icon: Shield },
-    { name: "Ambulance", number: "110", description: "Medical Emergency", icon: Heart },
-    { name: "Fire", number: "113", description: "Fire Department", icon: Phone },
+    { nameKey: "emergency.contacts.police", number: "112", descriptionKey: "emergency.contacts.policeDepartment", icon: Shield },
+    { nameKey: "emergency.contacts.ambulance", number: "110", descriptionKey: "emergency.contacts.medicalEmergency", icon: Heart },
+    { nameKey: "emergency.contacts.fire", number: "113", descriptionKey: "emergency.contacts.fireDepartment", icon: Phone },
   ],
   PS: [
-    { name: "Police", number: "100", description: "Police Department", icon: Shield },
-    { name: "Ambulance", number: "101", description: "Medical Emergency", icon: Heart },
-    { name: "Civil Defense", number: "102", description: "Civil Defense", icon: Phone },
+    { nameKey: "emergency.contacts.police", number: "100", descriptionKey: "emergency.contacts.policeDepartment", icon: Shield },
+    { nameKey: "emergency.contacts.ambulance", number: "101", descriptionKey: "emergency.contacts.medicalEmergency", icon: Heart },
+    { nameKey: "emergency.contacts.civilDefense", number: "102", descriptionKey: "emergency.contacts.civilDefense", icon: Phone },
   ],
   ZA: [
-    { name: "Police", number: "10111", description: "Police Department", icon: Shield },
-    { name: "Ambulance / Fire", number: "10177", description: "Medical & Fire Emergency", icon: Heart },
+    { nameKey: "emergency.contacts.police", number: "10111", descriptionKey: "emergency.contacts.policeDepartment", icon: Shield },
+    { nameKey: "emergency.contacts.ambulance", number: "10177", descriptionKey: "emergency.contacts.medicalFireEmergency", icon: Heart },
   ],
   NZ: [
-    { name: "Emergency Services", number: "111", description: "Police, Fire, Ambulance", icon: Phone },
+    { nameKey: "emergency.contacts.emergencyServices", number: "111", descriptionKey: "emergency.contacts.policeFireAmbulance", icon: Phone },
   ],
   EU: [
-    { name: "General Emergency", number: "112", description: "Police, Fire, Ambulance", icon: Phone },
+    { nameKey: "emergency.contacts.generalEmergency", number: "112", descriptionKey: "emergency.contacts.policeFireAmbulance", icon: Phone },
   ],
   default: [
-    { name: "General Emergency (Europe)", number: "112", description: "Police, Fire, Ambulance", icon: Phone },
-    { name: "General Emergency (US/Canada)", number: "911", description: "Police, Fire, Ambulance", icon: Phone },
-    { name: "General Emergency (Australia)", number: "000", description: "Police, Fire, Ambulance", icon: Shield },
+    { nameKey: "emergency.contacts.generalEmergency", number: "112", descriptionKey: "emergency.contacts.policeFireAmbulance", icon: Phone },
+    { nameKey: "emergency.contacts.generalEmergency", number: "911", descriptionKey: "emergency.contacts.policeFireAmbulance", icon: Phone },
+    { nameKey: "emergency.contacts.generalEmergency", number: "000", descriptionKey: "emergency.contacts.policeFireAmbulance", icon: Shield },
   ],
 };

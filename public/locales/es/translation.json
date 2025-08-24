@@ -14,7 +14,11 @@
     "required": "Requerido",
     "optional": "Opcional",
     "yes": "Sí",
-    "no": "No"
+    "no": "No",
+    "step": "Paso",
+    "of": "de",
+    "complete": "Completo",
+    "and": "y"
   },
   "navigation": {
     "medicalConsultation": "Consulta Médica",
@@ -47,12 +51,35 @@
     "keyFindings": "Hallazgos Principales",
     "recommendations": "Recomendaciones",
     "confidence": "Confianza",
+    "imagePreviewAlt": "Vista previa de la imagen médica",
+    "disclaimerTitle": "Descargo de responsabilidad médica",
+    "errorAnalyzing": "Error al analizar la imagen. Inténtalo de nuevo.",
+    "status": {
+      "uploading": "Subiendo imagen...",
+      "analyzing": "La IA está analizando tu imagen...",
+      "completed": "Análisis completado",
+      "error": "El análisis falló"
+    },
     "priority": {
       "high": "PRIORIDAD ALTA",
       "medium": "PRIORIDAD MEDIA",
       "low": "PRIORIDAD BAJA"
     },
-    "disclaimer": "Este análisis de IA es solo para fines informativos y no debe reemplazar el diagnóstico médico profesional."
+    "disclaimer": "Este análisis de IA es solo para fines informativos y no debe reemplazar el diagnóstico médico profesional.",
+    "supportedTypes": {
+      "title": "Tipos de imágenes compatibles",
+      "xrays": "Rayos X y radiografías",
+      "mri": "Resonancias magnéticas y tomografías computarizadas",
+      "dermatology": "Imágenes dermatológicas",
+      "pathology": "Diapositivas de patología"
+    },
+    "privacy": {
+      "title": "Privacidad y seguridad",
+      "encrypted": "Las imágenes se cifran durante la carga",
+      "secure": "El análisis se realiza de forma segura",
+      "notStored": "Los datos no se almacenan de forma permanente",
+      "hipaa": "Procesamiento compatible con HIPAA"
+    }
   },
   "wellness": {
     "title": "Planificación de Bienestar",
@@ -65,6 +92,118 @@
       "preferences": "Preferencias",
       "plan": "Tu Plan de Bienestar"
     },
+    "personalInfo": {
+      "age": "Edad",
+      "agePrompt": "Introduce tu edad",
+      "gender": "Género",
+      "genderOptions": {
+        "male": "Masculino",
+        "female": "Femenino",
+        "other": "Otro",
+        "preferNotToSay": "Prefiero no decirlo"
+      },
+      "height": "Altura (cm)",
+      "heightPrompt": "Introduce tu altura",
+      "weight": "Peso (kg)",
+      "weightPrompt": "Introduce tu peso",
+      "activityLevel": "Nivel de actividad actual",
+      "activityLevels": {
+        "sedentary": "Sedentario (poco o ningún ejercicio)",
+        "light": "Ligeramente activo (ejercicio ligero 1-3 días/semana)",
+        "moderate": "Moderadamente activo (ejercicio moderado 3-5 días/semana)",
+        "very": "Muy activo (ejercicio intenso 6-7 días/semana)"
+      }
+    },
+    "healthGoals": {
+      "title": "¿Cuáles son tus principales objetivos de salud?",
+      "weightLoss": "Pérdida de peso",
+      "weightGain": "Aumento de peso",
+      "muscleBuilding": "Desarrollo muscular",
+      "cardiovascularHealth": "Salud cardiovascular",
+      "stressManagement": "Manejo del estrés",
+      "betterSleep": "Mejor sueño",
+      "increasedEnergy": "Aumento de energía",
+      "diseasePrevention": "Prevención de enfermedades",
+      "mentalWellness": "Bienestar mental",
+      "flexibilityImprovement": "Mejora de la flexibilidad"
+    },
+    "lifestyle": {
+      "sleepHours": "Horas de sueño promedio por noche",
+      "sleepOptions": {
+        "lessThan5": "Menos de 5 horas",
+        "5to6": "5-6 horas",
+        "7to8": "7-8 horas",
+        "moreThan8": "Más de 8 horas"
+      },
+      "stressLevel": "Nivel de estrés actual",
+      "stressLevels": {
+        "low": "Bajo",
+        "moderate": "Moderado",
+        "high": "Alto",
+        "veryHigh": "Muy alto"
+      },
+      "smokingStatus": "Estado de tabaquismo",
+      "smokingOptions": {
+        "never": "Nunca he fumado",
+        "former": "Ex fumador",
+        "current": "Fumador actual"
+      },
+      "alcoholConsumption": "Consumo de alcohol",
+      "alcoholOptions": {
+        "never": "Nunca",
+        "rarely": "Raramente",
+        "occasionally": "Ocasionalmente",
+        "regularly": "Regularmente"
+      }
+    },
+    "medicalHistory": {
+      "conditionsTitle": "¿Tienes alguna de estas condiciones?",
+      "conditions": {
+        "diabetes": "Diabetes",
+        "hypertension": "Hipertensión",
+        "heartDisease": "Enfermedad del corazón",
+        "asthma": "Asma",
+        "arthritis": "Artritis",
+        "depressionAnxiety": "Depresión/Ansiedad",
+        "thyroidDisorders": "Trastornos de la tiroides",
+        "none": "Ninguna de las anteriores"
+      },
+      "medications": "Medicamentos actuales (opcional)",
+      "medicationsPrompt": "Enumera los medicamentos que estás tomando actualmente...",
+      "allergies": "Alergias conocidas (opcional)",
+      "allergiesPrompt": "Enumera las alergias conocidas..."
+    },
+    "preferences": {
+      "dietType": "Tipo de dieta preferida",
+      "dietTypes": {
+        "balanced": "Dieta equilibrada",
+        "vegetarian": "Vegetariana",
+        "vegan": "Vegana",
+        "keto": "Cetogénica",
+        "mediterranean": "Mediterránea",
+        "lowCarb": "Baja en carbohidratos",
+        "other": "Otra"
+      },
+      "exerciseTypes": "Tipos de ejercicio preferidos",
+      "exercises": {
+        "walking": "Caminar/Correr",
+        "weightTraining": "Entrenamiento con pesas",
+        "yoga": "Yoga/Pilates",
+        "swimming": "Natación",
+        "cycling": "Ciclismo",
+        "dancing": "Bailar",
+        "teamSports": "Deportes de equipo",
+        "homeWorkouts": "Entrenamientos en casa"
+      },
+      "timeAvailability": "Disponibilidad de tiempo para actividades de bienestar",
+      "timeOptions": {
+        "15to30": "15-30 minutos diarios",
+        "30to60": "30-60 minutos diarios",
+        "1to2hours": "1-2 horas diarias",
+        "weekendsOnly": "Solo fines de semana",
+        "flexible": "Horario flexible"
+      }
+    },
     "plan": {
       "title": "Tu Plan de Bienestar Personalizado",
       "subtitle": "Este es un punto de partida para tu jornada de bienestar, creado especialmente para ti.",
@@ -72,34 +211,272 @@
       "downloadPdf": "Descargar Plan como PDF",
       "scheduleCheckin": "Programar Revisión",
       "generating": "Generando Tu Plan...",
-      "generatingSubtitle": "Nuestra IA está creando una jornada de bienestar personalizada para ti."
+      "generatingSubtitle": "Nuestra IA está creando una jornada de bienestar personalizada para ti.",
+      "weeklyScheduleTitle": "Tu semana de muestra de un vistazo"
     }
   },
   "medication": {
     "title": "Recordatorios de Medicamentos",
     "description": "Mantente al día con tu horario de medicamentos",
     "addReminder": "Agregar Recordatorio",
+    "addNew": "Agregar Nuevo Medicamento",
+    "createReminder": "Crea un recordatorio para tu horario de medicamentos",
+    "nameLabel": "Nombre del Medicamento *",
+    "namePlaceholder": "p. ej., Lisinopril",
+    "doseLabel": "Dosis *",
+    "dosePlaceholder": "p. ej., 10mg",
+    "frequencyLabel": "Frecuencia *",
+    "selectFrequency": "Seleccionar frecuencia",
+    "onceDaily": "Una vez al día",
+    "twiceDaily": "Dos veces al día",
+    "threeTimesDaily": "Tres veces al día",
+    "fourTimesDaily": "Cuatro veces al día",
+    "asNeeded": "Según sea necesario",
+    "timesLabel": "Hora(s) *",
+    "selectTime": "Seleccionar hora",
+    "addTime": "Agregar Hora",
+    "startDateLabel": "Fecha de Inicio",
+    "endDateLabel": "Fecha de Finalización (opcional)",
+    "notesLabel": "Notas",
+    "notesPlaceholder": "Instrucciones especiales...",
+    "addMedication": "Agregar Medicamento",
     "upcomingReminders": "Recordatorios Próximos",
     "adherence": "Adherencia de 7 Días",
-    "allMedications": "Todos los Medicamentos"
+    "allMedications": "Todos los Medicamentos",
+    "noReminders": "¡No hay recordatorios próximos para hoy!",
+    "allCaughtUp": "Estás al día.",
+    "noMedications": "No hay medicamentos agregados todavía",
+    "addFirst": "Comienza agregando tu primer recordatorio de medicamento",
+    "addFirstMedication": "Agregar Primer Medicamento",
+    "overdue": "Atrasado",
+    "taken": "Marcado como Tomado",
+    "skipped": "Dosis Omitida",
+    "snoozed": "Recordatorio Pospuesto",
+    "snoozeMessage": "Te recordaremos de nuevo en 15 minutos.",
+    "jobStaying": "¡Gran trabajo manteniéndote en el camino!",
+    "reminderNoted": "Recordatorio anotado.",
+    "adherenceChartTitle": "Adherencia de 7 Días",
+    "adherenceChartDescription": "Tu cumplimiento de la medicación esta semana",
+    "noMedicationsToTrack": "No hay medicamentos para rastrear.",
+    "allMedicationsTitle": "Todos los Medicamentos",
+    "manageReminders": "Administra tus recordatorios de medicamentos",
+    "scheduleToday": "Tu horario de medicamentos para hoy"
   },
   "emergency": {
     "title": "Cuidado de Emergencia",
     "description": "Acceso rápido a orientación de emergencia e instrucciones de primeros auxilios",
     "lifeThreatening": "¿Emergencia que Amenaza la Vida?",
     "lifeThreateningDesc": "Si alguien está inconsciente, no respira, o está gravemente herido, llama a servicios de emergencia inmediatamente.",
-    "callEmergency": "Llamar Servicios de Emergencia"
+    "callEmergency": "Llamar Servicios de Emergencia",
+    "emergencyCallButton": "Emergencia: Llamar a Servicios de Emergencia",
+    "findUrgentCare": "Encontrar Atención de Urgencia",
+    "locationError": "No se puede recuperar tu ubicación. Activa los servicios de ubicación en la configuración de tu navegador.",
+    "geolocationNotSupported": "La geolocalización no es compatible con este navegador.",
+    "tabs": {
+      "contacts": "Contactos de Emergencia",
+      "guides": "Guías de Primeros Auxilios",
+      "symptoms": "Verificador de Síntomas"
+    },
+    "findHospital": "Encontrar Hospital Más Cercano",
+    "findHospitalDesc": "Localiza la sala de emergencias o el centro de atención de urgencia más cercano según tu ubicación actual.",
+    "findHospitals": "Encontrar Hospitales",
+    "urgentCare": "Atención de Urgencia",
+    "firstAidSearch": "Buscar guías de primeros auxilios o síntomas...",
+    "watchVideo": "Ver Video",
+    "emergencyContacts": "Contactos de Emergencia",
+    "selectCountry": "Seleccionar un país",
+    "default": "Predeterminado",
+    "call": "Llamar",
+    "severity": {
+      "critical": "CRÍTICO",
+      "urgent": "URGENTE",
+      "moderate": "MODERADO"
+    },
+    "firstAidGuides": {
+      "cpr": "RCP (Reanimación Cardiopulmonar)",
+      "choking": "Asfixia (Maniobra de Heimlich)",
+      "bleeding": "Control de Hemorragias Graves",
+      "burns": "Tratamiento de Quemaduras"
+    },
+    "symptoms": {
+      "unconscious": "Inconsciente",
+      "notBreathing": "No respira",
+      "noPulse": "Sin pulso",
+      "cannotSpeak": "No puede hablar",
+      "clutchingThroat": "Agarrándose la garganta",
+      "blueLips": "Labios azules",
+      "heavyBleeding": "Hemorragia grave",
+      "bloodSoaking": "Sangre empapando las vendas",
+      "spurtingBlood": "Sangre a chorros",
+      "redSkin": "Piel roja y dolorosa",
+      "blisters": "Ampollas",
+      "charredSkin": "Piel carbonizada",
+      "emergencyList": {
+        "unconscious": "Inconsciente o no responde",
+        "breathing": "Dificultad para respirar o no respira",
+        "chestPain": "Dolor o presión en el pecho",
+        "severeBleeding": "Hemorragia grave",
+        "stroke": "Signos de accidente cerebrovascular (prueba FAST)",
+        "allergic": "Reacción alérgica grave",
+        "poisoning": "Envenenamiento o sobredosis"
+      },
+      "urgentList": {
+        "highFever": "Fiebre alta (más de 39.4°C)",
+        "abdominalPain": "Dolor abdominal intenso",
+        "deepCuts": "Cortes profundos que requieren sutura",
+        "brokenBones": "Sospecha de huesos rotos",
+        "headache": "Dolor de cabeza intenso con cambios en la visión",
+        "vomiting": "Vómitos persistentes",
+        "dehydration": "Signos de deshidratación"
+      }
+    },
+    "symptomChecker": {
+      "title": "Verificador de Síntomas de Emergencia",
+      "description": "Selecciona los síntomas para obtener orientación inmediata sobre si se necesita atención de emergencia.",
+      "callEmergencyIf": "Llama a Servicios de Emergencia si:",
+      "seekUrgentCareFor": "Busca Atención de Urgencia para:"
+    },
+    "contacts": {
+        "police": "Policía",
+        "fire": "Bomberos",
+        "ambulance": "Ambulancia",
+        "emergencyServices": "Servicios de Emergencia",
+        "poisonControl": "Control de Envenenamiento",
+        "crisisHotline": "Línea de Crisis",
+        "generalEmergency": "Emergencia General",
+        "medicalEmergency": "Emergencia Médica",
+        "civilDefense": "Defensa Civil",
+        "policeFireAmbulance": "Policía, Bomberos, Ambulancia",
+        "nonUrgentMedical": "Consejo médico no urgente",
+        "policeDepartment": "Departamento de Policía",
+        "fireDepartment": "Departamento de Bomberos",
+        "medicalFireEmergency": "Emergencia Médica y de Bomberos"
+    }
   },
   "settings": {
     "title": "Configuración",
-    "description": "Gestiona las preferencias de tu cuenta y configuración de privacidad"
+    "description": "Gestiona las preferencias de tu cuenta y configuración de privacidad",
+    "saveSuccess": "La configuración se ha guardado correctamente.",
+    "saveError": "No se pudo guardar la configuración. Inténtalo de nuevo.",
+    "tabs": {
+      "profile": "Perfil",
+      "preferences": "Preferencias",
+      "notifications": "Notificaciones",
+      "privacy": "Privacidad",
+      "data": "Datos"
+    },
+    "profile": {
+      "title": "Información del Perfil",
+      "changePhoto": "Cambiar Foto",
+      "removePhoto": "Eliminar Foto",
+      "fullName": "Nombre Completo",
+      "email": "Dirección de Correo Electrónico",
+      "phone": "Número de Teléfono",
+      "dateOfBirth": "Fecha de Nacimiento",
+      "emergencyContact": "Contacto de Emergencia",
+      "saveChanges": "Guardar Cambios"
+    },
+    "preferences": {
+      "language": "Idioma y Región",
+      "languageLabel": "Idioma",
+      "appearance": "Apariencia",
+      "theme": "Tema",
+      "themeOptions": {
+        "light": "Claro",
+        "dark": "Oscuro",
+        "system": "Sistema"
+      },
+      "accessibility": "Accesibilidad",
+      "highContrast": "Modo de Alto Contraste",
+      "highContrastDesc": "Aumentar el contraste para una mejor visibilidad",
+      "largeText": "Texto Grande",
+      "largeTextDesc": "Aumentar el tamaño del texto en toda la aplicación",
+      "screenReader": "Soporte para Lector de Pantalla",
+      "screenReaderDesc": "Optimizar para software de lectura de pantalla",
+      "reducedMotion": "Movimiento Reducido",
+      "reducedMotionDesc": "Minimizar animaciones y transiciones"
+    },
+    "notifications": {
+      "title": "Preferencias de Notificación",
+      "email": "Notificaciones por Correo Electrónico",
+      "emailDesc": "Recibir actualizaciones y recordatorios por correo electrónico",
+      "push": "Notificaciones Push",
+      "pushDesc": "Recibir notificaciones instantáneas en tu dispositivo",
+      "sms": "Notificaciones por SMS",
+      "smsDesc": "Recibir alertas importantes por mensaje de texto",
+      "reminders": "Recordatorios de Salud",
+      "remindersDesc": "Recibir recordatorios de medicamentos y citas"
+    },
+    "privacy": {
+      "title": "Privacidad y Control de Datos",
+      "dataSharing": "Compartir Datos con Proveedores de Salud",
+      "dataSharingDesc": "Permitir compartir datos anonimizados para investigación",
+      "analytics": "Análisis y Rendimiento",
+      "analyticsDesc": "Ayudar a mejorar la aplicación con análisis de uso",
+      "marketing": "Comunicaciones de Marketing",
+      "marketingDesc": "Recibir contenido promocional y consejos de salud",
+      "thirdParty": "Integraciones de Terceros",
+      "thirdPartyDesc": "Permitir conexiones con rastreadores de actividad física y aplicaciones",
+      "accountSecurity": "Seguridad de la Cuenta",
+      "viewPrivacy": "Ver Política de Privacidad",
+      "changePassword": "Cambiar Contraseña",
+      "twoFactor": "Autenticación de Dos Factores"
+    },
+    "data": {
+      "title": "Gestión de Datos",
+      "export": "Exportar Tus Datos",
+      "exportDesc": "Descargar una copia de tus datos de salud, consultas y planes de bienestar.",
+      "exportData": "Exportar Datos",
+      "import": "Importar Datos de Salud",
+      "importDesc": "Importar registros de salud desde otras plataformas o dispositivos.",
+      "importData": "Importar Datos",
+      "dangerZone": "Zona de Peligro",
+      "deleteAccount": "Eliminar Cuenta",
+      "deleteAccountDesc": "Eliminar permanentemente tu cuenta y todos los datos asociados. Esta acción no se puede deshacer."
+    }
   },
   "auth": {
     "signIn": "Iniciar Sesión",
     "signUp": "Registrarse",
     "email": "Email",
     "password": "Contraseña",
+    "confirmPassword": "Confirmar Contraseña",
     "dontHaveAccount": "¿No tienes una cuenta?",
-    "alreadyHaveAccount": "¿Ya tienes una cuenta?"
+    "alreadyHaveAccount": "¿Ya tienes una cuenta?",
+    "signInSubtitle": "Bienvenido de nuevo a tu compañero de salud",
+    "signUpSubtitle": "Únete a nosotros para comenzar tu viaje de bienestar",
+    "emailPlaceholder": "Introduce tu dirección de correo electrónico",
+    "passwordPlaceholder": "Introduce tu contraseña",
+    "confirmPasswordPlaceholder": "Confirma tu contraseña",
+    "passwordRequirement": "La contraseña debe tener al menos 6 caracteres",
+    "termsNotice": "Al registrarte, aceptas nuestros",
+    "termsOfService": "Términos de Servicio",
+    "privacyPolicy": "Política de Privacidad",
+    "errors": {
+      "signInFailed": "Inicio de sesión fallido. Por favor, comprueba tus credenciales e inténtalo de nuevo.",
+      "signUpFailed": "Registro fallido. Inténtalo de nuevo.",
+      "userNotFound": "No se encontró ninguna cuenta con esta dirección de correo electrónico.",
+      "wrongPassword": "Contraseña incorrecta. Inténtalo de nuevo.",
+      "emailInUse": "Ya existe una cuenta con este correo electrónico.",
+      "invalidEmail": "Por favor, introduce una dirección de correo electrónico válida.",
+      "weakPassword": "La contraseña es demasiado débil. Por favor, elige una contraseña más fuerte.",
+      "passwordMismatch": "Las contraseñas no coinciden. Inténtalo de nuevo.",
+      "passwordTooShort": "La contraseña debe tener al menos 6 caracteres.",
+      "tooManyRequests": "Demasiados intentos. Por favor, inténtalo de nuevo más tarde."
+    }
+  },
+  "errors": {
+    "generic": "Ocurrió un error. Inténtalo de nuevo.",
+    "networkError": "Error de red. Comprueba tu conexión.",
+    "unauthorized": "Acceso no autorizado.",
+    "notFound": "Recurso no encontrado.",
+    "validationError": "Comprueba tu entrada.",
+    "serverError": "Error del servidor. Inténtalo de nuevo más tarde."
+  },
+  "success": {
+    "saved": "¡Configuración guardada correctamente!",
+    "deleted": "¡Elemento eliminado correctamente!",
+    "updated": "¡Actualizado correctamente!",
+    "sent": "¡Enviado correctamente!"
   }
 }

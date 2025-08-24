@@ -100,7 +100,7 @@ export function EmergencyCare() {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
         const { latitude, longitude } = position.coords;
-        const googleMapsUrl = `https://www.google.com/maps/search/hospitals+near+me/@${latitude},${longitude},15z`;
+        const googleMapsUrl = `https://www.google.com/maps/search/hospital/@${latitude},${longitude},15z`;
         window.open(googleMapsUrl, "_blank");
       },
       () => {
@@ -194,7 +194,7 @@ export function EmergencyCare() {
                 {emergencyContacts.map((contact) => {
                   const Icon = contact.icon
                   return (
-                    <Card key={contact.name} className="bg-card/50 border-border/50">
+                    <Card key={contact.nameKey + contact.number} className="bg-card/50 border-border/50">
                       <CardContent className="p-6">
                         <div className="flex items-center justify-between">
                           <div className="flex items-center gap-3">
@@ -202,8 +202,8 @@ export function EmergencyCare() {
                               <Icon className="h-5 w-5 text-primary" />
                             </div>
                             <div>
-                              <h3 className="font-semibold text-foreground">{contact.name}</h3>
-                              <p className="text-sm text-muted-foreground">{contact.description}</p>
+                              <h3 className="font-semibold text-foreground">{t(contact.nameKey)}</h3>
+                              <p className="text-sm text-muted-foreground">{t(contact.descriptionKey)}</p>
                             </div>
                           </div>
                           <div className="text-right">

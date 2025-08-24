@@ -1,3 +1,4 @@
+// components/ai-diagnosis.tsx
 "use client"
 
 import type React from "react"
@@ -8,6 +9,8 @@ import { Progress } from "@/components/ui/progress"
 import { Badge } from "@/components/ui/badge"
 import { Upload, X, Eye, AlertCircle, CheckCircle, Clock, FileImage, Scan, Brain } from "lucide-react"
 import { cn } from "@/lib/utils"
+import { useTranslation } from "react-i18next"
+import i18n from "@/lib/i18n"
 
 interface UploadedImage {
   id: string
@@ -35,6 +38,7 @@ const fileToBase64 = (file: File): Promise<string> => {
 };
 
 export function AIDiagnosis() {
+  const { t } = useTranslation();
   const [uploadedImages, setUploadedImages] = useState<UploadedImage[]>([])
   const [isDragOver, setIsDragOver] = useState(false)
 
@@ -69,23 +73,23 @@ export function AIDiagnosis() {
         id,
         file,
         preview,
-        status: "uploading", // We'll keep this state for user feedback
+        status: "uploading",
       }
 
       setUploadedImages((prev) => [...prev, newImage]);
       
-      // We can change the status to "analyzing" right away
       setUploadedImages((prev) => prev.map((img) => (img.id === id ? { ...img, status: "analyzing" } : img)));
 
       try {
-        // 1. Convert the file to a Base64 string
         const base64Image = await fileToBase64(file);
 
-        // 2. Call your backend API with the Base64 string
         const response = await fetch('/api/ai-diagnosis', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify({ image: base64Image }), // Send the base64 string
+            body: JSON.stringify({ 
+              image: base64Image,
+              language: i18n.language 
+            }),
         });
 
         if (!response.ok) {
@@ -93,7 +97,6 @@ export function AIDiagnosis() {
         }
         const analysis: AnalysisResult = await response.json();
 
-        // 3. Update state with the analysis result
         setUploadedImages((prev) =>
             prev.map((img) => (img.id === id ? { ...img, status: "completed", analysis } : img)),
         )
@@ -140,6 +143,21 @@ export function AIDiagnosis() {
     }
   }
 
+  const getStatusText = (status: string) => {
+    switch (status) {
+      case "uploading":
+        return t("diagnosis.status.uploading")
+      case "analyzing":
+        return t("diagnosis.status.analyzing")
+      case "completed":
+        return t("diagnosis.status.completed")
+      case "error":
+        return t("diagnosis.status.error")
+      default:
+        return ""
+    }
+  }
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -148,8 +166,8 @@ export function AIDiagnosis() {
           <Scan className="h-5 w-5 text-secondary" />
         </div>
         <div>
-          <h1 className="text-2xl font-semibold text-foreground">AI Medical Image Analysis</h1>
-          <p className="text-muted-foreground">Upload medical images for AI-powered analysis and insights</p>
+          <h1 className="text-2xl font-semibold text-foreground">{t("diagnosis.title")}</h1>
+          <p className="text-muted-foreground">{t("diagnosis.description")}</p>
         </div>
       </div>
 
@@ -170,8 +188,8 @@ export function AIDiagnosis() {
                 <Upload className="h-8 w-8 text-primary" />
               </div>
               <div>
-                <h3 className="text-lg font-medium text-foreground">Upload Medical Images</h3>
-                <p className="text-muted-foreground mt-1">Drag and drop your images here, or click to browse</p>
+                <h3 className="text-lg font-medium text-foreground">{t("diagnosis.uploadTitle")}</h3>
+                <p className="text-muted-foreground mt-1">{t("diagnosis.uploadDescription")}</p>
               </div>
               <input
                 type="file"
@@ -184,10 +202,10 @@ export function AIDiagnosis() {
               <Button asChild className="mt-2">
                 <label htmlFor="file-upload" className="cursor-pointer">
                   <FileImage className="h-4 w-4 mr-2" />
-                  Choose Images
+                  {t("diagnosis.chooseImages")}
                 </label>
               </Button>
-              <p className="text-xs text-muted-foreground">Supports: JPG, PNG, DICOM • Max size: 10MB per image</p>
+              <p className="text-xs text-muted-foreground">{t("diagnosis.supportedFormats")}</p>
             </div>
           </div>
         </CardContent>
@@ -196,7 +214,7 @@ export function AIDiagnosis() {
       {/* Uploaded Images */}
       {uploadedImages.length > 0 && (
         <div className="space-y-4">
-          <h2 className="text-lg font-medium text-foreground">Analysis Results</h2>
+          <h2 className="text-lg font-medium text-foreground">{t("diagnosis.analysisResults")}</h2>
 
           {uploadedImages.map((image) => (
             <Card key={image.id} className="bg-card/50 backdrop-blur-sm border-border/50">
@@ -219,7 +237,7 @@ export function AIDiagnosis() {
                     <div className="relative w-24 h-24 rounded-lg overflow-hidden bg-muted">
                       <img
                         src={image.preview || "/placeholder.svg"}
-                        alt="Medical image preview"
+                        alt={t("diagnosis.imagePreviewAlt")}
                         className="w-full h-full object-cover"
                       />
                       <Button variant="secondary" size="icon" className="absolute top-1 right-1 h-6 w-6">
@@ -230,17 +248,10 @@ export function AIDiagnosis() {
 
                   {/* Analysis Content */}
                   <div className="flex-1 space-y-3">
-                    {image.status === "uploading" && (
+                    {(image.status === "uploading" || image.status === "analyzing") && (
                       <div className="space-y-2">
-                        <p className="text-sm text-muted-foreground">Uploading image...</p>
-                        <Progress value={75} className="h-2" />
-                      </div>
-                    )}
-
-                    {image.status === "analyzing" && (
-                      <div className="space-y-2">
-                        <p className="text-sm text-muted-foreground">AI is analyzing your image...</p>
-                        <Progress value={45} className="h-2" />
+                        <p className="text-sm text-muted-foreground">{getStatusText(image.status)}</p>
+                        <Progress value={image.status === "uploading" ? 25 : 65} className="h-2" />
                       </div>
                     )}
 
@@ -248,15 +259,15 @@ export function AIDiagnosis() {
                       <div className="space-y-4">
                         <div className="flex items-center gap-2">
                           <Badge variant={getUrgencyColor(image.analysis.urgency)}>
-                            {image.analysis.urgency.toUpperCase()} PRIORITY
+                            {t(`diagnosis.priority.${image.analysis.urgency}`)}
                           </Badge>
                           <span className="text-sm text-muted-foreground">
-                            Confidence: {image.analysis.confidence}%
+                            {t("diagnosis.confidence")}: {image.analysis.confidence}%
                           </span>
                         </div>
 
                         <div>
-                          <h4 className="font-medium text-foreground mb-2">Key Findings</h4>
+                          <h4 className="font-medium text-foreground mb-2">{t("diagnosis.keyFindings")}</h4>
                           <ul className="space-y-1">
                             {image.analysis.findings.map((finding, index) => (
                               <li key={index} className="text-sm text-muted-foreground flex items-start gap-2">
@@ -268,7 +279,7 @@ export function AIDiagnosis() {
                         </div>
 
                         <div>
-                          <h4 className="font-medium text-foreground mb-2">Recommendations</h4>
+                          <h4 className="font-medium text-foreground mb-2">{t("diagnosis.recommendations")}</h4>
                           <ul className="space-y-1">
                             {image.analysis.recommendations.map((rec, index) => (
                               <li key={index} className="text-sm text-muted-foreground flex items-start gap-2">
@@ -281,14 +292,14 @@ export function AIDiagnosis() {
 
                         <div className="bg-muted/50 rounded-lg p-3">
                           <p className="text-xs text-muted-foreground">
-                            <strong>Medical Disclaimer:</strong> {image.analysis.disclaimer}
+                            <strong>{t("diagnosis.disclaimerTitle")}:</strong> {image.analysis.disclaimer}
                           </p>
                         </div>
                       </div>
                     )}
 
                     {image.status === "error" && (
-                      <div className="text-destructive text-sm">Error analyzing image. Please try again.</div>
+                      <div className="text-destructive text-sm">{t("diagnosis.errorAnalyzing")}</div>
                     )}
                   </div>
                 </div>
@@ -302,25 +313,25 @@ export function AIDiagnosis() {
       <div className="grid md:grid-cols-2 gap-4">
         <Card className="bg-card/50 backdrop-blur-sm border-border/50">
           <CardHeader>
-            <CardTitle className="text-base">Supported Image Types</CardTitle>
+            <CardTitle className="text-base">{t("diagnosis.supportedTypes.title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
-            <div className="text-sm text-muted-foreground">• X-rays and radiographs</div>
-            <div className="text-sm text-muted-foreground">• MRI and CT scans</div>
-            <div className="text-sm text-muted-foreground">• Dermatological images</div>
-            <div className="text-sm text-muted-foreground">• Pathology slides</div>
+            <div className="text-sm text-muted-foreground">• {t("diagnosis.supportedTypes.xrays")}</div>
+            <div className="text-sm text-muted-foreground">• {t("diagnosis.supportedTypes.mri")}</div>
+            <div className="text-sm text-muted-foreground">• {t("diagnosis.supportedTypes.dermatology")}</div>
+            <div className="text-sm text-muted-foreground">• {t("diagnosis.supportedTypes.pathology")}</div>
           </CardContent>
         </Card>
 
         <Card className="bg-card/50 backdrop-blur-sm border-border/50">
           <CardHeader>
-            <CardTitle className="text-base">Privacy & Security</CardTitle>
+            <CardTitle className="text-base">{t("diagnosis.privacy.title")}</CardTitle>
           </CardHeader>
           <CardContent className="space-y-2">
-            <div className="text-sm text-muted-foreground">• Images are encrypted during upload</div>
-            <div className="text-sm text-muted-foreground">• Analysis is performed securely</div>
-            <div className="text-sm text-muted-foreground">• Data is not stored permanently</div>
-            <div className="text-sm text-muted-foreground">• HIPAA compliant processing</div>
+            <div className="text-sm text-muted-foreground">• {t("diagnosis.privacy.encrypted")}</div>
+            <div className="text-sm text-muted-foreground">• {t("diagnosis.privacy.secure")}</div>
+            <div className="text-sm text-muted-foreground">• {t("diagnosis.privacy.notStored")}</div>
+            <div className="text-sm text-muted-foreground">• {t("diagnosis.privacy.hipaa")}</div>
           </CardContent>
         </Card>
       </div>

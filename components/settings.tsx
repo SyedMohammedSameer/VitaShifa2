@@ -1,3 +1,4 @@
+// components/settings.tsx
 "use client"
 import { useState, useEffect } from "react"
 import { useAuth } from "@/context/AuthContext";
@@ -13,6 +14,8 @@ import {
   SettingsIcon, User, Bell, Shield, Globe, Palette, Download, Upload, Trash2, Eye, Moon, Sun, Volume2, Accessibility,
 } from "lucide-react"
 import { useToast } from "@/hooks/use-toast"
+import { useTranslation } from "react-i18next"
+import i18n from "@/lib/i18n"
 
 interface UserSettings {
   profile: {
@@ -50,18 +53,17 @@ const languages = [
   { code: "en", name: "English", flag: "🇺🇸" },
   { code: "es", name: "Español", flag: "🇪🇸" },
   { code: "fr", name: "Français", flag: "🇫🇷" },
-  { code: "de", name: "Deutsch", flag: "🇩🇪" },
-  { code: "it", name: "Italiano", flag: "🇮🇹" },
-  { code: "pt", name: "Português", flag: "🇵🇹" },
-  { code: "zh", name: "中文", flag: "🇨🇳" },
-  { code: "ja", name: "日本語", flag: "🇯🇵" },
-  { code: "ko", name: "한국어", flag: "🇰🇷" },
   { code: "ar", name: "العربية", flag: "🇸🇦" },
+  { code: "ja", name: "日本語", flag: "🇯🇵" },
+  { code: "id", name: "Bahasa Indonesia", flag: "🇮🇩" },
+  { code: "hi", name: "हिन्दी", flag: "🇮🇳" },
 ]
 
 export function Settings() {
   const { user } = useAuth();
   const { toast } = useToast();
+  const { t } = useTranslation();
+  
   const [settings, setSettings] = useState<UserSettings>({
     profile: {
       name: "John Doe",
@@ -71,7 +73,7 @@ export function Settings() {
       emergencyContact: "+1 (555) 987-6543",
     },
     preferences: {
-      language: "en",
+      language: i18n.language,
       theme: "light",
       notifications: {
         email: true,
@@ -104,8 +106,8 @@ export function Settings() {
             });
             if (response.ok) {
                 const data = await response.json();
-                if (Object.keys(data).length > 0) { // Check if settings exist
-                    setSettings(data);
+                if (Object.keys(data).length > 0) {
+                    setSettings(prev => ({ ...prev, ...data }));
                 }
             }
         } catch (error) {
@@ -114,7 +116,6 @@ export function Settings() {
     };
     fetchSettings();
   }, [user]);
-
 
   const saveSettings = async (newSettings: UserSettings) => {
     if (!user) return;
@@ -129,10 +130,10 @@ export function Settings() {
             body: JSON.stringify(newSettings),
         });
         if (!response.ok) throw new Error('Failed to save settings');
-        toast({ title: "Success", description: "Settings saved successfully." });
+        toast({ title: t("success.saved"), description: t("settings.saveSuccess") });
     } catch (error) {
         console.error(error);
-        toast({ title: "Error", description: "Could not save settings.", variant: "destructive" });
+        toast({ title: t("errors.generic"), description: t("settings.saveError"), variant: "destructive" });
     }
   };
 
@@ -169,6 +170,16 @@ export function Settings() {
     saveSettings(newSettings);
   }
 
+  const handleLanguageChange = (langCode: string) => {
+    i18n.changeLanguage(langCode);
+    updateSettings("preferences", { language: langCode });
+    if (langCode === 'ar') {
+      document.documentElement.dir = 'rtl';
+    } else {
+      document.documentElement.dir = 'ltr';
+    }
+  };
+
   return (
     <div className="space-y-6">
       {/* Header */}
@@ -177,18 +188,18 @@ export function Settings() {
           <SettingsIcon className="h-5 w-5 text-primary" />
         </div>
         <div>
-          <h1 className="text-2xl font-semibold text-foreground">Settings</h1>
-          <p className="text-muted-foreground">Manage your account preferences and privacy settings</p>
+          <h1 className="text-2xl font-semibold text-foreground">{t("settings.title")}</h1>
+          <p className="text-muted-foreground">{t("settings.description")}</p>
         </div>
       </div>
 
       <Tabs defaultValue="profile" className="space-y-6">
         <TabsList className="grid w-full grid-cols-5">
-          <TabsTrigger value="profile">Profile</TabsTrigger>
-          <TabsTrigger value="preferences">Preferences</TabsTrigger>
-          <TabsTrigger value="notifications">Notifications</TabsTrigger>
-          <TabsTrigger value="privacy">Privacy</TabsTrigger>
-          <TabsTrigger value="data">Data</TabsTrigger>
+          <TabsTrigger value="profile">{t("settings.tabs.profile")}</TabsTrigger>
+          <TabsTrigger value="preferences">{t("settings.tabs.preferences")}</TabsTrigger>
+          <TabsTrigger value="notifications">{t("settings.tabs.notifications")}</TabsTrigger>
+          <TabsTrigger value="privacy">{t("settings.tabs.privacy")}</TabsTrigger>
+          <TabsTrigger value="data">{t("settings.tabs.data")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="profile" className="space-y-4">
@@ -196,7 +207,7 @@ export function Settings() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <User className="h-5 w-5" />
-                Profile Information
+                {t("settings.profile.title")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
@@ -206,16 +217,16 @@ export function Settings() {
                   <AvatarFallback className="text-lg">JD</AvatarFallback>
                 </Avatar>
                 <div className="space-y-2">
-                  <Button variant="outline">Change Photo</Button>
+                  <Button variant="outline">{t("settings.profile.changePhoto")}</Button>
                   <Button variant="ghost" size="sm" className="text-destructive">
-                    Remove Photo
+                    {t("settings.profile.removePhoto")}
                   </Button>
                 </div>
               </div>
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="name">Full Name</Label>
+                  <Label htmlFor="name">{t("settings.profile.fullName")}</Label>
                   <Input
                     id="name"
                     value={settings.profile.name}
@@ -223,7 +234,7 @@ export function Settings() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="email">Email Address</Label>
+                  <Label htmlFor="email">{t("settings.profile.email")}</Label>
                   <Input
                     id="email"
                     type="email"
@@ -235,7 +246,7 @@ export function Settings() {
 
               <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
-                  <Label htmlFor="phone">Phone Number</Label>
+                  <Label htmlFor="phone">{t("settings.profile.phone")}</Label>
                   <Input
                     id="phone"
                     value={settings.profile.phone}
@@ -243,7 +254,7 @@ export function Settings() {
                   />
                 </div>
                 <div className="space-y-2">
-                  <Label htmlFor="dob">Date of Birth</Label>
+                  <Label htmlFor="dob">{t("settings.profile.dateOfBirth")}</Label>
                   <Input
                     id="dob"
                     type="date"
@@ -254,7 +265,7 @@ export function Settings() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="emergency">Emergency Contact</Label>
+                <Label htmlFor="emergency">{t("settings.profile.emergencyContact")}</Label>
                 <Input
                   id="emergency"
                   value={settings.profile.emergencyContact}
@@ -262,7 +273,7 @@ export function Settings() {
                 />
               </div>
 
-              <Button onClick={() => saveSettings(settings)}>Save Changes</Button>
+              <Button onClick={() => saveSettings(settings)}>{t("settings.profile.saveChanges")}</Button>
             </CardContent>
           </Card>
         </TabsContent>
@@ -272,15 +283,15 @@ export function Settings() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Globe className="h-5 w-5" />
-                Language & Region
+                {t("settings.preferences.language")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label>Language</Label>
+                <Label>{t("settings.preferences.languageLabel")}</Label>
                 <Select
                   value={settings.preferences.language}
-                  onValueChange={(value) => updateSettings("preferences", { language: value })}
+                  onValueChange={handleLanguageChange}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -304,12 +315,12 @@ export function Settings() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Palette className="h-5 w-5" />
-                Appearance
+                {t("settings.preferences.appearance")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
-                <Label>Theme</Label>
+                <Label>{t("settings.preferences.theme")}</Label>
                 <Select
                   value={settings.preferences.theme}
                   onValueChange={(value: "light" | "dark" | "system") =>
@@ -323,19 +334,19 @@ export function Settings() {
                     <SelectItem value="light">
                       <div className="flex items-center gap-2">
                         <Sun className="h-4 w-4" />
-                        Light
+                        {t("settings.preferences.themeOptions.light")}
                       </div>
                     </SelectItem>
                     <SelectItem value="dark">
                       <div className="flex items-center gap-2">
                         <Moon className="h-4 w-4" />
-                        Dark
+                        {t("settings.preferences.themeOptions.dark")}
                       </div>
                     </SelectItem>
                     <SelectItem value="system">
                       <div className="flex items-center gap-2">
                         <SettingsIcon className="h-4 w-4" />
-                        System
+                        {t("settings.preferences.themeOptions.system")}
                       </div>
                     </SelectItem>
                   </SelectContent>
@@ -348,14 +359,14 @@ export function Settings() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Accessibility className="h-5 w-5" />
-                Accessibility
+                {t("settings.preferences.accessibility")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label>High Contrast Mode</Label>
-                  <p className="text-sm text-muted-foreground">Increase contrast for better visibility</p>
+                  <Label>{t("settings.preferences.highContrast")}</Label>
+                  <p className="text-sm text-muted-foreground">{t("settings.preferences.highContrastDesc")}</p>
                 </div>
                 <Switch
                   checked={settings.preferences.accessibility.highContrast}
@@ -365,8 +376,8 @@ export function Settings() {
 
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label>Large Text</Label>
-                  <p className="text-sm text-muted-foreground">Increase text size throughout the app</p>
+                  <Label>{t("settings.preferences.largeText")}</Label>
+                  <p className="text-sm text-muted-foreground">{t("settings.preferences.largeTextDesc")}</p>
                 </div>
                 <Switch
                   checked={settings.preferences.accessibility.largeText}
@@ -376,8 +387,8 @@ export function Settings() {
 
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label>Screen Reader Support</Label>
-                  <p className="text-sm text-muted-foreground">Optimize for screen reading software</p>
+                  <Label>{t("settings.preferences.screenReader")}</Label>
+                  <p className="text-sm text-muted-foreground">{t("settings.preferences.screenReaderDesc")}</p>
                 </div>
                 <Switch
                   checked={settings.preferences.accessibility.screenReader}
@@ -387,8 +398,8 @@ export function Settings() {
 
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label>Reduced Motion</Label>
-                  <p className="text-sm text-muted-foreground">Minimize animations and transitions</p>
+                  <Label>{t("settings.preferences.reducedMotion")}</Label>
+                  <p className="text-sm text-muted-foreground">{t("settings.preferences.reducedMotionDesc")}</p>
                 </div>
                 <Switch
                   checked={settings.preferences.accessibility.reducedMotion}
@@ -404,14 +415,14 @@ export function Settings() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Bell className="h-5 w-5" />
-                Notification Preferences
+                {t("settings.notifications.title")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label>Email Notifications</Label>
-                  <p className="text-sm text-muted-foreground">Receive updates and reminders via email</p>
+                  <Label>{t("settings.notifications.email")}</Label>
+                  <p className="text-sm text-muted-foreground">{t("settings.notifications.emailDesc")}</p>
                 </div>
                 <Switch
                   checked={settings.preferences.notifications.email}
@@ -421,8 +432,8 @@ export function Settings() {
 
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label>Push Notifications</Label>
-                  <p className="text-sm text-muted-foreground">Get instant notifications on your device</p>
+                  <Label>{t("settings.notifications.push")}</Label>
+                  <p className="text-sm text-muted-foreground">{t("settings.notifications.pushDesc")}</p>
                 </div>
                 <Switch
                   checked={settings.preferences.notifications.push}
@@ -432,8 +443,8 @@ export function Settings() {
 
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label>SMS Notifications</Label>
-                  <p className="text-sm text-muted-foreground">Receive important alerts via text message</p>
+                  <Label>{t("settings.notifications.sms")}</Label>
+                  <p className="text-sm text-muted-foreground">{t("settings.notifications.smsDesc")}</p>
                 </div>
                 <Switch
                   checked={settings.preferences.notifications.sms}
@@ -443,8 +454,8 @@ export function Settings() {
 
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label>Health Reminders</Label>
-                  <p className="text-sm text-muted-foreground">Get reminders for medications and appointments</p>
+                  <Label>{t("settings.notifications.reminders")}</Label>
+                  <p className="text-sm text-muted-foreground">{t("settings.notifications.remindersDesc")}</p>
                 </div>
                 <Switch
                   checked={settings.preferences.notifications.reminders}
@@ -460,14 +471,14 @@ export function Settings() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Shield className="h-5 w-5" />
-                Privacy & Data Control
+                {t("settings.privacy.title")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label>Data Sharing with Healthcare Providers</Label>
-                  <p className="text-sm text-muted-foreground">Allow sharing anonymized data for research</p>
+                  <Label>{t("settings.privacy.dataSharing")}</Label>
+                  <p className="text-sm text-muted-foreground">{t("settings.privacy.dataSharingDesc")}</p>
                 </div>
                 <Switch
                   checked={settings.privacy.dataSharing}
@@ -477,8 +488,8 @@ export function Settings() {
 
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label>Analytics & Performance</Label>
-                  <p className="text-sm text-muted-foreground">Help improve the app with usage analytics</p>
+                  <Label>{t("settings.privacy.analytics")}</Label>
+                  <p className="text-sm text-muted-foreground">{t("settings.privacy.analyticsDesc")}</p>
                 </div>
                 <Switch
                   checked={settings.privacy.analytics}
@@ -488,8 +499,8 @@ export function Settings() {
 
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label>Marketing Communications</Label>
-                  <p className="text-sm text-muted-foreground">Receive promotional content and health tips</p>
+                  <Label>{t("settings.privacy.marketing")}</Label>
+                  <p className="text-sm text-muted-foreground">{t("settings.privacy.marketingDesc")}</p>
                 </div>
                 <Switch
                   checked={settings.privacy.marketing}
@@ -499,8 +510,8 @@ export function Settings() {
 
               <div className="flex items-center justify-between">
                 <div className="space-y-0.5">
-                  <Label>Third-party Integrations</Label>
-                  <p className="text-sm text-muted-foreground">Allow connections with fitness trackers and apps</p>
+                  <Label>{t("settings.privacy.thirdParty")}</Label>
+                  <p className="text-sm text-muted-foreground">{t("settings.privacy.thirdPartyDesc")}</p>
                 </div>
                 <Switch
                   checked={settings.privacy.thirdParty}
@@ -512,20 +523,20 @@ export function Settings() {
 
           <Card className="bg-card/50 backdrop-blur-sm border-border/50">
             <CardHeader>
-              <CardTitle>Account Security</CardTitle>
+              <CardTitle>{t("settings.privacy.accountSecurity")}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <Button variant="outline" className="w-full justify-start bg-transparent">
                 <Eye className="h-4 w-4 mr-2" />
-                View Privacy Policy
+                {t("settings.privacy.viewPrivacy")}
               </Button>
               <Button variant="outline" className="w-full justify-start bg-transparent">
                 <Shield className="h-4 w-4 mr-2" />
-                Change Password
+                {t("settings.privacy.changePassword")}
               </Button>
               <Button variant="outline" className="w-full justify-start bg-transparent">
                 <Volume2 className="h-4 w-4 mr-2" />
-                Two-Factor Authentication
+                {t("settings.privacy.twoFactor")}
               </Button>
             </CardContent>
           </Card>
@@ -536,30 +547,30 @@ export function Settings() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Download className="h-5 w-5" />
-                Data Management
+                {t("settings.data.title")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-4">
                 <div>
-                  <h4 className="font-medium text-foreground mb-2">Export Your Data</h4>
+                  <h4 className="font-medium text-foreground mb-2">{t("settings.data.export")}</h4>
                   <p className="text-sm text-muted-foreground mb-3">
-                    Download a copy of your health data, consultations, and wellness plans.
+                    {t("settings.data.exportDesc")}
                   </p>
                   <Button variant="outline">
                     <Download className="h-4 w-4 mr-2" />
-                    Export Data
+                    {t("settings.data.exportData")}
                   </Button>
                 </div>
 
                 <div>
-                  <h4 className="font-medium text-foreground mb-2">Import Health Data</h4>
+                  <h4 className="font-medium text-foreground mb-2">{t("settings.data.import")}</h4>
                   <p className="text-sm text-muted-foreground mb-3">
-                    Import health records from other platforms or devices.
+                    {t("settings.data.importDesc")}
                   </p>
                   <Button variant="outline">
                     <Upload className="h-4 w-4 mr-2" />
-                    Import Data
+                    {t("settings.data.importData")}
                   </Button>
                 </div>
               </div>
@@ -568,17 +579,17 @@ export function Settings() {
 
           <Card className="bg-destructive/5 border-destructive/20">
             <CardHeader>
-              <CardTitle className="text-destructive">Danger Zone</CardTitle>
+              <CardTitle className="text-destructive">{t("settings.data.dangerZone")}</CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <div>
-                <h4 className="font-medium text-foreground mb-2">Delete Account</h4>
+                <h4 className="font-medium text-foreground mb-2">{t("settings.data.deleteAccount")}</h4>
                 <p className="text-sm text-muted-foreground mb-3">
-                  Permanently delete your account and all associated data. This action cannot be undone.
+                  {t("settings.data.deleteAccountDesc")}
                 </p>
                 <Button variant="destructive">
                   <Trash2 className="h-4 w-4 mr-2" />
-                  Delete Account
+                  {t("settings.data.deleteAccount")}
                 </Button>
               </div>
             </CardContent>

@@ -14,7 +14,10 @@
     "required": "Required",
     "optional": "Optional",
     "yes": "Yes",
-    "no": "No"
+    "no": "No",
+    "step": "Step",
+    "of": "of",
+    "complete": "Complete"
   },
   "navigation": {
     "medicalConsultation": "Medical Consultation",
@@ -47,6 +50,15 @@
     "keyFindings": "Key Findings",
     "recommendations": "Recommendations",
     "confidence": "Confidence",
+    "imagePreviewAlt": "Medical image preview",
+    "disclaimerTitle": "Medical Disclaimer",
+    "errorAnalyzing": "Error analyzing image. Please try again.",
+    "status": {
+      "uploading": "Uploading image...",
+      "analyzing": "AI is analyzing your image...",
+      "completed": "Analysis completed",
+      "error": "Analysis failed"
+    },
     "priority": {
       "high": "HIGH PRIORITY",
       "medium": "MEDIUM PRIORITY", 
@@ -219,6 +231,7 @@
     "snoozed": "Reminder Snoozed",
     "snoozeMessage": "We'll remind you again in 15 minutes.",
     "jobStaying": "Great job staying on track!",
+    "reminderNoted": "Reminder noted.",
     "form": {
       "title": "Add New Medication",
       "description": "Create a reminder for your medication schedule",
@@ -260,6 +273,9 @@
     "urgentCare": "Urgent Care",
     "firstAidSearch": "Search first aid guides or symptoms...",
     "watchVideo": "Watch Video",
+    "emergencyContacts": "Emergency Contacts",
+    "selectCountry": "Select a country",
+    "call": "Call",
     "symptomChecker": {
       "title": "Emergency Symptom Checker",
       "description": "Select symptoms to get immediate guidance on whether emergency care is needed.",
@@ -294,6 +310,8 @@
   "settings": {
     "title": "Settings",
     "description": "Manage your account preferences and privacy settings",
+    "saveSuccess": "Settings have been saved successfully.",
+    "saveError": "Failed to save settings. Please try again.",
     "tabs": {
       "profile": "Profile",
       "preferences": "Preferences",

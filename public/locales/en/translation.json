@@ -17,7 +17,8 @@
     "no": "No",
     "step": "Step",
     "of": "of",
-    "complete": "Complete"
+    "complete": "Complete",
+    "and": "and"
   },
   "navigation": {
     "medicalConsultation": "Medical Consultation",
@@ -262,6 +263,10 @@
     "lifeThreatening": "Life-Threatening Emergency?",
     "lifeThreateningDesc": "If someone is unconscious, not breathing, or severely injured, call emergency services immediately.",
     "callEmergency": "Call Emergency Services",
+    "emergencyCallButton": "Emergency: Call Emergency Services",
+    "findUrgentCare": "Find Urgent Care",
+    "locationError": "Unable to retrieve your location. Please enable location services in your browser settings.",
+    "geolocationNotSupported": "Geolocation is not supported by this browser.",
     "tabs": {
       "contacts": "Emergency Contacts",
       "guides": "First Aid Guides", 
@@ -275,36 +280,56 @@
     "watchVideo": "Watch Video",
     "emergencyContacts": "Emergency Contacts",
     "selectCountry": "Select a country",
+    "default": "Default",
     "call": "Call",
-    "symptomChecker": {
-      "title": "Emergency Symptom Checker",
-      "description": "Select symptoms to get immediate guidance on whether emergency care is needed.",
-      "callEmergencyIf": "Call Emergency Services If:",
-      "seekUrgentCareFor": "Seek Urgent Care For:",
-      "emergencySymptoms": [
-        "Unconscious or unresponsive",
-        "Difficulty breathing or no breathing", 
-        "Chest pain or pressure",
-        "Severe bleeding",
-        "Signs of stroke (FAST test)",
-        "Severe allergic reaction",
-        "Poisoning or overdose"
-      ],
-      "urgentSymptoms": [
-        "High fever (over 103°F)",
-        "Severe abdominal pain",
-        "Deep cuts requiring stitches",
-        "Suspected broken bones", 
-        "Severe headache with vision changes",
-        "Persistent vomiting",
-        "Signs of dehydration"
-      ]
+    "severity": {
+      "critical": "CRITICAL",
+      "urgent": "URGENT",
+      "moderate": "MODERATE"
     },
     "firstAidGuides": {
       "cpr": "CPR (Cardiopulmonary Resuscitation)",
       "choking": "Choking (Heimlich Maneuver)", 
       "bleeding": "Severe Bleeding Control",
       "burns": "Burn Treatment"
+    },
+    "symptoms": {
+      "unconscious": "Unconscious",
+      "notBreathing": "Not breathing",
+      "noPulse": "No pulse",
+      "cannotSpeak": "Cannot speak",
+      "clutchingThroat": "Clutching throat",
+      "blueLips": "Blue lips",
+      "heavyBleeding": "Heavy bleeding",
+      "bloodSoaking": "Blood soaking bandages",
+      "spurtingBlood": "Spurting blood",
+      "redSkin": "Red, painful skin",
+      "blisters": "Blisters",
+      "charredSkin": "Charred skin",
+      "emergencyList": {
+        "unconscious": "Unconscious or unresponsive",
+        "breathing": "Difficulty breathing or no breathing", 
+        "chestPain": "Chest pain or pressure",
+        "severeBleeding": "Severe bleeding",
+        "stroke": "Signs of stroke (FAST test)",
+        "allergic": "Severe allergic reaction",
+        "poisoning": "Poisoning or overdose"
+      },
+      "urgentList": {
+        "highFever": "High fever (over 103°F)",
+        "abdominalPain": "Severe abdominal pain",
+        "deepCuts": "Deep cuts requiring stitches",
+        "brokenBones": "Suspected broken bones", 
+        "headache": "Severe headache with vision changes",
+        "vomiting": "Persistent vomiting",
+        "dehydration": "Signs of dehydration"
+      }
+    },
+    "symptomChecker": {
+      "title": "Emergency Symptom Checker",
+      "description": "Select symptoms to get immediate guidance on whether emergency care is needed.",
+      "callEmergencyIf": "Call Emergency Services If:",
+      "seekUrgentCareFor": "Seek Urgent Care For:"
     }
   },
   "settings": {
@@ -394,8 +419,30 @@
     "signUp": "Sign Up", 
     "email": "Email",
     "password": "Password",
+    "confirmPassword": "Confirm Password",
     "dontHaveAccount": "Don't have an account?",
-    "alreadyHaveAccount": "Already have an account?"
+    "alreadyHaveAccount": "Already have an account?",
+    "signInSubtitle": "Welcome back to your health companion",
+    "signUpSubtitle": "Join us to start your wellness journey",
+    "emailPlaceholder": "Enter your email address",
+    "passwordPlaceholder": "Enter your password",
+    "confirmPasswordPlaceholder": "Confirm your password",
+    "passwordRequirement": "Password must be at least 6 characters",
+    "termsNotice": "By signing up, you agree to our",
+    "termsOfService": "Terms of Service",
+    "privacyPolicy": "Privacy Policy",
+    "errors": {
+      "signInFailed": "Sign in failed. Please check your credentials and try again.",
+      "signUpFailed": "Sign up failed. Please try again.",
+      "userNotFound": "No account found with this email address.",
+      "wrongPassword": "Incorrect password. Please try again.",
+      "emailInUse": "An account with this email already exists.",
+      "invalidEmail": "Please enter a valid email address.",
+      "weakPassword": "Password is too weak. Please choose a stronger password.",
+      "passwordMismatch": "Passwords don't match. Please try again.",
+      "passwordTooShort": "Password must be at least 6 characters long.",
+      "tooManyRequests": "Too many attempts. Please try again later."
+    }
   },
   "errors": {
     "generic": "An error occurred. Please try again.",

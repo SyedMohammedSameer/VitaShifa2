@@ -1,3 +1,4 @@
+// components/emergency-care.tsx
 "use client"
 
 import type React from "react"
@@ -26,46 +27,47 @@ import {
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { emergencyContactsByCountry, EmergencyContact } from "@/lib/emergency-contacts";
+import { useTranslation } from "react-i18next"
 
 interface FirstAidGuide {
   id: string
-  title: string
+  titleKey: string
   severity: "critical" | "urgent" | "moderate"
-  symptoms: string[]
+  symptomsKey: string[]
   icon: React.ComponentType<{ className?: string }>
   videoUrl: string
 }
 
 const firstAidGuides: FirstAidGuide[] = [
-    {
+  {
     id: "cpr",
-    title: "CPR (Cardiopulmonary Resuscitation)",
+    titleKey: "emergency.firstAidGuides.cpr",
     severity: "critical",
-    symptoms: ["Unconscious", "Not breathing", "No pulse"],
+    symptomsKey: ["emergency.symptoms.unconscious", "emergency.symptoms.notBreathing", "emergency.symptoms.noPulse"],
     icon: Heart,
     videoUrl: "https://www.youtube.com/watch?v=y52c9ebL-Wo", // St John Ambulance
   },
   {
     id: "choking",
-    title: "Choking (Heimlich Maneuver)",
-    severity: "critical",
-    symptoms: ["Cannot speak", "Clutching throat", "Blue lips"],
+    titleKey: "emergency.firstAidGuides.choking",
+    severity: "critical", 
+    symptomsKey: ["emergency.symptoms.cannotSpeak", "emergency.symptoms.clutchingThroat", "emergency.symptoms.blueLips"],
     icon: AlertTriangle,
     videoUrl: "https://www.youtube.com/watch?v=2dn13zneEjo", // American Red Cross
   },
   {
     id: "bleeding",
-    title: "Severe Bleeding Control",
+    titleKey: "emergency.firstAidGuides.bleeding",
     severity: "urgent",
-    symptoms: ["Heavy bleeding", "Blood soaking bandages", "Spurting blood"],
+    symptomsKey: ["emergency.symptoms.heavyBleeding", "emergency.symptoms.bloodSoaking", "emergency.symptoms.spurtingBlood"],
     icon: Zap,
     videoUrl: "https://www.youtube.com/watch?v=NxO5LvgqZe0", // American Red Cross
   },
   {
     id: "burns",
-    title: "Burn Treatment",
+    titleKey: "emergency.firstAidGuides.burns", 
     severity: "moderate",
-    symptoms: ["Red, painful skin", "Blisters", "Charred skin"],
+    symptomsKey: ["emergency.symptoms.redSkin", "emergency.symptoms.blisters", "emergency.symptoms.charredSkin"],
     icon: Thermometer,
     videoUrl: "https://www.youtube.com/watch?v=ZNWjfe-84Ig", // Mayo Clinic
   },
@@ -77,6 +79,7 @@ const countryList = Object.keys(emergencyContactsByCountry)
   .sort((a, b) => a.name!.localeCompare(b.name!));
 
 export function EmergencyCare() {
+  const { t } = useTranslation();
   const [searchTerm, setSearchTerm] = useState("")
   const [emergencyContacts, setEmergencyContacts] = useState<EmergencyContact[]>([]);
   const [selectedCountry, setSelectedCountry] = useState<string>('');
@@ -93,7 +96,6 @@ export function EmergencyCare() {
     setEmergencyContacts(emergencyContactsByCountry[selectedCountry] || emergencyContactsByCountry.default);
   }, [selectedCountry]);
 
-
   const findNearestHospital = () => {
     if (navigator.geolocation) {
       navigator.geolocation.getCurrentPosition((position) => {
@@ -102,17 +104,17 @@ export function EmergencyCare() {
         window.open(googleMapsUrl, "_blank");
       },
       () => {
-        alert("Unable to retrieve your location. Please enable location services in your browser settings.");
+        alert(t("emergency.locationError"));
       });
     } else {
-      alert("Geolocation is not supported by this browser.");
+      alert(t("emergency.geolocationNotSupported"));
     }
   };
 
   const filteredGuides = firstAidGuides.filter(
     (guide) =>
-      guide.title.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      guide.symptoms.some((symptom) => symptom.toLowerCase().includes(searchTerm.toLowerCase())),
+      t(guide.titleKey).toLowerCase().includes(searchTerm.toLowerCase()) ||
+      guide.symptomsKey.some((symptomKey) => t(symptomKey).toLowerCase().includes(searchTerm.toLowerCase())),
   )
 
   const getSeverityColor = (severity: string) => {
@@ -134,8 +136,8 @@ export function EmergencyCare() {
           <AlertTriangle className="h-5 w-5 text-destructive" />
         </div>
         <div>
-          <h1 className="text-2xl font-semibold text-foreground">Emergency Care</h1>
-          <p className="text-muted-foreground">Quick access to emergency guidance and first aid instructions</p>
+          <h1 className="text-2xl font-semibold text-foreground">{t("emergency.title")}</h1>
+          <p className="text-muted-foreground">{t("emergency.description")}</p>
         </div>
       </div>
 
@@ -147,14 +149,14 @@ export function EmergencyCare() {
               <Phone className="h-6 w-6" />
             </div>
             <div className="flex-1">
-              <h3 className="text-lg font-semibold text-destructive">Life-Threatening Emergency?</h3>
+              <h3 className="text-lg font-semibold text-destructive">{t("emergency.lifeThreatening")}</h3>
               <p className="text-sm text-muted-foreground">
-                If someone is unconscious, not breathing, or severely injured, call emergency services immediately.
+                {t("emergency.lifeThreateningDesc")}
               </p>
             </div>
             <Button size="lg" className="bg-destructive hover:bg-destructive/90 text-destructive-foreground">
               <Phone className="h-4 w-4 mr-2" />
-              Call Emergency Services
+              {t("emergency.callEmergency")}
             </Button>
           </div>
         </CardContent>
@@ -162,84 +164,84 @@ export function EmergencyCare() {
 
       <Tabs defaultValue="contacts" className="space-y-6">
         <TabsList className="grid w-full grid-cols-3">
-          <TabsTrigger value="contacts">Emergency Contacts</TabsTrigger>
-          <TabsTrigger value="guides">First Aid Guides</TabsTrigger>
-          <TabsTrigger value="symptoms">Symptom Checker</TabsTrigger>
+          <TabsTrigger value="contacts">{t("emergency.tabs.contacts")}</TabsTrigger>
+          <TabsTrigger value="guides">{t("emergency.tabs.guides")}</TabsTrigger>
+          <TabsTrigger value="symptoms">{t("emergency.tabs.symptoms")}</TabsTrigger>
         </TabsList>
 
         <TabsContent value="contacts" className="space-y-4">
-            <Card className="bg-card/50 backdrop-blur-sm border-border/50">
-                <CardHeader>
-                     <CardTitle className="flex items-center justify-between">
-                        <span>Emergency Contacts</span>
-                        <Select value={selectedCountry} onValueChange={setSelectedCountry}>
-                            <SelectTrigger className="w-[200px]">
-                                <SelectValue placeholder="Select a country" />
-                            </SelectTrigger>
-                            <SelectContent>
-                                {countryList.map((country) => (
-                                    <SelectItem key={country.code} value={country.code}>
-                                        {country.name}
-                                    </SelectItem>
-                                ))}
-                                <SelectItem value="default">Default</SelectItem>
-                            </SelectContent>
-                        </Select>
-                    </CardTitle>
-                </CardHeader>
-                <CardContent>
-                    <div className="grid md:grid-cols-2 gap-4">
-                        {emergencyContacts.map((contact) => {
-                          const Icon = contact.icon
-                          return (
-                            <Card key={contact.name} className="bg-card/50 border-border/50">
-                              <CardContent className="p-6">
-                                <div className="flex items-center justify-between">
-                                  <div className="flex items-center gap-3">
-                                    <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
-                                      <Icon className="h-5 w-5 text-primary" />
-                                    </div>
-                                    <div>
-                                      <h3 className="font-semibold text-foreground">{contact.name}</h3>
-                                      <p className="text-sm text-muted-foreground">{contact.description}</p>
-                                    </div>
-                                  </div>
-                                  <div className="text-right">
-                                    <p className="text-2xl font-bold text-primary">{contact.number}</p>
-                                    <Button size="sm" className="mt-2">
-                                      <Phone className="h-3 w-3 mr-1" />
-                                      Call
-                                    </Button>
-                                  </div>
-                                </div>
-                              </CardContent>
-                            </Card>
-                          )
-                        })}
-                    </div>
-                </CardContent>
-            </Card>
+          <Card className="bg-card/50 backdrop-blur-sm border-border/50">
+            <CardHeader>
+              <CardTitle className="flex items-center justify-between">
+                <span>{t("emergency.emergencyContacts")}</span>
+                <Select value={selectedCountry} onValueChange={setSelectedCountry}>
+                  <SelectTrigger className="w-[200px]">
+                    <SelectValue placeholder={t("emergency.selectCountry")} />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {countryList.map((country) => (
+                      <SelectItem key={country.code} value={country.code}>
+                        {country.name}
+                      </SelectItem>
+                    ))}
+                    <SelectItem value="default">{t("emergency.default")}</SelectItem>
+                  </SelectContent>
+                </Select>
+              </CardTitle>
+            </CardHeader>
+            <CardContent>
+              <div className="grid md:grid-cols-2 gap-4">
+                {emergencyContacts.map((contact) => {
+                  const Icon = contact.icon
+                  return (
+                    <Card key={contact.name} className="bg-card/50 border-border/50">
+                      <CardContent className="p-6">
+                        <div className="flex items-center justify-between">
+                          <div className="flex items-center gap-3">
+                            <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
+                              <Icon className="h-5 w-5 text-primary" />
+                            </div>
+                            <div>
+                              <h3 className="font-semibold text-foreground">{contact.name}</h3>
+                              <p className="text-sm text-muted-foreground">{contact.description}</p>
+                            </div>
+                          </div>
+                          <div className="text-right">
+                            <p className="text-2xl font-bold text-primary">{contact.number}</p>
+                            <Button size="sm" className="mt-2">
+                              <Phone className="h-3 w-3 mr-1" />
+                              {t("emergency.call")}
+                            </Button>
+                          </div>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  )
+                })}
+              </div>
+            </CardContent>
+          </Card>
 
           {/* Location Services */}
           <Card className="bg-card/50 backdrop-blur-sm border-border/50">
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <MapPin className="h-5 w-5" />
-                Find Nearest Hospital
+                {t("emergency.findHospital")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
               <p className="text-muted-foreground">
-                Locate the nearest emergency room or urgent care facility based on your current location.
+                {t("emergency.findHospitalDesc")}
               </p>
               <div className="flex gap-2">
                 <Button className="flex-1" onClick={findNearestHospital}>
                   <Navigation className="h-4 w-4 mr-2" />
-                  Find Hospitals
+                  {t("emergency.findHospitals")}
                 </Button>
                 <Button variant="outline" className="flex-1 bg-transparent">
                   <MapPin className="h-4 w-4 mr-2" />
-                  Urgent Care
+                  {t("emergency.urgentCare")}
                 </Button>
               </div>
             </CardContent>
@@ -251,7 +253,7 @@ export function EmergencyCare() {
           <div className="relative">
             <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-4 w-4 text-muted-foreground" />
             <Input
-              placeholder="Search first aid guides or symptoms..."
+              placeholder={t("emergency.firstAidSearch")}
               value={searchTerm}
               onChange={(e) => setSearchTerm(e.target.value)}
               className="pl-10"
@@ -287,20 +289,20 @@ export function EmergencyCare() {
                             <Icon className="h-5 w-5" />
                           </div>
                           <div>
-                            <h3 className="font-semibold text-foreground">{guide.title}</h3>
+                            <h3 className="font-semibold text-foreground">{t(guide.titleKey)}</h3>
                             <div className="flex items-center gap-2 mt-1">
                               <Badge variant={getSeverityColor(guide.severity)} className="text-xs">
-                                {guide.severity.toUpperCase()}
+                                {t(`emergency.severity.${guide.severity}`)}
                               </Badge>
                               <p className="text-sm text-muted-foreground">
-                                {guide.symptoms.join(", ")}
+                                {guide.symptomsKey.map(key => t(key)).join(", ")}
                               </p>
                             </div>
                           </div>
                         </div>
                         <div className="flex items-center gap-2 text-primary">
                           <Youtube className="h-5 w-5" />
-                           <span className="hidden sm:inline">Watch Video</span>
+                          <span className="hidden sm:inline">{t("emergency.watchVideo")}</span>
                         </div>
                       </div>
                     </CardContent>
@@ -316,42 +318,50 @@ export function EmergencyCare() {
             <CardHeader>
               <CardTitle className="flex items-center gap-2">
                 <Activity className="h-5 w-5" />
-                Emergency Symptom Checker
+                {t("emergency.symptomChecker.title")}
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-6">
               <p className="text-muted-foreground">
-                Select symptoms to get immediate guidance on whether emergency care is needed.
+                {t("emergency.symptomChecker.description")}
               </p>
 
               <div className="grid md:grid-cols-2 gap-4">
                 <Card className="bg-destructive/5 border-destructive/20">
                   <CardHeader>
-                    <CardTitle className="text-destructive text-base">Call Emergency Services If:</CardTitle>
+                    <CardTitle className="text-destructive text-base">{t("emergency.symptomChecker.callEmergencyIf")}</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-2">
-                    <div className="text-sm text-muted-foreground">• Unconscious or unresponsive</div>
-                    <div className="text-sm text-muted-foreground">• Difficulty breathing or no breathing</div>
-                    <div className="text-sm text-muted-foreground">• Chest pain or pressure</div>
-                    <div className="text-sm text-muted-foreground">• Severe bleeding</div>
-                    <div className="text-sm text-muted-foreground">• Signs of stroke (FAST test)</div>
-                    <div className="text-sm text-muted-foreground">• Severe allergic reaction</div>
-                    <div className="text-sm text-muted-foreground">• Poisoning or overdose</div>
+                    {[
+                      "emergency.symptoms.emergencyList.unconscious",
+                      "emergency.symptoms.emergencyList.breathing",
+                      "emergency.symptoms.emergencyList.chestPain",
+                      "emergency.symptoms.emergencyList.severeBleeding",
+                      "emergency.symptoms.emergencyList.stroke",
+                      "emergency.symptoms.emergencyList.allergic",
+                      "emergency.symptoms.emergencyList.poisoning"
+                    ].map((key) => (
+                      <div key={key} className="text-sm text-muted-foreground">• {t(key)}</div>
+                    ))}
                   </CardContent>
                 </Card>
 
                 <Card className="bg-secondary/5 border-secondary/20">
                   <CardHeader>
-                    <CardTitle className="text-secondary text-base">Seek Urgent Care For:</CardTitle>
+                    <CardTitle className="text-secondary text-base">{t("emergency.symptomChecker.seekUrgentCareFor")}</CardTitle>
                   </CardHeader>
                   <CardContent className="space-y-2">
-                    <div className="text-sm text-muted-foreground">• High fever (over 103°F)</div>
-                    <div className="text-sm text-muted-foreground">• Severe abdominal pain</div>
-                    <div className="text-sm text-muted-foreground">• Deep cuts requiring stitches</div>
-                    <div className="text-sm text-muted-foreground">• Suspected broken bones</div>
-                    <div className="text-sm text-muted-foreground">• Severe headache with vision changes</div>
-                    <div className="text-sm text-muted-foreground">• Persistent vomiting</div>
-                    <div className="text-sm text-muted-foreground">• Signs of dehydration</div>
+                    {[
+                      "emergency.symptoms.urgentList.highFever",
+                      "emergency.symptoms.urgentList.abdominalPain",
+                      "emergency.symptoms.urgentList.deepCuts",
+                      "emergency.symptoms.urgentList.brokenBones",
+                      "emergency.symptoms.urgentList.headache",
+                      "emergency.symptoms.urgentList.vomiting",
+                      "emergency.symptoms.urgentList.dehydration"
+                    ].map((key) => (
+                      <div key={key} className="text-sm text-muted-foreground">• {t(key)}</div>
+                    ))}
                   </CardContent>
                 </Card>
               </div>
@@ -359,11 +369,11 @@ export function EmergencyCare() {
               <div className="flex gap-4">
                 <Button className="flex-1 bg-destructive hover:bg-destructive/90">
                   <Phone className="h-4 w-4 mr-2" />
-                  Emergency: Call Emergency Services
+                  {t("emergency.emergencyCallButton")}
                 </Button>
                 <Button variant="outline" className="flex-1 bg-transparent">
                   <Users className="h-4 w-4 mr-2" />
-                  Find Urgent Care
+                  {t("emergency.findUrgentCare")}
                 </Button>
               </div>
             </CardContent>

@@ -1,10 +1,90 @@
 {
+  "common": {
+    "loading": "Chargement...",
+    "save": "Enregistrer",
+    "cancel": "Annuler",
+    "delete": "Supprimer",
+    "edit": "Modifier",
+    "add": "Ajouter",
+    "next": "Suivant",
+    "previous": "Précédent",
+    "close": "Fermer",
+    "search": "Rechercher",
+    "submit": "Soumettre",
+    "required": "Requis",
+    "optional": "Optionnel",
+    "yes": "Oui",
+    "no": "Non"
+  },
+  "navigation": {
     "medicalConsultation": "Consultation Médicale",
     "aiDiagnosis": "Diagnostic IA",
     "wellnessPlanning": "Planification du Bien-être",
     "medicationReminders": "Rappels de Médicaments",
     "emergencyCare": "Soins d'Urgence",
-    "recentConsultations": "Consultations Récentes",
     "settings": "Paramètres",
-    "signOut": "Se Déconnecter"
+    "signOut": "Se Déconnecter",
+    "recentConsultations": "Consultations Récentes"
+  },
+  "dashboard": {
+    "title": "VitaShifa",
+    "welcome": "Votre compagnon de santé fiable alimenté par l'IA"
+  },
+  "consultation": {
+    "title": "Consultation Médicale",
+    "placeholder": "Décrivez vos symptômes ou posez une question de santé...",
+    "disclaimer": "Cet assistant IA fournit des informations générales de santé et ne remplace pas les conseils médicaux professionnels.",
+    "aiGreeting": "Bonjour ! Je suis votre compagnon de santé IA. Je suis là pour vous aider avec vos questions médicales et vous fournir des conseils. Veuillez noter que je ne remplace pas les soins médicaux professionnels. Comment puis-je vous aider aujourd'hui ?"
+  },
+  "wellness": {
+    "title": "Planification du Bien-être",
+    "description": "Créez votre plan personnalisé de santé et bien-être",
+    "steps": {
+      "personalInfo": "Informations Personnelles",
+      "healthGoals": "Objectifs de Santé",
+      "lifestyle": "Évaluation du Mode de Vie",
+      "medicalHistory": "Antécédents Médicaux",
+      "preferences": "Préférences",
+      "plan": "Votre Plan de Bien-être"
+    },
+    "plan": {
+      "title": "Votre Plan de Bien-être Personnalisé",
+      "subtitle": "Voici un point de départ pour votre parcours de bien-être, créé spécialement pour vous.",
+      "goals": "Vos Objectifs",
+      "downloadPdf": "Télécharger le Plan en PDF",
+      "scheduleCheckin": "Programmer un Suivi",
+      "generating": "Génération de Votre Plan...",
+      "generatingSubtitle": "Notre IA crée un parcours de bien-être personnalisé pour vous."
+    }
+  },
+  "medication": {
+    "title": "Rappels de Médicaments",
+    "description": "Restez sur la bonne voie avec votre programme de médicaments",
+    "addReminder": "Ajouter un Rappel"
+  },
+  "emergency": {
+    "title": "Soins d'Urgence",
+    "description": "Accès rapide aux conseils d'urgence et instructions de premiers secours",
+    "callEmergency": "Appeler les Services d'Urgence"
+  },
+  "settings": {
+    "title": "Paramètres",
+    "description": "Gérez les préférences de votre compte et les paramètres de confidentialité"
+  },
+  "auth": {
+    "signIn": "Se Connecter",
+    "signUp": "S'Inscrire",
+    "email": "Email",
+    "password": "Mot de passe",
+    "dontHaveAccount": "Vous n'avez pas de compte ?",
+    "alreadyHaveAccount": "Vous avez déjà un compte ?"
+  },
+  "errors": {
+    "generic": "Une erreur s'est produite. Veuillez réessayer.",
+    "networkError": "Erreur réseau. Veuillez vérifier votre connexion.",
+    "unauthorized": "Accès non autorisé.",
+    "notFound": "Ressource introuvable.",
+    "validationError": "Veuillez vérifier votre saisie.",
+    "serverError": "Erreur serveur. Veuillez réessayer plus tard."
   }
+}

@@ -4,9 +4,20 @@ import admin from "@/lib/firebaseAdmin";
 
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
 
+// Language mapping for AI responses
+const languagePrompts = {
+  en: "Respond in English.",
+  ar: "Respond in Arabic (العربية). Use proper Arabic grammar and medical terminology.",
+  es: "Respond in Spanish (Español). Use proper Spanish grammar and medical terminology.",
+  fr: "Respond in French (Français). Use proper French grammar and medical terminology.", 
+  ja: "Respond in Japanese (日本語). Use proper Japanese grammar and medical terminology.",
+  id: "Respond in Indonesian (Bahasa Indonesia). Use proper Indonesian grammar and medical terminology.",
+  hi: "Respond in Hindi (हिन्दी). Use proper Hindi grammar and medical terminology."
+};
+
 export async function POST(req: NextRequest) {
   try {
-    const { message, conversationId } = await req.json();
+    const { message, conversationId, language = 'en' } = await req.json();
     const idToken = req.headers.get('Authorization')?.split('Bearer ')[1];
 
     if (!idToken) {
@@ -18,15 +29,21 @@ export async function POST(req: NextRequest) {
 
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
+    // Get language-specific prompt
+    const languageInstruction = languagePrompts[language as keyof typeof languagePrompts] || languagePrompts.en;
+
     const chat = model.startChat({
       history: [
         {
           role: "user",
           parts: [{ text: `You are an AI health companion named VitaShifa. Your goal is to provide helpful, safe, and empathetic medical information in a natural, conversational tone.
 
+          LANGUAGE INSTRUCTION: ${languageInstruction}
+
           Always remember:
           - You are not a replacement for a professional medical diagnosis.
           - Always encourage the user to consult with a doctor for any health concerns.
+          - Provide responses in the requested language while maintaining medical accuracy.
 
           When explaining medical topics, aim for clarity. Structured formats can be helpful for complex topics, but prioritize what feels most natural for the conversation. For example, you might use a structure like this for a detailed query:
           Overview: [Brief overview]
@@ -39,11 +56,11 @@ export async function POST(req: NextRequest) {
 
           Do not use asterisks for formatting. Use newlines to separate paragraphs and hyphens for lists.
 
-          Finally, always end your response with the disclaimer: "This is not medical advice. Consult a healthcare professional for any health concerns."` }],
+          Finally, always end your response with a disclaimer in the requested language that this is not medical advice and to consult a healthcare professional for any health concerns.` }],
         },
         {
           role: "model",
-          parts: [{ text: "I understand. I am VitaShifa. I will provide helpful, safe, and empathetic medical information in a natural, conversational tone. I will use structures like lists for clarity when needed, but not for every message. I will not provide a diagnosis. I will only mention general categories of OTC medications and will always include a strong disclaimer to consult a healthcare professional. Every response will end with the required disclaimer." }],
+          parts: [{ text: `I understand. I am VitaShifa. I will provide helpful, safe, and empathetic medical information in ${language === 'ar' ? 'Arabic' : language === 'es' ? 'Spanish' : language === 'fr' ? 'French' : language === 'ja' ? 'Japanese' : language === 'id' ? 'Indonesian' : language === 'hi' ? 'Hindi' : 'English'} in a natural, conversational tone. I will use structures like lists for clarity when needed, but not for every message. I will not provide a diagnosis. I will only mention general categories of OTC medications and will always include a strong disclaimer to consult a healthcare professional. Every response will end with the required disclaimer in the requested language.` }],
         },
       ],
     });
@@ -67,6 +84,7 @@ export async function POST(req: NextRequest) {
             { sender: "user", content: message },
             { sender: "ai", content: text }
           ),
+          language: language, // Store the conversation language
         });
       } else {
         return NextResponse.json({ error: "Permission denied or conversation not found" }, { status: 404 });
@@ -78,6 +96,7 @@ export async function POST(req: NextRequest) {
         userId,
         title: message.substring(0, 30),
         timestamp: admin.firestore.FieldValue.serverTimestamp(),
+        language: language, // Store the conversation language
         messages: [
           { sender: "user", content: message },
           { sender: "ai", content: text },

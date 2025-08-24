@@ -9,6 +9,8 @@ import { Avatar, AvatarFallback } from "@/components/ui/avatar"
 import { Send, Bot, User, Mic, Paperclip } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useAuth } from "@/context/AuthContext"
+import { useTranslation } from "react-i18next"
+import i18n from "@/lib/i18n"
 
 interface Message {
   id: string
@@ -22,6 +24,7 @@ interface MedicalConsultationProps {
 }
 
 export function MedicalConsultation({ conversation: initialConversation }: MedicalConsultationProps) {
+  const { t } = useTranslation();
   const { user } = useAuth();
   const [messages, setMessages] = useState<Message[]>([]);
   const [inputValue, setInputValue] = useState("");
@@ -47,15 +50,14 @@ export function MedicalConsultation({ conversation: initialConversation }: Medic
       setMessages([
         {
           id: "1",
-          content:
-            "Hello! I'm your AI health companion. I'm here to help with your medical questions and provide guidance. Please note that I'm not a replacement for professional medical care. How can I assist you today?",
+          content: t("consultation.aiGreeting"),
           sender: "ai",
           timestamp: new Date(),
         },
       ]);
       setCurrentConversationId(null);
     }
-  }, [initialConversation]);
+  }, [initialConversation, t]);
 
   useEffect(() => {
     scrollToBottom();
@@ -87,6 +89,7 @@ export function MedicalConsultation({ conversation: initialConversation }: Medic
         body: JSON.stringify({
           message: currentInput,
           conversationId: currentConversationId,
+          language: i18n.language, // Send current language
         }),
       });
 
@@ -110,7 +113,7 @@ export function MedicalConsultation({ conversation: initialConversation }: Medic
       console.error(error);
       const errorMessage: Message = {
         id: (Date.now() + 1).toString(),
-        content: "Sorry, I'm having trouble connecting. Please try again later.",
+        content: t("errors.generic"),
         sender: "ai",
         timestamp: new Date(),
       };
@@ -135,7 +138,7 @@ export function MedicalConsultation({ conversation: initialConversation }: Medic
             <div className="flex h-10 w-10 items-center justify-center rounded-full bg-primary/10">
               <Bot className="h-5 w-5 text-primary" />
             </div>
-            Medical Consultation
+            {t("consultation.title")}
           </CardTitle>
         </CardHeader>
         
@@ -207,7 +210,7 @@ export function MedicalConsultation({ conversation: initialConversation }: Medic
                 value={inputValue}
                 onChange={(e) => setInputValue(e.target.value)}
                 onKeyPress={handleKeyPress}
-                placeholder="Describe your symptoms or ask a health question..."
+                placeholder={t("consultation.placeholder")}
                 className="pr-20 h-12 bg-background border-border/50 focus:border-primary/50"
               />
               <div className="absolute right-2 top-1/2 -translate-y-1/2 flex gap-1">
@@ -224,7 +227,7 @@ export function MedicalConsultation({ conversation: initialConversation }: Medic
             </Button>
           </div>
           <p className="text-xs text-muted-foreground mt-2 text-center">
-            This AI assistant provides general health information and is not a substitute for professional medical advice.
+            {t("consultation.disclaimer")}
           </p>
         </div>
       </Card>

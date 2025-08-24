@@ -1,10 +1,90 @@
 {
+  "common": {
+    "loading": "読み込み中...",
+    "save": "保存",
+    "cancel": "キャンセル",
+    "delete": "削除",
+    "edit": "編集",
+    "add": "追加",
+    "next": "次へ",
+    "previous": "前へ",
+    "close": "閉じる",
+    "search": "検索",
+    "submit": "送信",
+    "required": "必須",
+    "optional": "任意",
+    "yes": "はい",
+    "no": "いいえ"
+  },
+  "navigation": {
     "medicalConsultation": "医療相談",
     "aiDiagnosis": "AI診断",
-    "wellnessPlanning": "ウェルネスプランニング",
+    "wellnessPlanning": "ウェルネス計画",
     "medicationReminders": "服薬リマインダー",
-    "emergencyCare": "救急医療",
-    "recentConsultations": "最近の相談",
+    "emergencyCare": "緊急医療",
     "settings": "設定",
-    "signOut": "サインアウト"
+    "signOut": "ログアウト",
+    "recentConsultations": "最近の相談"
+  },
+  "dashboard": {
+    "title": "VitaShifa",
+    "welcome": "AIを活用した信頼できる健康パートナー"
+  },
+  "consultation": {
+    "title": "医療相談",
+    "placeholder": "症状を説明するか、健康に関する質問をしてください...",
+    "disclaimer": "このAIアシスタントは一般的な健康情報を提供するものであり、専門的な医学的アドバイスの代替ではありません。",
+    "aiGreeting": "こんにちは！私はあなたのAI健康パートナーです。医学的な質問やガイダンスの提供をお手伝いします。私は専門的な医療の代替ではないことをご理解ください。今日はどのようにお手伝いできますか？"
+  },
+  "wellness": {
+    "title": "ウェルネス計画",
+    "description": "個人向けの健康・ウェルネス計画を作成",
+    "steps": {
+      "personalInfo": "個人情報",
+      "healthGoals": "健康目標",
+      "lifestyle": "ライフスタイル評価",
+      "medicalHistory": "病歴",
+      "preferences": "好み",
+      "plan": "あなたのウェルネス計画"
+    },
+    "plan": {
+      "title": "あなた専用のウェルネス計画",
+      "subtitle": "あなただけのために作成された、ウェルネスの旅の出発点です。",
+      "goals": "あなたの目標",
+      "downloadPdf": "計画をPDFでダウンロード",
+      "scheduleCheckin": "チェックインを予定",
+      "generating": "計画を生成中...",
+      "generatingSubtitle": "AIがあなた専用のウェルネスジャーニーを作成しています。"
+    }
+  },
+  "medication": {
+    "title": "服薬リマインダー",
+    "description": "服薬スケジュールを管理",
+    "addReminder": "リマインダーを追加"
+  },
+  "emergency": {
+    "title": "緊急医療",
+    "description": "緊急時のガイダンスと応急処置の指示に素早くアクセス",
+    "callEmergency": "緊急サービスに電話"
+  },
+  "settings": {
+    "title": "設定",
+    "description": "アカウントの設定とプライバシー設定を管理"
+  },
+  "auth": {
+    "signIn": "ログイン",
+    "signUp": "新規登録",
+    "email": "メール",
+    "password": "パスワード",
+    "dontHaveAccount": "アカウントをお持ちではありませんか？",
+    "alreadyHaveAccount": "すでにアカウントをお持ちですか？"
+  },
+  "errors": {
+    "generic": "エラーが発生しました。もう一度お試しください。",
+    "networkError": "ネットワークエラーです。接続を確認してください。",
+    "unauthorized": "認証されていません。",
+    "notFound": "リソースが見つかりません。",
+    "validationError": "入力内容を確認してください。",
+    "serverError": "サーバーエラーです。後でもう一度お試しください。"
   }
+}

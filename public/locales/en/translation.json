@@ -1,10 +1,396 @@
 {
+  "common": {
+    "loading": "Loading...",
+    "save": "Save",
+    "cancel": "Cancel",
+    "delete": "Delete", 
+    "edit": "Edit",
+    "add": "Add",
+    "next": "Next",
+    "previous": "Previous",
+    "close": "Close",
+    "search": "Search",
+    "submit": "Submit",
+    "required": "Required",
+    "optional": "Optional",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "navigation": {
     "medicalConsultation": "Medical Consultation",
-    "aiDiagnosis": "AI Diagnosis",
+    "aiDiagnosis": "AI Diagnosis", 
     "wellnessPlanning": "Wellness Planning",
     "medicationReminders": "Medication Reminders",
     "emergencyCare": "Emergency Care",
-    "recentConsultations": "Recent Consultations",
     "settings": "Settings",
-    "signOut": "Sign Out"
+    "signOut": "Sign Out",
+    "recentConsultations": "Recent Consultations"
+  },
+  "dashboard": {
+    "title": "VitaShifa",
+    "welcome": "Your trusted AI-powered health companion"
+  },
+  "consultation": {
+    "title": "Medical Consultation",
+    "placeholder": "Describe your symptoms or ask a health question...",
+    "disclaimer": "This AI assistant provides general health information and is not a substitute for professional medical advice.",
+    "aiGreeting": "Hello! I'm your AI health companion. I'm here to help with your medical questions and provide guidance. Please note that I'm not a replacement for professional medical care. How can I assist you today?"
+  },
+  "diagnosis": {
+    "title": "AI Medical Image Analysis",
+    "description": "Upload medical images for AI-powered analysis and insights",
+    "uploadTitle": "Upload Medical Images",
+    "uploadDescription": "Drag and drop your images here, or click to browse",
+    "chooseImages": "Choose Images",
+    "supportedFormats": "Supports: JPG, PNG, DICOM • Max size: 10MB per image",
+    "analysisResults": "Analysis Results",
+    "keyFindings": "Key Findings",
+    "recommendations": "Recommendations",
+    "confidence": "Confidence",
+    "priority": {
+      "high": "HIGH PRIORITY",
+      "medium": "MEDIUM PRIORITY", 
+      "low": "LOW PRIORITY"
+    },
+    "disclaimer": "This AI analysis is for informational purposes only and should not replace professional medical diagnosis.",
+    "supportedTypes": {
+      "title": "Supported Image Types",
+      "xrays": "X-rays and radiographs",
+      "mri": "MRI and CT scans", 
+      "dermatology": "Dermatological images",
+      "pathology": "Pathology slides"
+    },
+    "privacy": {
+      "title": "Privacy & Security",
+      "encrypted": "Images are encrypted during upload",
+      "secure": "Analysis is performed securely", 
+      "notStored": "Data is not stored permanently",
+      "hipaa": "HIPAA compliant processing"
+    }
+  },
+  "wellness": {
+    "title": "Wellness Planning",
+    "description": "Create your personalized health and wellness plan",
+    "steps": {
+      "personalInfo": "Personal Information",
+      "healthGoals": "Health Goals",
+      "lifestyle": "Lifestyle Assessment", 
+      "medicalHistory": "Medical History",
+      "preferences": "Preferences",
+      "plan": "Your Wellness Plan"
+    },
+    "personalInfo": {
+      "age": "Age",
+      "agePrompt": "Enter your age",
+      "gender": "Gender",
+      "genderOptions": {
+        "male": "Male",
+        "female": "Female", 
+        "other": "Other",
+        "preferNotToSay": "Prefer not to say"
+      },
+      "height": "Height (cm)",
+      "heightPrompt": "Enter your height",
+      "weight": "Weight (kg)",
+      "weightPrompt": "Enter your weight",
+      "activityLevel": "Current Activity Level",
+      "activityLevels": {
+        "sedentary": "Sedentary (little to no exercise)",
+        "light": "Lightly active (light exercise 1-3 days/week)",
+        "moderate": "Moderately active (moderate exercise 3-5 days/week)",
+        "very": "Very active (hard exercise 6-7 days/week)"
+      }
+    },
+    "healthGoals": {
+      "title": "What are your primary health goals?",
+      "weightLoss": "Weight loss",
+      "weightGain": "Weight gain", 
+      "muscleBuilding": "Muscle building",
+      "cardiovascularHealth": "Cardiovascular health",
+      "stressManagement": "Stress management",
+      "betterSleep": "Better sleep",
+      "increasedEnergy": "Increased energy",
+      "diseasePrevention": "Disease prevention",
+      "mentalWellness": "Mental wellness",
+      "flexibilityImprovement": "Flexibility improvement"
+    },
+    "lifestyle": {
+      "sleepHours": "Average sleep hours per night",
+      "sleepOptions": {
+        "lessThan5": "Less than 5 hours",
+        "5to6": "5-6 hours",
+        "7to8": "7-8 hours", 
+        "moreThan8": "More than 8 hours"
+      },
+      "stressLevel": "Current stress level",
+      "stressLevels": {
+        "low": "Low",
+        "moderate": "Moderate",
+        "high": "High",
+        "veryHigh": "Very High"
+      },
+      "smokingStatus": "Smoking status",
+      "smokingOptions": {
+        "never": "Never smoked",
+        "former": "Former smoker",
+        "current": "Current smoker"
+      },
+      "alcoholConsumption": "Alcohol consumption",
+      "alcoholOptions": {
+        "never": "Never",
+        "rarely": "Rarely",
+        "occasionally": "Occasionally", 
+        "regularly": "Regularly"
+      }
+    },
+    "medicalHistory": {
+      "conditionsTitle": "Do you have any of these conditions?",
+      "conditions": {
+        "diabetes": "Diabetes",
+        "hypertension": "Hypertension",
+        "heartDisease": "Heart disease",
+        "asthma": "Asthma", 
+        "arthritis": "Arthritis",
+        "depressionAnxiety": "Depression/Anxiety",
+        "thyroidDisorders": "Thyroid disorders",
+        "none": "None of the above"
+      },
+      "medications": "Current medications (optional)",
+      "medicationsPrompt": "List any medications you're currently taking...",
+      "allergies": "Known allergies (optional)",
+      "allergiesPrompt": "List any known allergies..."
+    },
+    "preferences": {
+      "dietType": "Preferred diet type",
+      "dietTypes": {
+        "balanced": "Balanced diet",
+        "vegetarian": "Vegetarian",
+        "vegan": "Vegan",
+        "keto": "Ketogenic",
+        "mediterranean": "Mediterranean",
+        "lowCarb": "Low carb",
+        "other": "Other"
+      },
+      "exerciseTypes": "Preferred exercise types",
+      "exercises": {
+        "walking": "Walking/Jogging",
+        "weightTraining": "Weight training",
+        "yoga": "Yoga/Pilates",
+        "swimming": "Swimming",
+        "cycling": "Cycling",
+        "dancing": "Dancing",
+        "teamSports": "Team sports",
+        "homeWorkouts": "Home workouts"
+      },
+      "timeAvailability": "Time availability for wellness activities",
+      "timeOptions": {
+        "15to30": "15-30 minutes daily",
+        "30to60": "30-60 minutes daily",
+        "1to2hours": "1-2 hours daily",
+        "weekendsOnly": "Weekends only",
+        "flexible": "Flexible schedule"
+      }
+    },
+    "plan": {
+      "title": "Your Personalized Wellness Plan",
+      "subtitle": "Here is a starting point for your wellness journey, created just for you.",
+      "goals": "Your Goals",
+      "downloadPdf": "Download Plan as PDF",
+      "scheduleCheckin": "Schedule Check-in",
+      "generating": "Generating Your Plan...",
+      "generatingSubtitle": "Our AI is crafting a personalized wellness journey just for you."
+    }
+  },
+  "medication": {
+    "title": "Medication Reminders", 
+    "description": "Stay on track with your medication schedule",
+    "addReminder": "Add Reminder",
+    "upcomingReminders": "Upcoming Reminders",
+    "adherence": "7-Day Adherence",
+    "allMedications": "All Medications",
+    "noReminders": "No upcoming reminders for today!",
+    "allCaughtUp": "You're all caught up.",
+    "noMedications": "No medications added yet",
+    "addFirst": "Start by adding your first medication reminder",
+    "addFirstMedication": "Add First Medication",
+    "overdue": "Overdue",
+    "taken": "Marked as Taken",
+    "skipped": "Dose Skipped",
+    "snoozed": "Reminder Snoozed",
+    "snoozeMessage": "We'll remind you again in 15 minutes.",
+    "jobStaying": "Great job staying on track!",
+    "form": {
+      "title": "Add New Medication",
+      "description": "Create a reminder for your medication schedule",
+      "name": "Medication Name",
+      "namePrompt": "e.g., Lisinopril",
+      "dose": "Dose", 
+      "dosePrompt": "e.g., 10mg",
+      "frequency": "Frequency",
+      "frequencyOptions": {
+        "onceDaily": "Once daily",
+        "twiceDaily": "Twice daily",
+        "threeTimes": "Three times daily",
+        "fourTimes": "Four times daily",
+        "asNeeded": "As needed"
+      },
+      "times": "Time(s)",
+      "addTime": "Add Time",
+      "startDate": "Start Date",
+      "endDate": "End Date (optional)",
+      "notes": "Notes",
+      "notesPrompt": "Special instructions...",
+      "add": "Add Medication"
+    }
+  },
+  "emergency": {
+    "title": "Emergency Care",
+    "description": "Quick access to emergency guidance and first aid instructions", 
+    "lifeThreatening": "Life-Threatening Emergency?",
+    "lifeThreateningDesc": "If someone is unconscious, not breathing, or severely injured, call emergency services immediately.",
+    "callEmergency": "Call Emergency Services",
+    "tabs": {
+      "contacts": "Emergency Contacts",
+      "guides": "First Aid Guides", 
+      "symptoms": "Symptom Checker"
+    },
+    "findHospital": "Find Nearest Hospital",
+    "findHospitalDesc": "Locate the nearest emergency room or urgent care facility based on your current location.",
+    "findHospitals": "Find Hospitals",
+    "urgentCare": "Urgent Care",
+    "firstAidSearch": "Search first aid guides or symptoms...",
+    "watchVideo": "Watch Video",
+    "symptomChecker": {
+      "title": "Emergency Symptom Checker",
+      "description": "Select symptoms to get immediate guidance on whether emergency care is needed.",
+      "callEmergencyIf": "Call Emergency Services If:",
+      "seekUrgentCareFor": "Seek Urgent Care For:",
+      "emergencySymptoms": [
+        "Unconscious or unresponsive",
+        "Difficulty breathing or no breathing", 
+        "Chest pain or pressure",
+        "Severe bleeding",
+        "Signs of stroke (FAST test)",
+        "Severe allergic reaction",
+        "Poisoning or overdose"
+      ],
+      "urgentSymptoms": [
+        "High fever (over 103°F)",
+        "Severe abdominal pain",
+        "Deep cuts requiring stitches",
+        "Suspected broken bones", 
+        "Severe headache with vision changes",
+        "Persistent vomiting",
+        "Signs of dehydration"
+      ]
+    },
+    "firstAidGuides": {
+      "cpr": "CPR (Cardiopulmonary Resuscitation)",
+      "choking": "Choking (Heimlich Maneuver)", 
+      "bleeding": "Severe Bleeding Control",
+      "burns": "Burn Treatment"
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "description": "Manage your account preferences and privacy settings",
+    "tabs": {
+      "profile": "Profile",
+      "preferences": "Preferences",
+      "notifications": "Notifications",
+      "privacy": "Privacy",
+      "data": "Data"
+    },
+    "profile": {
+      "title": "Profile Information",
+      "changePhoto": "Change Photo",
+      "removePhoto": "Remove Photo",
+      "fullName": "Full Name",
+      "email": "Email Address",
+      "phone": "Phone Number", 
+      "dateOfBirth": "Date of Birth",
+      "emergencyContact": "Emergency Contact",
+      "saveChanges": "Save Changes"
+    },
+    "preferences": {
+      "language": "Language & Region",
+      "languageLabel": "Language",
+      "appearance": "Appearance",
+      "theme": "Theme",
+      "themeOptions": {
+        "light": "Light",
+        "dark": "Dark",
+        "system": "System"
+      },
+      "accessibility": "Accessibility",
+      "highContrast": "High Contrast Mode",
+      "highContrastDesc": "Increase contrast for better visibility",
+      "largeText": "Large Text", 
+      "largeTextDesc": "Increase text size throughout the app",
+      "screenReader": "Screen Reader Support",
+      "screenReaderDesc": "Optimize for screen reading software",
+      "reducedMotion": "Reduced Motion",
+      "reducedMotionDesc": "Minimize animations and transitions"
+    },
+    "notifications": {
+      "title": "Notification Preferences",
+      "email": "Email Notifications",
+      "emailDesc": "Receive updates and reminders via email",
+      "push": "Push Notifications",
+      "pushDesc": "Get instant notifications on your device", 
+      "sms": "SMS Notifications",
+      "smsDesc": "Receive important alerts via text message",
+      "reminders": "Health Reminders",
+      "remindersDesc": "Get reminders for medications and appointments"
+    },
+    "privacy": {
+      "title": "Privacy & Data Control",
+      "dataSharing": "Data Sharing with Healthcare Providers",
+      "dataSharingDesc": "Allow sharing anonymized data for research",
+      "analytics": "Analytics & Performance", 
+      "analyticsDesc": "Help improve the app with usage analytics",
+      "marketing": "Marketing Communications",
+      "marketingDesc": "Receive promotional content and health tips",
+      "thirdParty": "Third-party Integrations",
+      "thirdPartyDesc": "Allow connections with fitness trackers and apps",
+      "accountSecurity": "Account Security",
+      "viewPrivacy": "View Privacy Policy",
+      "changePassword": "Change Password",
+      "twoFactor": "Two-Factor Authentication"
+    },
+    "data": {
+      "title": "Data Management",
+      "export": "Export Your Data",
+      "exportDesc": "Download a copy of your health data, consultations, and wellness plans.",
+      "exportData": "Export Data",
+      "import": "Import Health Data", 
+      "importDesc": "Import health records from other platforms or devices.",
+      "importData": "Import Data",
+      "dangerZone": "Danger Zone",
+      "deleteAccount": "Delete Account",
+      "deleteAccountDesc": "Permanently delete your account and all associated data. This action cannot be undone."
+    }
+  },
+  "auth": {
+    "signIn": "Sign In",
+    "signUp": "Sign Up", 
+    "email": "Email",
+    "password": "Password",
+    "dontHaveAccount": "Don't have an account?",
+    "alreadyHaveAccount": "Already have an account?"
+  },
+  "errors": {
+    "generic": "An error occurred. Please try again.",
+    "networkError": "Network error. Please check your connection.",
+    "unauthorized": "Unauthorized access.",
+    "notFound": "Resource not found.",
+    "validationError": "Please check your input.",
+    "serverError": "Server error. Please try again later."
+  },
+  "success": {
+    "saved": "Settings saved successfully!",
+    "deleted": "Item deleted successfully!",
+    "updated": "Updated successfully!",
+    "sent": "Sent successfully!"
   }
+}

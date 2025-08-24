@@ -102,11 +102,11 @@ export function DashboardLayout() {
   };
 
   const navigationItems = [
-    { id: "consultation", label: t("medicalConsultation"), icon: MessageSquare },
-    { id: "diagnosis", label: t("aiDiagnosis"), icon: Scan },
-    { id: "wellness", label: t("wellnessPlanning"), icon: Heart },
-    { id: "medication", label: t("medicationReminders"), icon: Pill },
-    { id: "emergency", label: t("emergencyCare"), icon: AlertTriangle },
+    { id: "consultation", label: t("navigation.medicalConsultation"), icon: MessageSquare },
+    { id: "diagnosis", label: t("navigation.aiDiagnosis"), icon: Scan },
+    { id: "wellness", label: t("navigation.wellnessPlanning"), icon: Heart },
+    { id: "medication", label: t("navigation.medicationReminders"), icon: Pill },
+    { id: "emergency", label: t("navigation.emergencyCare"), icon: AlertTriangle },
   ];
 
   const handleSignOut = async () => {
@@ -166,7 +166,7 @@ export function DashboardLayout() {
                 <Stethoscope className="h-4 w-4" />
               </div>
               <h1 className="text-xl font-semibold text-foreground bg-gradient-to-r from-primary to-accent bg-clip-text text-transparent">
-                VitaShifa
+                {t("dashboard.title")}
               </h1>
             </div>
           </div>
@@ -213,12 +213,12 @@ export function DashboardLayout() {
               <DropdownMenuContent align="end" className="glass-card border-border/50">
                 <DropdownMenuItem onClick={() => setActiveTab("settings")} className="cursor-pointer">
                   <Settings className="h-4 w-4 mr-2" />
-                  {t('settings')}
+                  {t('navigation.settings')}
                 </DropdownMenuItem>
                 <DropdownMenuSeparator />
                 <DropdownMenuItem onClick={handleSignOut} className="cursor-pointer text-red-500">
                   <LogOut className="h-4 w-4 mr-2" />
-                  {t('signOut')}
+                  {t('navigation.signOut')}
                 </DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
@@ -260,7 +260,7 @@ export function DashboardLayout() {
 
               {/* Chat History Section */}
               <div className="mt-8">
-                <h3 className="mb-3 text-sm font-medium text-muted-foreground">{t('recentConsultations')}</h3>
+                <h3 className="mb-3 text-sm font-medium text-muted-foreground">{t('navigation.recentConsultations')}</h3>
                 <div className="space-y-2">
                   {recentConsultations.map((chat: any, index) => (
                     <Card
@@ -268,7 +268,7 @@ export function DashboardLayout() {
                       onClick={() => handleRecentConversationClick(chat)}
                       className="glass-card p-3 cursor-pointer hover:bg-accent/20 transition-all duration-200 hover:scale-105"
                     >
-                      <p className="text-sm text-foreground truncate">{chat.title || "Consultation"}</p>
+                      <p className="text-sm text-foreground truncate">{chat.title || t("navigation.medicalConsultation")}</p>
                       <p className="text-xs text-muted-foreground mt-1">
                         {new Date(chat.timestamp?._seconds * 1000).toLocaleDateString()}
                       </p>

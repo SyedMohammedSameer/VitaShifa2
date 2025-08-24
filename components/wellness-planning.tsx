@@ -27,10 +27,8 @@ import {
 } from "lucide-react"
 import { cn } from "@/lib/utils"
 import { useToast } from "@/hooks/use-toast"
-// We are NOT using html2canvas or jspdf here anymore
-// import jsPDF from "jspdf";
-// import html2canvas from "html2canvas";
-
+import { useTranslation } from "react-i18next"
+import i18n from "@/lib/i18n"
 
 interface WellnessData {
   personalInfo: {
@@ -80,15 +78,16 @@ interface AIPlan {
 }
 
 const steps = [
-  { id: 1, title: "Personal Information", icon: Target },
-  { id: 2, title: "Health Goals", icon: Heart },
-  { id: 3, title: "Lifestyle Assessment", icon: Activity },
-  { id: 4, title: "Medical History", icon: CheckCircle },
-  { id: 5, title: "Preferences", icon: Apple },
-  { id: 6, title: "Your Wellness Plan", icon: TrendingUp },
+  { id: 1, titleKey: "wellness.steps.personalInfo", icon: Target },
+  { id: 2, titleKey: "wellness.steps.healthGoals", icon: Heart },
+  { id: 3, titleKey: "wellness.steps.lifestyle", icon: Activity },
+  { id: 4, titleKey: "wellness.steps.medicalHistory", icon: CheckCircle },
+  { id: 5, titleKey: "wellness.steps.preferences", icon: Apple },
+  { id: 6, titleKey: "wellness.steps.plan", icon: TrendingUp },
 ]
 
 export function WellnessPlanning() {
+  const { t } = useTranslation();
   const [currentStep, setCurrentStep] = useState(1)
   const { user } = useAuth();
   const { toast } = useToast();
@@ -99,7 +98,7 @@ export function WellnessPlanning() {
   const handleDownloadPlan = () => {
     const planContent = planRef.current;
     if (!planContent) {
-      toast({ title: "Error", description: "Could not find plan content.", variant: "destructive" });
+      toast({ title: t("errors.generic"), description: "Could not find plan content.", variant: "destructive" });
       return;
     }
 
@@ -109,9 +108,8 @@ export function WellnessPlanning() {
         <!DOCTYPE html>
         <html>
           <head>
-            <title>VitaShifa Wellness Plan</title>
+            <title>${t("dashboard.title")} ${t("wellness.title")}</title>
             <style>
-              /* Basic setup for printing */
               @media print {
                 body { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
               }
@@ -121,8 +119,6 @@ export function WellnessPlanning() {
                 background: linear-gradient(135deg, oklch(0.98 0.005 180) 0%, oklch(0.95 0.01 200) 100%);
                 color: oklch(0.15 0.02 200);
               }
-
-              /* Core component styles adapted from your globals.css and components */
               .card {
                 background-color: oklch(0.99 0.002 180 / 0.8);
                 border: 1px solid oklch(0.85 0.01 180 / 0.4);
@@ -132,47 +128,9 @@ export function WellnessPlanning() {
                 box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
                 page-break-inside: avoid;
               }
-              .card-header { padding: 0 0 1rem 0; }
-              .card-title { font-size: 1.125rem; font-weight: 600; display: flex; align-items: center; gap: 0.5rem; }
-              .card-content { font-size: 0.875rem; }
-              .badge {
-                display: inline-flex;
-                align-items: center;
-                border-radius: 0.375rem;
-                padding: 0.25rem 0.75rem;
-                font-size: 0.75rem;
-                font-weight: 500;
-                background-color: oklch(0.55 0.12 180 / 0.2);
-                color: oklch(0.15 0.02 200);
-                border: 1px solid oklch(0.55 0.12 180 / 0.5);
-              }
-
-              /* Plan-specific layout */
               .text-center { text-align: center; }
-              .space-y-2 > * + * { margin-top: 0.5rem; }
-              .mb-4 { margin-bottom: 1rem; }
-              .mb-6 { margin-bottom: 1.5rem; }
               h3 { font-size: 1.5rem; line-height: 2rem; font-weight: 600; }
               p { color: oklch(0.45 0.02 200); }
-              ul { list-style-position: inside; padding-left: 0;}
-              li { margin-top: 0.5rem; }
-              table { width: 100%; border-collapse: collapse; }
-              th, td { text-align: left; padding: 0.75rem; border-bottom: 1px solid oklch(0.85 0.01 180 / 0.4); }
-              th { font-weight: 600; }
-              thead { display: table-header-group; }
-              tr { page-break-inside: avoid; }
-
-
-              /* Icon and color theming */
-              .text-primary { color: oklch(0.45 0.15 180); }
-              .text-secondary { color: oklch(0.55 0.12 180); }
-              svg {
-                display: inline-block;
-                width: 1.25rem;
-                height: 1.25rem;
-                margin-right: 0.5rem;
-                vertical-align: middle;
-              }
             </style>
           </head>
           <body>
@@ -189,7 +147,7 @@ export function WellnessPlanning() {
       }, 500);
 
       toast({ 
-        title: "Print Dialog Opened", 
+        title: t("success.sent"), 
         description: "Your PDF is ready. Please use the 'Save as PDF' option in your browser's print menu." 
       });
     }
@@ -223,7 +181,6 @@ export function WellnessPlanning() {
     },
   })
 
-
   const updateFormData = (section: keyof WellnessData, data: any) => {
     setFormData((prev) => ({
       ...prev,
@@ -232,7 +189,7 @@ export function WellnessPlanning() {
   }
 
   const nextStep = async () => {
-    if (currentStep === steps.length - 1) { // On the last step before the plan is shown
+    if (currentStep === steps.length - 1) {
         setIsGenerating(true);
         setGeneratedPlan(null);
         try {
@@ -241,17 +198,20 @@ export function WellnessPlanning() {
                 headers: {
                     'Content-Type': 'application/json',
                 },
-                body: JSON.stringify(formData),
+                body: JSON.stringify({
+                    formData,
+                    language: i18n.language // Send current language to API
+                }),
             });
 
             if (!response.ok) throw new Error('Failed to generate plan');
             
             const plan: AIPlan = await response.json();
             setGeneratedPlan(plan);
-            setCurrentStep(currentStep + 1); // Move to the final plan view
+            setCurrentStep(currentStep + 1);
         } catch (error) {
             console.error(error);
-            toast({ title: "Error", description: "Could not generate your wellness plan.", variant: "destructive" });
+            toast({ title: t("errors.generic"), description: "Could not generate your wellness plan.", variant: "destructive" });
         } finally {
             setIsGenerating(false);
         }
@@ -268,37 +228,62 @@ export function WellnessPlanning() {
 
   const progress = (currentStep / steps.length) * 100
 
+  // Health goals with translations
+  const healthGoals = [
+    t("wellness.healthGoals.weightLoss"),
+    t("wellness.healthGoals.weightGain"),
+    t("wellness.healthGoals.muscleBuilding"),
+    t("wellness.healthGoals.cardiovascularHealth"),
+    t("wellness.healthGoals.stressManagement"),
+    t("wellness.healthGoals.betterSleep"),
+    t("wellness.healthGoals.increasedEnergy"),
+    t("wellness.healthGoals.diseasePrevention"),
+    t("wellness.healthGoals.mentalWellness"),
+    t("wellness.healthGoals.flexibilityImprovement"),
+  ];
+
+  // Medical conditions with translations
+  const medicalConditions = [
+    t("wellness.medicalHistory.conditions.diabetes"),
+    t("wellness.medicalHistory.conditions.hypertension"),
+    t("wellness.medicalHistory.conditions.heartDisease"),
+    t("wellness.medicalHistory.conditions.asthma"),
+    t("wellness.medicalHistory.conditions.arthritis"),
+    t("wellness.medicalHistory.conditions.depressionAnxiety"),
+    t("wellness.medicalHistory.conditions.thyroidDisorders"),
+    t("wellness.medicalHistory.conditions.none"),
+  ];
+
   const renderStepContent = () => {
     switch (currentStep) {
-      // Cases 1-5 remain unchanged...
       case 1:
         return (
           <div className="space-y-6">
             <div className="grid md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="age">Age</Label>
+                <Label htmlFor="age">{t("wellness.personalInfo.age")}</Label>
                 <Input
                   id="age"
                   type="number"
-                  placeholder="Enter your age"
+                  placeholder={t("wellness.personalInfo.agePrompt")}
                   value={formData.personalInfo.age}
                   onChange={(e) => updateFormData("personalInfo", { age: e.target.value })}
                 />
               </div>
               <div className="space-y-2">
-                <Label>Gender</Label>
+                <Label>{t("wellness.personalInfo.gender")}</Label>
                 <Select
                   value={formData.personalInfo.gender}
                   onValueChange={(value) => updateFormData("personalInfo", { gender: value })}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select gender" />
+                    <SelectValue placeholder={t("wellness.personalInfo.gender")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="male">Male</SelectItem>
-                    <SelectItem value="female">Female</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
-                    <SelectItem value="prefer-not-to-say">Prefer not to say</SelectItem>
+                    <SelectItem value="male">{t("wellness.personalInfo.genderOptions.male")}</SelectItem>
+                    <SelectItem value="female">{t("wellness.personalInfo.genderOptions.female")}</SelectItem>
+                    <SelectItem value="other">{t("wellness.personalInfo.genderOptions.other")}</SelectItem>
+                    <SelectItem value="prefer-not-to-say">{t("wellness.personalInfo.genderOptions.preferNotToSay")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -306,21 +291,21 @@ export function WellnessPlanning() {
 
             <div className="grid md:grid-cols-2 gap-4">
               <div className="space-y-2">
-                <Label htmlFor="height">Height (cm)</Label>
+                <Label htmlFor="height">{t("wellness.personalInfo.height")}</Label>
                 <Input
                   id="height"
                   type="number"
-                  placeholder="Enter your height"
+                  placeholder={t("wellness.personalInfo.heightPrompt")}
                   value={formData.personalInfo.height}
                   onChange={(e) => updateFormData("personalInfo", { height: e.target.value })}
                 />
               </div>
               <div className="space-y-2">
-                <Label htmlFor="weight">Weight (kg)</Label>
+                <Label htmlFor="weight">{t("wellness.personalInfo.weight")}</Label>
                 <Input
                   id="weight"
                   type="number"
-                  placeholder="Enter your weight"
+                  placeholder={t("wellness.personalInfo.weightPrompt")}
                   value={formData.personalInfo.weight}
                   onChange={(e) => updateFormData("personalInfo", { weight: e.target.value })}
                 />
@@ -328,26 +313,26 @@ export function WellnessPlanning() {
             </div>
 
             <div className="space-y-3">
-              <Label>Current Activity Level</Label>
+              <Label>{t("wellness.personalInfo.activityLevel")}</Label>
               <RadioGroup
                 value={formData.personalInfo.activityLevel}
                 onValueChange={(value) => updateFormData("personalInfo", { activityLevel: value })}
               >
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="sedentary" id="sedentary" />
-                  <Label htmlFor="sedentary">Sedentary (little to no exercise)</Label>
+                  <Label htmlFor="sedentary">{t("wellness.personalInfo.activityLevels.sedentary")}</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="light" id="light" />
-                  <Label htmlFor="light">Lightly active (light exercise 1-3 days/week)</Label>
+                  <Label htmlFor="light">{t("wellness.personalInfo.activityLevels.light")}</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="moderate" id="moderate" />
-                  <Label htmlFor="moderate">Moderately active (moderate exercise 3-5 days/week)</Label>
+                  <Label htmlFor="moderate">{t("wellness.personalInfo.activityLevels.moderate")}</Label>
                 </div>
                 <div className="flex items-center space-x-2">
                   <RadioGroupItem value="very" id="very" />
-                  <Label htmlFor="very">Very active (hard exercise 6-7 days/week)</Label>
+                  <Label htmlFor="very">{t("wellness.personalInfo.activityLevels.very")}</Label>
                 </div>
               </RadioGroup>
             </div>
@@ -358,20 +343,9 @@ export function WellnessPlanning() {
         return (
           <div className="space-y-6">
             <div>
-              <h3 className="text-lg font-medium mb-4">What are your primary health goals?</h3>
+              <h3 className="text-lg font-medium mb-4">{t("wellness.healthGoals.title")}</h3>
               <div className="grid md:grid-cols-2 gap-3">
-                {[
-                  "Weight loss",
-                  "Weight gain",
-                  "Muscle building",
-                  "Cardiovascular health",
-                  "Stress management",
-                  "Better sleep",
-                  "Increased energy",
-                  "Disease prevention",
-                  "Mental wellness",
-                  "Flexibility improvement",
-                ].map((goal) => (
+                {healthGoals.map((goal) => (
                   <div key={goal} className="flex items-center space-x-2">
                     <Checkbox
                       id={goal}
@@ -403,37 +377,37 @@ export function WellnessPlanning() {
           <div className="space-y-6">
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-3">
-                <Label>Average sleep hours per night</Label>
+                <Label>{t("wellness.lifestyle.sleepHours")}</Label>
                 <Select
                   value={formData.lifestyle.sleepHours}
                   onValueChange={(value) => updateFormData("lifestyle", { sleepHours: value })}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select hours" />
+                    <SelectValue placeholder={t("common.search")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="less-than-5">Less than 5 hours</SelectItem>
-                    <SelectItem value="5-6">5-6 hours</SelectItem>
-                    <SelectItem value="7-8">7-8 hours</SelectItem>
-                    <SelectItem value="more-than-8">More than 8 hours</SelectItem>
+                    <SelectItem value="less-than-5">{t("wellness.lifestyle.sleepOptions.lessThan5")}</SelectItem>
+                    <SelectItem value="5-6">{t("wellness.lifestyle.sleepOptions.5to6")}</SelectItem>
+                    <SelectItem value="7-8">{t("wellness.lifestyle.sleepOptions.7to8")}</SelectItem>
+                    <SelectItem value="more-than-8">{t("wellness.lifestyle.sleepOptions.moreThan8")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div className="space-y-3">
-                <Label>Current stress level</Label>
+                <Label>{t("wellness.lifestyle.stressLevel")}</Label>
                 <Select
                   value={formData.lifestyle.stressLevel}
                   onValueChange={(value) => updateFormData("lifestyle", { stressLevel: value })}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select level" />
+                    <SelectValue placeholder={t("common.search")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="low">Low</SelectItem>
-                    <SelectItem value="moderate">Moderate</SelectItem>
-                    <SelectItem value="high">High</SelectItem>
-                    <SelectItem value="very-high">Very High</SelectItem>
+                    <SelectItem value="low">{t("wellness.lifestyle.stressLevels.low")}</SelectItem>
+                    <SelectItem value="moderate">{t("wellness.lifestyle.stressLevels.moderate")}</SelectItem>
+                    <SelectItem value="high">{t("wellness.lifestyle.stressLevels.high")}</SelectItem>
+                    <SelectItem value="very-high">{t("wellness.lifestyle.stressLevels.veryHigh")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -441,40 +415,40 @@ export function WellnessPlanning() {
 
             <div className="grid md:grid-cols-2 gap-6">
               <div className="space-y-3">
-                <Label>Smoking status</Label>
+                <Label>{t("wellness.lifestyle.smokingStatus")}</Label>
                 <RadioGroup
                   value={formData.lifestyle.smokingStatus}
                   onValueChange={(value) => updateFormData("lifestyle", { smokingStatus: value })}
                 >
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="never" id="never-smoke" />
-                    <Label htmlFor="never-smoke">Never smoked</Label>
+                    <Label htmlFor="never-smoke">{t("wellness.lifestyle.smokingOptions.never")}</Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="former" id="former-smoke" />
-                    <Label htmlFor="former-smoke">Former smoker</Label>
+                    <Label htmlFor="former-smoke">{t("wellness.lifestyle.smokingOptions.former")}</Label>
                   </div>
                   <div className="flex items-center space-x-2">
                     <RadioGroupItem value="current" id="current-smoke" />
-                    <Label htmlFor="current-smoke">Current smoker</Label>
+                    <Label htmlFor="current-smoke">{t("wellness.lifestyle.smokingOptions.current")}</Label>
                   </div>
                 </RadioGroup>
               </div>
 
               <div className="space-y-3">
-                <Label>Alcohol consumption</Label>
+                <Label>{t("wellness.lifestyle.alcoholConsumption")}</Label>
                 <Select
                   value={formData.lifestyle.alcoholConsumption}
                   onValueChange={(value) => updateFormData("lifestyle", { alcoholConsumption: value })}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select frequency" />
+                    <SelectValue placeholder={t("common.search")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="never">Never</SelectItem>
-                    <SelectItem value="rarely">Rarely</SelectItem>
-                    <SelectItem value="occasionally">Occasionally</SelectItem>
-                    <SelectItem value="regularly">Regularly</SelectItem>
+                    <SelectItem value="never">{t("wellness.lifestyle.alcoholOptions.never")}</SelectItem>
+                    <SelectItem value="rarely">{t("wellness.lifestyle.alcoholOptions.rarely")}</SelectItem>
+                    <SelectItem value="occasionally">{t("wellness.lifestyle.alcoholOptions.occasionally")}</SelectItem>
+                    <SelectItem value="regularly">{t("wellness.lifestyle.alcoholOptions.regularly")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -487,18 +461,9 @@ export function WellnessPlanning() {
           <div className="space-y-6">
             <div className="space-y-4">
               <div>
-                <Label className="text-base font-medium">Do you have any of these conditions?</Label>
+                <Label className="text-base font-medium">{t("wellness.medicalHistory.conditionsTitle")}</Label>
                 <div className="grid md:grid-cols-2 gap-3 mt-3">
-                  {[
-                    "Diabetes",
-                    "Hypertension",
-                    "Heart disease",
-                    "Asthma",
-                    "Arthritis",
-                    "Depression/Anxiety",
-                    "Thyroid disorders",
-                    "None of the above",
-                  ].map((condition) => (
+                  {medicalConditions.map((condition) => (
                     <div key={condition} className="flex items-center space-x-2">
                       <Checkbox
                         id={condition}
@@ -530,20 +495,20 @@ export function WellnessPlanning() {
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="medications">Current medications (optional)</Label>
+                <Label htmlFor="medications">{t("wellness.medicalHistory.medications")}</Label>
                 <Textarea
                   id="medications"
-                  placeholder="List any medications you're currently taking..."
+                  placeholder={t("wellness.medicalHistory.medicationsPrompt")}
                   value={formData.medicalHistory.medications}
                   onChange={(e) => updateFormData("medicalHistory", { medications: e.target.value })}
                 />
               </div>
 
               <div className="space-y-2">
-                <Label htmlFor="allergies">Known allergies (optional)</Label>
+                <Label htmlFor="allergies">{t("wellness.medicalHistory.allergies")}</Label>
                 <Textarea
                   id="allergies"
-                  placeholder="List any known allergies..."
+                  placeholder={t("wellness.medicalHistory.allergiesPrompt")}
                   value={formData.medicalHistory.allergies}
                   onChange={(e) => updateFormData("medicalHistory", { allergies: e.target.value })}
                 />
@@ -557,38 +522,38 @@ export function WellnessPlanning() {
           <div className="space-y-6">
             <div className="space-y-4">
               <div className="space-y-3">
-                <Label>Preferred diet type</Label>
+                <Label>{t("wellness.preferences.dietType")}</Label>
                 <Select
                   value={formData.preferences.dietType}
                   onValueChange={(value) => updateFormData("preferences", { dietType: value })}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select diet preference" />
+                    <SelectValue placeholder={t("wellness.preferences.dietType")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="balanced">Balanced diet</SelectItem>
-                    <SelectItem value="vegetarian">Vegetarian</SelectItem>
-                    <SelectItem value="vegan">Vegan</SelectItem>
-                    <SelectItem value="keto">Ketogenic</SelectItem>
-                    <SelectItem value="mediterranean">Mediterranean</SelectItem>
-                    <SelectItem value="low-carb">Low carb</SelectItem>
-                    <SelectItem value="other">Other</SelectItem>
+                    <SelectItem value="balanced">{t("wellness.preferences.dietTypes.balanced")}</SelectItem>
+                    <SelectItem value="vegetarian">{t("wellness.preferences.dietTypes.vegetarian")}</SelectItem>
+                    <SelectItem value="vegan">{t("wellness.preferences.dietTypes.vegan")}</SelectItem>
+                    <SelectItem value="keto">{t("wellness.preferences.dietTypes.keto")}</SelectItem>
+                    <SelectItem value="mediterranean">{t("wellness.preferences.dietTypes.mediterranean")}</SelectItem>
+                    <SelectItem value="low-carb">{t("wellness.preferences.dietTypes.lowCarb")}</SelectItem>
+                    <SelectItem value="other">{t("wellness.preferences.dietTypes.other")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
 
               <div>
-                <Label className="text-base font-medium">Preferred exercise types</Label>
+                <Label className="text-base font-medium">{t("wellness.preferences.exerciseTypes")}</Label>
                 <div className="grid md:grid-cols-2 gap-3 mt-3">
                   {[
-                    "Walking/Jogging",
-                    "Weight training",
-                    "Yoga/Pilates",
-                    "Swimming",
-                    "Cycling",
-                    "Dancing",
-                    "Team sports",
-                    "Home workouts",
+                    t("wellness.preferences.exercises.walking"),
+                    t("wellness.preferences.exercises.weightTraining"),
+                    t("wellness.preferences.exercises.yoga"),
+                    t("wellness.preferences.exercises.swimming"),
+                    t("wellness.preferences.exercises.cycling"),
+                    t("wellness.preferences.exercises.dancing"),
+                    t("wellness.preferences.exercises.teamSports"),
+                    t("wellness.preferences.exercises.homeWorkouts"),
                   ].map((exercise) => (
                     <div key={exercise} className="flex items-center space-x-2">
                       <Checkbox
@@ -621,20 +586,20 @@ export function WellnessPlanning() {
               </div>
 
               <div className="space-y-3">
-                <Label>Time availability for wellness activities</Label>
+                <Label>{t("wellness.preferences.timeAvailability")}</Label>
                 <Select
                   value={formData.preferences.timeAvailability}
                   onValueChange={(value) => updateFormData("preferences", { timeAvailability: value })}
                 >
                   <SelectTrigger>
-                    <SelectValue placeholder="Select time availability" />
+                    <SelectValue placeholder={t("wellness.preferences.timeAvailability")} />
                   </SelectTrigger>
                   <SelectContent>
-                    <SelectItem value="15-30-min">15-30 minutes daily</SelectItem>
-                    <SelectItem value="30-60-min">30-60 minutes daily</SelectItem>
-                    <SelectItem value="1-2-hours">1-2 hours daily</SelectItem>
-                    <SelectItem value="weekends-only">Weekends only</SelectItem>
-                    <SelectItem value="flexible">Flexible schedule</SelectItem>
+                    <SelectItem value="15-30-min">{t("wellness.preferences.timeOptions.15to30")}</SelectItem>
+                    <SelectItem value="30-60-min">{t("wellness.preferences.timeOptions.30to60")}</SelectItem>
+                    <SelectItem value="1-2-hours">{t("wellness.preferences.timeOptions.1to2hours")}</SelectItem>
+                    <SelectItem value="weekends-only">{t("wellness.preferences.timeOptions.weekendsOnly")}</SelectItem>
+                    <SelectItem value="flexible">{t("wellness.preferences.timeOptions.flexible")}</SelectItem>
                   </SelectContent>
                 </Select>
               </div>
@@ -647,27 +612,27 @@ export function WellnessPlanning() {
             return (
                 <div className="flex flex-col items-center justify-center text-center space-y-4 h-64">
                     <Loader2 className="h-12 w-12 animate-spin text-primary" />
-                    <h3 className="text-xl font-semibold">Generating Your Plan...</h3>
-                    <p className="text-muted-foreground">Our AI is crafting a personalized wellness journey just for you.</p>
+                    <h3 className="text-xl font-semibold">{t("wellness.plan.generating")}</h3>
+                    <p className="text-muted-foreground">{t("wellness.plan.generatingSubtitle")}</p>
                 </div>
             )
         }
 
         if (!generatedPlan) {
-            return <div className="text-center h-64">Could not generate a plan. Please go back and try again.</div>
+            return <div className="text-center h-64">{t("errors.generic")}</div>
         }
 
         return (
             <div className="space-y-6">
                  <div ref={planRef} className="p-6 bg-background space-y-6">
                      <div className="text-center space-y-2 mb-6">
-                        <h3 className="text-2xl font-semibold text-foreground">Your Personalized Wellness Plan</h3>
-                        <p className="text-muted-foreground">Here is a starting point for your wellness journey, created just for you.</p>
+                        <h3 className="text-2xl font-semibold text-foreground">{t("wellness.plan.title")}</h3>
+                        <p className="text-muted-foreground">{t("wellness.plan.subtitle")}</p>
                      </div>
                      
                      <Card className="bg-primary/5 border-primary/20">
                          <CardHeader>
-                             <CardTitle className="flex items-center gap-2 text-primary"><Target className="h-5 w-5" /> Your Goals</CardTitle>
+                             <CardTitle className="flex items-center gap-2 text-primary"><Target className="h-5 w-5" /> {t("wellness.plan.goals")}</CardTitle>
                          </CardHeader>
                          <CardContent>
                              <div className="flex flex-wrap gap-2">
@@ -708,7 +673,7 @@ export function WellnessPlanning() {
                                 <table className="w-full text-left">
                                     <thead>
                                         <tr className="border-b">
-                                            <th className="p-2 font-medium">Day</th>
+                                            <th className="p-2 font-medium">{t("common.search")}</th>
                                             <th className="p-2 font-medium">Fitness</th>
                                             <th className="p-2 font-medium">Nutrition Focus</th>
                                             <th className="p-2 font-medium">Mindfulness</th>
@@ -731,8 +696,8 @@ export function WellnessPlanning() {
                  </div>
                  
                  <div className="flex gap-4 mt-6">
-                     <Button className="flex-1" onClick={handleDownloadPlan}>Download Plan as PDF</Button>
-                     <Button variant="outline" className="flex-1 bg-transparent">Schedule Check-in</Button>
+                     <Button className="flex-1" onClick={handleDownloadPlan}>{t("wellness.plan.downloadPdf")}</Button>
+                     <Button variant="outline" className="flex-1 bg-transparent">{t("wellness.plan.scheduleCheckin")}</Button>
                  </div>
             </div>
         )
@@ -749,8 +714,8 @@ export function WellnessPlanning() {
           <Heart className="h-5 w-5 text-accent" />
         </div>
         <div>
-          <h1 className="text-2xl font-semibold text-foreground">Wellness Planning</h1>
-          <p className="text-muted-foreground">Create your personalized health and wellness plan</p>
+          <h1 className="text-2xl font-semibold text-foreground">{t("wellness.title")}</h1>
+          <p className="text-muted-foreground">{t("wellness.description")}</p>
         </div>
       </div>
 
@@ -759,9 +724,9 @@ export function WellnessPlanning() {
           <div className="space-y-4">
             <div className="flex justify-between items-center">
               <span className="text-sm font-medium text-foreground">
-                Step {currentStep} of {steps.length}
+                {t("common.search")} {currentStep} {t("common.search")} {steps.length}
               </span>
-              <span className="text-sm text-muted-foreground">{Math.round(progress)}% Complete</span>
+              <span className="text-sm text-muted-foreground">{Math.round(progress)}% {t("common.search")}</span>
             </div>
             <Progress value={progress} className="h-2" />
             <div className="flex justify-between">
@@ -785,7 +750,7 @@ export function WellnessPlanning() {
                     >
                       <Icon className="h-4 w-4" />
                     </div>
-                    <span className="hidden sm:block text-center max-w-16">{step.title}</span>
+                    <span className="hidden sm:block text-center max-w-16">{t(step.titleKey)}</span>
                   </div>
                 )
               })}
@@ -796,7 +761,7 @@ export function WellnessPlanning() {
 
       <Card className="bg-card/50 backdrop-blur-sm border-border/50">
         <CardHeader>
-          <CardTitle>{steps[currentStep - 1]?.title}</CardTitle>
+          <CardTitle>{t(steps[currentStep - 1]?.titleKey)}</CardTitle>
         </CardHeader>
         <CardContent className="space-y-6">
           {renderStepContent()}
@@ -805,10 +770,10 @@ export function WellnessPlanning() {
             <div className="flex justify-between pt-6">
               <Button variant="outline" onClick={prevStep} disabled={currentStep === 1}>
                 <ChevronLeft className="h-4 w-4 mr-2" />
-                Previous
+                {t("common.previous")}
               </Button>
               <Button onClick={nextStep} disabled={isGenerating}>
-                {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : (currentStep === steps.length -1 ? "Generate Plan" : "Next")}
+                {isGenerating ? <Loader2 className="h-4 w-4 animate-spin" /> : (currentStep === steps.length -1 ? t("wellness.plan.generating") : t("common.next"))}
                 {!isGenerating && currentStep < steps.length -1 && <ChevronRight className="h-4 w-4 ml-2" />}
               </Button>
             </div>

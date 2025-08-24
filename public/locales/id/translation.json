@@ -1,10 +1,55 @@
 {
+  "common": {
+    "loading": "Memuat...",
+    "save": "Simpan",
+    "cancel": "Batal",
+    "delete": "Hapus",
+    "edit": "Edit",
+    "add": "Tambah",
+    "next": "Selanjutnya",
+    "previous": "Sebelumnya",
+    "close": "Tutup",
+    "search": "Cari",
+    "submit": "Kirim",
+    "required": "Wajib",
+    "optional": "Opsional",
+    "yes": "Ya",
+    "no": "Tidak"
+  },
+  "navigation": {
     "medicalConsultation": "Konsultasi Medis",
     "aiDiagnosis": "Diagnosis AI",
-    "wellnessPlanning": "Perencanaan Kebugaran",
+    "wellnessPlanning": "Perencanaan Kesehatan",
     "medicationReminders": "Pengingat Obat",
     "emergencyCare": "Perawatan Darurat",
-    "recentConsultations": "Konsultasi Terkini",
     "settings": "Pengaturan",
-    "signOut": "Keluar"
+    "signOut": "Keluar",
+    "recentConsultations": "Konsultasi Terbaru"
+  },
+  "dashboard": {
+    "title": "VitaShifa",
+    "welcome": "Pendamping kesehatan terpercaya yang didukung AI"
+  },
+  "consultation": {
+    "title": "Konsultasi Medis",
+    "placeholder": "Jelaskan gejala Anda atau ajukan pertanyaan kesehatan...",
+    "disclaimer": "Asisten AI ini memberikan informasi kesehatan umum dan bukan pengganti nasihat medis profesional.",
+    "aiGreeting": "Halo! Saya pendamping kesehatan AI Anda. Saya di sini untuk membantu pertanyaan medis dan memberikan bimbingan. Harap dicatat bahwa saya bukan pengganti perawatan medis profesional. Bagaimana saya bisa membantu Anda hari ini?"
+  },
+  "auth": {
+    "signIn": "Masuk",
+    "signUp": "Daftar",
+    "email": "Email",
+    "password": "Kata Sandi",
+    "dontHaveAccount": "Belum punya akun?",
+    "alreadyHaveAccount": "Sudah punya akun?"
+  },
+  "errors": {
+    "generic": "Terjadi kesalahan. Silakan coba lagi.",
+    "networkError": "Kesalahan jaringan. Periksa koneksi Anda.",
+    "unauthorized": "Akses tidak diizinkan.",
+    "notFound": "Sumber daya tidak ditemukan.",
+    "validationError": "Periksa input Anda.",
+    "serverError": "Kesalahan server. Coba lagi nanti."
   }
+}

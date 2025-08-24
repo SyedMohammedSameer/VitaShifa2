@@ -1,10 +1,105 @@
 {
+  "common": {
+    "loading": "Cargando...",
+    "save": "Guardar",
+    "cancel": "Cancelar",
+    "delete": "Eliminar",
+    "edit": "Editar",
+    "add": "Agregar",
+    "next": "Siguiente",
+    "previous": "Anterior",
+    "close": "Cerrar",
+    "search": "Buscar",
+    "submit": "Enviar",
+    "required": "Requerido",
+    "optional": "Opcional",
+    "yes": "Sí",
+    "no": "No"
+  },
+  "navigation": {
     "medicalConsultation": "Consulta Médica",
-    "aiDiagnosis": "Diagnóstico de IA",
+    "aiDiagnosis": "Diagnóstico IA",
     "wellnessPlanning": "Planificación de Bienestar",
     "medicationReminders": "Recordatorios de Medicamentos",
-    "emergencyCare": "Atención de Emergencia",
-    "recentConsultations": "Consultas Recientes",
+    "emergencyCare": "Cuidado de Emergencia",
     "settings": "Configuración",
-    "signOut": "Cerrar Sesión"
+    "signOut": "Cerrar Sesión",
+    "recentConsultations": "Consultas Recientes"
+  },
+  "dashboard": {
+    "title": "VitaShifa",
+    "welcome": "Tu compañero de salud confiable impulsado por IA"
+  },
+  "consultation": {
+    "title": "Consulta Médica",
+    "placeholder": "Describe tus síntomas o haz una pregunta de salud...",
+    "disclaimer": "Este asistente de IA proporciona información general de salud y no sustituye el consejo médico profesional.",
+    "aiGreeting": "¡Hola! Soy tu compañero de salud de IA. Estoy aquí para ayudarte con tus preguntas médicas y proporcionarte orientación. Ten en cuenta que no soy un reemplazo de la atención médica profesional. ¿Cómo puedo ayudarte hoy?"
+  },
+  "diagnosis": {
+    "title": "Análisis de Imágenes Médicas con IA",
+    "description": "Sube imágenes médicas para análisis e insights impulsados por IA",
+    "uploadTitle": "Subir Imágenes Médicas",
+    "uploadDescription": "Arrastra y suelta tus imágenes aquí, o haz clic para navegar",
+    "chooseImages": "Elegir Imágenes",
+    "supportedFormats": "Compatible: JPG, PNG, DICOM • Tamaño máximo: 10MB por imagen",
+    "analysisResults": "Resultados del Análisis",
+    "keyFindings": "Hallazgos Principales",
+    "recommendations": "Recomendaciones",
+    "confidence": "Confianza",
+    "priority": {
+      "high": "PRIORIDAD ALTA",
+      "medium": "PRIORIDAD MEDIA",
+      "low": "PRIORIDAD BAJA"
+    },
+    "disclaimer": "Este análisis de IA es solo para fines informativos y no debe reemplazar el diagnóstico médico profesional."
+  },
+  "wellness": {
+    "title": "Planificación de Bienestar",
+    "description": "Crea tu plan personalizado de salud y bienestar",
+    "steps": {
+      "personalInfo": "Información Personal",
+      "healthGoals": "Objetivos de Salud",
+      "lifestyle": "Evaluación del Estilo de Vida",
+      "medicalHistory": "Historia Médica",
+      "preferences": "Preferencias",
+      "plan": "Tu Plan de Bienestar"
+    },
+    "plan": {
+      "title": "Tu Plan de Bienestar Personalizado",
+      "subtitle": "Este es un punto de partida para tu jornada de bienestar, creado especialmente para ti.",
+      "goals": "Tus Objetivos",
+      "downloadPdf": "Descargar Plan como PDF",
+      "scheduleCheckin": "Programar Revisión",
+      "generating": "Generando Tu Plan...",
+      "generatingSubtitle": "Nuestra IA está creando una jornada de bienestar personalizada para ti."
+    }
+  },
+  "medication": {
+    "title": "Recordatorios de Medicamentos",
+    "description": "Mantente al día con tu horario de medicamentos",
+    "addReminder": "Agregar Recordatorio",
+    "upcomingReminders": "Recordatorios Próximos",
+    "adherence": "Adherencia de 7 Días",
+    "allMedications": "Todos los Medicamentos"
+  },
+  "emergency": {
+    "title": "Cuidado de Emergencia",
+    "description": "Acceso rápido a orientación de emergencia e instrucciones de primeros auxilios",
+    "lifeThreatening": "¿Emergencia que Amenaza la Vida?",
+    "lifeThreateningDesc": "Si alguien está inconsciente, no respira, o está gravemente herido, llama a servicios de emergencia inmediatamente.",
+    "callEmergency": "Llamar Servicios de Emergencia"
+  },
+  "settings": {
+    "title": "Configuración",
+    "description": "Gestiona las preferencias de tu cuenta y configuración de privacidad"
+  },
+  "auth": {
+    "signIn": "Iniciar Sesión",
+    "signUp": "Registrarse",
+    "email": "Email",
+    "password": "Contraseña",
+    "dontHaveAccount": "¿No tienes una cuenta?",
+    "alreadyHaveAccount": "¿Ya tienes una cuenta?"
   }
+}

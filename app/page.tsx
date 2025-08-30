@@ -2,7 +2,7 @@
 
 import { DashboardLayout } from "@/components/dashboard-layout";
 import { useAuth } from "@/context/AuthContext";
-import { useEffect } from "react";
+import { useEffect, Suspense } from "react"; // Import Suspense
 import { useRouter } from "next/navigation";
 import { useTranslation } from "react-i18next";
 
@@ -22,11 +22,11 @@ export default function HomePage() {
       <div className="flex items-center justify-center min-h-screen bg-gradient-to-br from-primary/5 via-background to-accent/5">
         <div className="flex flex-col items-center gap-4">
           <div className="flex h-12 w-12 items-center justify-center rounded-lg bg-gradient-to-br from-primary to-accent text-primary-foreground animate-pulse">
-            <svg 
-              className="h-6 w-6" 
-              viewBox="0 0 24 24" 
-              fill="none" 
-              stroke="currentColor" 
+            <svg
+              className="h-6 w-6"
+              viewBox="0 0 24 24"
+              fill="none"
+              stroke="currentColor"
               strokeWidth="2"
             >
               <path d="M4.5 12.75l6 6 9-13.5"/>
@@ -45,5 +45,9 @@ export default function HomePage() {
     );
   }
 
-  return <DashboardLayout />;
+  return (
+    <Suspense fallback={<div>Loading...</div>}>
+      <DashboardLayout />
+    </Suspense>
+  );
 }

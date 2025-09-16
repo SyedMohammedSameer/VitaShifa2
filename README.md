@@ -295,3 +295,15 @@ For support, email support@vitashifa.com or join our [Discord community](https:/
 - [ ] Mobile app development
 - [ ] Voice-based interactions
 - [ ] Community health features
+
+---
+
+## 👨‍💻 Built By
+
+**Mohammed Sameer Syed**  
+📧 mohammedsameer@arizona.edu
+
+## 🙏 Special Thanks
+
+Special thanks to **Amine Montasir** for his valuable contribution to this project.  
+📧 Aminemontasir8.5.2004@gmail.com

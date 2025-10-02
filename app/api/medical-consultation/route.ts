@@ -1,19 +1,10 @@
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import Groq from "groq-sdk";
 import { NextRequest, NextResponse } from "next/server";
 import admin from "@/lib/firebaseAdmin";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
-
-// Language mapping for AI responses
-const languagePrompts = {
-  en: "Respond in English.",
-  ar: "Respond in Arabic (العربية). Use proper Arabic grammar and medical terminology.",
-  es: "Respond in Spanish (Español). Use proper Spanish grammar and medical terminology.",
-  fr: "Respond in French (Français). Use proper French grammar and medical terminology.", 
-  ja: "Respond in Japanese (日本語). Use proper Japanese grammar and medical terminology.",
-  id: "Respond in Indonesian (Bahasa Indonesia). Use proper Indonesian grammar and medical terminology.",
-  hi: "Respond in Hindi (हिन्दी). Use proper Hindi grammar and medical terminology."
-};
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY as string,
+});
 
 export async function POST(req: NextRequest) {
   try {
@@ -27,47 +18,58 @@ export async function POST(req: NextRequest) {
     const decodedToken = await admin.auth().verifyIdToken(idToken);
     const userId = decodedToken.uid;
 
-    const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
+    // Build conversation history for Groq
+    let conversationHistory: Array<{ role: "system" | "user" | "assistant", content: string }> = [
+      {
+        role: "system",
+        content: `You are VitaShifa, an AI health companion. Provide helpful, accurate medical information in a clear, conversational, and empathetic tone.
 
-    // Get language-specific prompt
-    const languageInstruction = languagePrompts[language as keyof typeof languagePrompts] || languagePrompts.en;
+Your approach:
+- Give direct, knowledgeable answers about health topics, symptoms, conditions, and general wellness
+- Explain medical concepts clearly using simple language
+- For complex topics, use structured formats like bullet points or sections when helpful
+- You can mention specific medications, treatments, and medical procedures when relevant to the question
+- Provide actionable advice and recommendations based on medical knowledge
 
-    const chat = model.startChat({
-      history: [
-        {
-          role: "user",
-          parts: [{ text: `You are an AI health companion named VitaShifa. Your goal is to provide helpful, safe, and empathetic medical information in a natural, conversational tone.
+Formatting:
+- Use newlines to separate paragraphs
+- Use hyphens for lists
+- No asterisks for formatting`
+      }
+    ];
 
-          LANGUAGE INSTRUCTION: ${languageInstruction}
+    // Load previous conversation history if exists
+    if (conversationId) {
+      const db = admin.firestore();
+      const consultationRef = db.collection("consultations").doc(conversationId);
+      const docSnap = await consultationRef.get();
 
-          Always remember:
-          - You are not a replacement for a professional medical diagnosis.
-          - Always encourage the user to consult with a doctor for any health concerns.
-          - Provide responses in the requested language while maintaining medical accuracy.
+      if (docSnap.exists && docSnap.data()?.userId === userId) {
+        const messages = docSnap.data()?.messages || [];
+        conversationHistory = [
+          conversationHistory[0], // Keep system message
+          ...messages.map((msg: { sender: string; content: string }) => ({
+            role: msg.sender === "user" ? "user" : "assistant",
+            content: msg.content
+          }))
+        ];
+      }
+    }
 
-          When explaining medical topics, aim for clarity. Structured formats can be helpful for complex topics, but prioritize what feels most natural for the conversation. For example, you might use a structure like this for a detailed query:
-          Overview: [Brief overview]
-          Common Symptoms:
-          - [Symptom 1]
-          - [Symptom 2]
-          General Advice: [Actionable advice]
-
-          Regarding medication: You can mention general categories of over-the-counter (OTC) medications (e.g., "pain relievers," "antihistamines") if relevant. However, you MUST NOT suggest specific drug names (e.g., Ibuprofen), brands, or dosages. This should always be followed by a strong recommendation to speak with a doctor or pharmacist first.
-
-          Do not use asterisks for formatting. Use newlines to separate paragraphs and hyphens for lists.
-
-          Finally, always end your response with a disclaimer in the requested language that this is not medical advice and to consult a healthcare professional for any health concerns.` }],
-        },
-        {
-          role: "model",
-          parts: [{ text: `I understand. I am VitaShifa. I will provide helpful, safe, and empathetic medical information in ${language === 'ar' ? 'Arabic' : language === 'es' ? 'Spanish' : language === 'fr' ? 'French' : language === 'ja' ? 'Japanese' : language === 'id' ? 'Indonesian' : language === 'hi' ? 'Hindi' : 'English'} in a natural, conversational tone. I will use structures like lists for clarity when needed, but not for every message. I will not provide a diagnosis. I will only mention general categories of OTC medications and will always include a strong disclaimer to consult a healthcare professional. Every response will end with the required disclaimer in the requested language.` }],
-        },
-      ],
+    // Add current user message
+    conversationHistory.push({
+      role: "user",
+      content: message
     });
 
-    const result = await chat.sendMessage(message);
-    const response = await result.response;
-    const text = response.text();
+    const completion = await groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages: conversationHistory,
+      temperature: 0.8,
+      max_tokens: 2048,
+    });
+
+    const text = completion.choices[0]?.message?.content || "";
 
     const db = admin.firestore();
     let newConversationId = conversationId;

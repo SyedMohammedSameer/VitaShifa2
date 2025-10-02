@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import Groq from "groq-sdk";
 
+<<<<<<< HEAD
 const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
 
 // Language mapping for AI diagnosis responses
@@ -45,11 +46,21 @@ function dataUrlToGenerativePart(dataUrl: string) {
 export async function POST(req: NextRequest) {
   try {
     const { image, language = 'en' } = await req.json(); // Expect language parameter
+=======
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY as string,
+});
 
-    if (!image) {
-      return NextResponse.json({ error: "No image data provided." }, { status: 400 });
+export async function POST(req: NextRequest) {
+  try {
+    const { image, symptoms } = await req.json();
+>>>>>>> e699cd4 (netlify deployment and model shift)
+
+    if (!image && !symptoms) {
+      return NextResponse.json({ error: "No image or symptom data provided." }, { status: 400 });
     }
 
+<<<<<<< HEAD
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
     
     // Get language-specific instruction
@@ -64,16 +75,64 @@ export async function POST(req: NextRequest) {
     - "urgency" (a string which can be 'low', 'medium', or 'high')
     
     Ensure all text content is in the requested language.`;
+=======
+    let messages: any[] = [];
+>>>>>>> e699cd4 (netlify deployment and model shift)
 
-    const imagePart = dataUrlToGenerativePart(image);
+    if (image) {
+      // Use Llama 4 Scout for vision analysis
+      messages = [
+        {
+          role: "user",
+          content: [
+            {
+              type: "text",
+              text: `Analyze this medical image and provide a professional assessment. ${symptoms ? `Additional context: ${symptoms}` : ''}
 
-    const result = await model.generateContent([prompt, imagePart]);
-    const responseText = result.response.text();
-    
-    // Clean up potential markdown formatting from the response
+Provide your analysis in JSON format with:
+- "confidence": number 0-100 indicating diagnostic confidence
+- "findings": array of potential conditions or issues identified
+- "recommendations": array of specific actions to take
+- "urgency": 'low', 'medium', or 'high'`
+            },
+            {
+              type: "image_url",
+              image_url: {
+                url: image
+              }
+            }
+          ]
+        }
+      ];
+    } else {
+      // Text-only symptom analysis
+      messages = [
+        {
+          role: "user",
+          content: `Analyze these symptoms and provide a professional medical assessment: ${symptoms}
+
+Provide your analysis in JSON format with:
+- "confidence": number 0-100 indicating diagnostic confidence
+- "findings": array of potential conditions or issues identified
+- "recommendations": array of specific actions to take
+- "urgency": 'low', 'medium', or 'high'`
+        }
+      ];
+    }
+
+    const completion = await groq.chat.completions.create({
+      model: image ? "meta-llama/llama-4-scout-17b-16e-instruct" : "llama-3.3-70b-versatile",
+      messages: messages,
+      temperature: 0.7,
+      max_tokens: 2048,
+      response_format: { type: "json_object" }
+    });
+
+    const responseText = completion.choices[0]?.message?.content || "{}";
     const jsonString = responseText.replace(/```json|```/g, '').trim();
     const analysisResult = JSON.parse(jsonString);
 
+<<<<<<< HEAD
     // Add the disclaimer in the appropriate language
     const disclaimer = disclaimerTranslations[language as keyof typeof disclaimerTranslations] || disclaimerTranslations.en;
 
@@ -81,9 +140,12 @@ export async function POST(req: NextRequest) {
         ...analysisResult,
         disclaimer: disclaimer
     });
+=======
+    return NextResponse.json(analysisResult);
+>>>>>>> e699cd4 (netlify deployment and model shift)
 
   } catch (error) {
     console.error("Error during AI diagnosis:", error);
-    return NextResponse.json({ error: "Failed to process the image." }, { status: 500 });
+    return NextResponse.json({ error: "Failed to process the request." }, { status: 500 });
   }
 }

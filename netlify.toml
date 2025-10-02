@@ -1,0 +1,30 @@
+[build]
+  command = "npm run build"
+  publish = ".next"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+[build.environment]
+  NODE_VERSION = "18"
+
+# Security headers
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+# Environment variables configuration
+# Add these in Netlify UI: Site settings > Environment variables
+# Required environment variables:
+# - GROQ_API_KEY
+# - FIREBASE_SERVICE_ACCOUNT_BASE64
+# - NEXT_PUBLIC_FIREBASE_API_KEY
+# - NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
+# - NEXT_PUBLIC_FIREBASE_PROJECT_ID
+# - NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
+# - NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
+# - NEXT_PUBLIC_FIREBASE_APP_ID

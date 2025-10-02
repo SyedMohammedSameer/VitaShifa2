@@ -1,7 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
-import { GoogleGenerativeAI } from "@google/generative-ai";
+import Groq from "groq-sdk";
 
-const genAI = new GoogleGenerativeAI(process.env.GEMINI_API_KEY as string);
+const groq = new Groq({
+  apiKey: process.env.GROQ_API_KEY as string,
+});
 
 // Language mapping for wellness plan responses
 const languagePrompts = {
@@ -16,6 +18,7 @@ const languagePrompts = {
 
 export async function POST(req: NextRequest) {
   try {
+<<<<<<< HEAD
     const { formData, language = 'en' } = await req.json();
     const model = genAI.getGenerativeModel({ model: "gemini-1.5-flash" });
 
@@ -49,9 +52,48 @@ export async function POST(req: NextRequest) {
 
       Ensure the entire output is a single, valid JSON object with all content in the requested language.
     `;
+=======
+    const formData = await req.json();
 
-    const result = await model.generateContent(prompt);
-    const responseText = result.response.text();
+    const prompt = `Create a personalized wellness plan based on this profile:
+
+Age: ${formData.personalInfo.age}, Gender: ${formData.personalInfo.gender}, Height: ${formData.personalInfo.height}cm, Weight: ${formData.personalInfo.weight}kg, Activity: ${formData.personalInfo.activityLevel}
+Goals: ${formData.healthGoals.join(", ")}
+Sleep: ${formData.lifestyle.sleepHours}hrs, Stress: ${formData.lifestyle.stressLevel}, Smoking: ${formData.lifestyle.smokingStatus}, Alcohol: ${formData.lifestyle.alcoholConsumption}
+Conditions: ${formData.medicalHistory.conditions.join(", ") || "none"}
+Diet: ${formData.preferences.dietType}, Exercise preferences: ${formData.preferences.exercisePreferences.join(", ")}, Time: ${formData.preferences.timeAvailability}
+
+Generate JSON with these keys:
+
+1. "nutritionPlan", "fitnessPlan", "mindfulnessPlan": Each has:
+   - title: catchy title
+   - summary: 1-2 sentences
+   - recommendations: array of objects with "tip" and "explanation" (3-4 items each)
+
+2. "weeklySchedule":
+   - title: "Your Sample Week at a Glance"
+   - summary: brief sentence
+   - schedule: 7 day objects (Monday-Sunday) each with "fitness", "nutrition", "mindfulness"`;
+
+    const completion = await groq.chat.completions.create({
+      model: "llama-3.3-70b-versatile",
+      messages: [
+        {
+          role: "system",
+          content: "You are VitaShifa's wellness planning expert. Create personalized, actionable health plans in JSON format."
+        },
+        {
+          role: "user",
+          content: prompt
+        }
+      ],
+      temperature: 0.7,
+      max_tokens: 4096,
+      response_format: { type: "json_object" }
+    });
+>>>>>>> e699cd4 (netlify deployment and model shift)
+
+    const responseText = completion.choices[0]?.message?.content || "{}";
     const plan = JSON.parse(responseText.replace(/```json|```/g, '').trim());
 
     return NextResponse.json(plan);

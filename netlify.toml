@@ -2,11 +2,13 @@
   command = "npm run build"
   publish = ".next"
 
-[[plugins]]
-  package = "@netlify/plugin-nextjs"
-
 [build.environment]
   NODE_VERSION = "18"
+  # Omit Next.js public env vars from secret scanning (these are meant to be public)
+  SECRETS_SCAN_OMIT_KEYS = "NEXT_PUBLIC_FIREBASE_API_KEY,NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN,NEXT_PUBLIC_FIREBASE_PROJECT_ID,NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET,NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID,NEXT_PUBLIC_FIREBASE_APP_ID"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
 
 # Security headers
 [[headers]]
@@ -20,11 +22,11 @@
 # Environment variables configuration
 # Add these in Netlify UI: Site settings > Environment variables
 # Required environment variables:
-# - GROQ_API_KEY
-# - FIREBASE_SERVICE_ACCOUNT_BASE64
-# - NEXT_PUBLIC_FIREBASE_API_KEY
-# - NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN
-# - NEXT_PUBLIC_FIREBASE_PROJECT_ID
-# - NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET
-# - NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID
-# - NEXT_PUBLIC_FIREBASE_APP_ID
+# - GROQ_API_KEY (server-side only)
+# - FIREBASE_SERVICE_ACCOUNT_BASE64 (server-side only)
+# - NEXT_PUBLIC_FIREBASE_API_KEY (client-side - safe to expose)
+# - NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN (client-side - safe to expose)
+# - NEXT_PUBLIC_FIREBASE_PROJECT_ID (client-side - safe to expose)
+# - NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET (client-side - safe to expose)
+# - NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID (client-side - safe to expose)
+# - NEXT_PUBLIC_FIREBASE_APP_ID (client-side - safe to expose)
